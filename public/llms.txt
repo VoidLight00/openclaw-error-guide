@@ -1,6 +1,6 @@
 # OpenClaw Error Guide
 
-> OpenClaw 설치 및 설정 오류 해결 가이드. 66개 에러, 137개 솔루션.
+> OpenClaw 설치 및 설정 오류 해결 가이드. 75개 에러, 148개 솔루션.
 
 ## Docs
 - [전체 가이드](https://openclaw-error-guide.vercel.app/llms-full.txt): 모든 에러와 솔루션
@@ -16,5 +16,6 @@
 - 채널 통합 오류
 - 클라이언트 연결 오류
 - 런타임 오류
+- 브라우저 도구 오류
 - 채널 확장 오류
 - 스킬 & 모델 오류

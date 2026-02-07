@@ -45,8 +45,9 @@
           <li><a href="channels.html">8. 채널 통합 오류</a></li>
           <li><a href="client.html">9. 클라이언트 연결 오류</a></li>
           <li><a href="runtime.html">10. 런타임 오류</a></li>
-          <li><a href="channels-ext.html">11. 채널 확장 오류</a></li>
-          <li><a href="skills.html">12. 스킬 &amp; 모델 오류</a></li>
+          <li><a href="browser.html">11. 브라우저 도구 오류</a></li>
+          <li><a href="channels-ext.html">12. 채널 확장 오류</a></li>
+          <li><a href="skills.html">13. 스킬 &amp; 모델 오류</a></li>
         </ul>
         
         <div class="sidebar-section">리소스</div>
@@ -64,7 +65,7 @@
     </aside>
     <main class="main">
       <h1>공통 오류</h1>
-      <p class="page-subtitle">7개의 오류 유형 | 총 13개의 해결 방법</p>
+      <p class="page-subtitle">12개의 오류 유형 | 총 18개의 해결 방법</p>
       
       <div class="search-bar">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -687,6 +688,331 @@ source ~/.bashrc
 
 # OpenClaw 재설치
 npm install -g openclaw@latest</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-medium">보통</span>
+              <h2>설치 실패 시 상세 로그 확인 (verbose 모드)</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">5분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>설치 스크립트가 실패하지만 에러 메시지가 불충분</li>
+                <li>npm 설치 중 어디서 멈추는지 모름</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>기본 설치 스크립트는 상세 로그를 숨김. verbose 모드로 전체 trace를 확인해야 정확한 원인 파악 가능 (출처: help/troubleshooting.md)</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: verbose 모드로 재설치</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># verbose 모드로 전체 로그 확인
+curl -fsSL https://openclaw.ai/install.sh | bash -s -- --verbose
+
+# 베타 버전 설치 시
+curl -fsSL https://openclaw.ai/install.sh | bash -s -- --beta --verbose
+
+# 또는 환경변수로
+OPENCLAW_VERBOSE=1 curl -fsSL https://openclaw.ai/install.sh | bash</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-low">낮음</span>
+              <h2>docs.openclaw.ai SSL 에러 (ISP 보안 차단)</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">5분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>docs.openclaw.ai 접속 시 SSL 에러</li>
+                <li>공식 문서 사이트가 열리지 않음</li>
+                <li>특정 네트워크에서만 발생</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>일부 ISP(Comcast/Xfinity 등)의 Advanced Security 기능이 docs.openclaw.ai를 차단함 (출처: help/troubleshooting.md)</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: ISP 보안 기능 비활성화</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># Comcast/Xfinity 사용자:
+# 1. Xfinity 앱 또는 xfi.xfinity.com 접속
+# 2. Advanced Security 설정에서 비활성화 또는 docs.openclaw.ai 허용목록 추가
+
+# 확인 방법: 모바일 핫스팟이나 VPN으로 접속 시 정상이면 ISP 차단
+
+# 참고: https://www.xfinity.com/support/articles/using-xfinity-xfi-advanced-security</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-medium">보통</span>
+              <h2>HTTP 429 Rate Limit 에러 (Anthropic)</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">5분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>HTTP 429: rate_limit_error 메시지</li>
+                <li>요청이 너무 빠르다는 에러</li>
+                <li>일정 시간 후 다시 작동</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>Anthropic API의 요청 속도 제한에 도달함. 무료 또는 저가 플랜에서 자주 발생 (출처: help/faq.md)</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: 대기 후 재시도 또는 모델 변경</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 1. 몇 분 대기 후 재시도
+
+# 2. 다른 모델로 전환
+# Telegram에서: /model sonnet
+# 또는 config에서:
+openclaw config set agents.defaults.model.primary anthropic/claude-sonnet-4-20250514
+
+# 3. API 사용량 확인: https://console.anthropic.com/settings/usage</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-medium">보통</span>
+              <h2>/model 명령어 'model not allowed' 에러</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">3분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>/model 명령어 실행 시 'model not allowed' 메시지</li>
+                <li>특정 모델로 전환이 안 됨</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>agents.defaults.models가 허용 목록(allowlist)으로 설정되어 있어, 목록에 없는 모델은 선택 불가 (출처: help/troubleshooting.md)</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: 허용 목록 확인 및 수정</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 현재 허용된 모델 목록 확인
+openclaw config get agents.defaults.models
+
+# 사용 가능한 모델 목록 보기
+# Telegram에서: /models
+
+# 원하는 모델 추가 또는 허용 목록 초기화
+# config에서 agents.defaults.models를 빈 배열로 설정하면 모든 모델 허용</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-high">심각</span>
+              <h2>온보딩 'wake up my friend' 에서 멈춤 (해칭 실패)</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">10분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>온보딩 진행 중 'wake up my friend'에서 멈춤</li>
+                <li>해칭(hatching) 단계에서 진행 안 됨</li>
+                <li>온보딩이 완료되지 않음</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>AI 모델 API 연결 실패 또는 인증 문제로 첫 번째 대화 시작이 안 됨 (출처: help/faq.md)</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: 상태 확인 및 재시도</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 1. 게이트웨이 상태 확인
+openclaw status --all
+
+# 2. doctor로 설정 문제 진단
+openclaw doctor
+
+# 3. 로그 확인
+openclaw logs --follow
+
+# 4. API 키 확인 후 온보딩 재시도
+openclaw onboard</code></pre>
                 </div>
               </div>
             </div>

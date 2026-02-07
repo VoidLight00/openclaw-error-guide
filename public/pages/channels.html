@@ -45,8 +45,9 @@
           <li><a href="channels.html" class="active">8. 채널 통합 오류</a></li>
           <li><a href="client.html">9. 클라이언트 연결 오류</a></li>
           <li><a href="runtime.html">10. 런타임 오류</a></li>
-          <li><a href="channels-ext.html">11. 채널 확장 오류</a></li>
-          <li><a href="skills.html">12. 스킬 &amp; 모델 오류</a></li>
+          <li><a href="browser.html">11. 브라우저 도구 오류</a></li>
+          <li><a href="channels-ext.html">12. 채널 확장 오류</a></li>
+          <li><a href="skills.html">13. 스킬 &amp; 모델 오류</a></li>
         </ul>
         
         <div class="sidebar-section">리소스</div>
@@ -64,7 +65,7 @@
     </aside>
     <main class="main">
       <h1>채널 통합 오류</h1>
-      <p class="page-subtitle">6개의 오류 유형 | 총 13개의 해결 방법</p>
+      <p class="page-subtitle">8개의 오류 유형 | 총 15개의 해결 방법</p>
       
       <div class="search-bar">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -655,6 +656,140 @@ openclaw gateway status
 
 # 설정 파일에서 문제 키 수동 확인
 cat ~/.openclaw/openclaw.json</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-medium">보통</span>
+              <h2>Telegram API IPv6 DNS 연결 실패</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">10분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>로그에 'HttpError: Network request for sendMessage failed' 출력</li>
+                <li>'sendChatAction' 네트워크 요청 실패</li>
+                <li>Telegram 봇이 메시지를 보내지 못함</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>api.telegram.org가 IPv6로 먼저 해석되는데, 호스트에 IPv6 egress가 없으면 연결 실패 (출처: channels/troubleshooting.md)</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: IPv4 강제 사용</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># Node.js IPv4 우선 설정
+export NODE_OPTIONS='--dns-result-order=ipv4first'
+
+# 또는 systemd 서비스에 추가:
+# Environment=NODE_OPTIONS=--dns-result-order=ipv4first
+
+# 또는 서버에서 IPv6 비활성화:
+sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-medium">보통</span>
+              <h2>Telegram setMyCommands 실패 (VPS HTTPS/DNS 차단)</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">10분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>로그에 'setMyCommands failed' 출력</li>
+                <li>Telegram 봇 명령어 등록 실패</li>
+                <li>VPS에서 Telegram 연결 불안정</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>VPS 방화벽 또는 DNS 설정이 api.telegram.org로의 outbound HTTPS 연결을 차단 (출처: channels/troubleshooting.md)</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: DNS 및 방화벽 확인</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># DNS 해석 확인
+nslookup api.telegram.org
+dig api.telegram.org
+
+# HTTPS 연결 테스트
+curl -v https://api.telegram.org
+
+# 방화벽에서 outbound 443 허용
+sudo ufw allow out 443/tcp
+
+# DNS 서버 변경 (Google DNS)
+echo 'nameserver 8.8.8.8' | sudo tee /etc/resolv.conf</code></pre>
                 </div>
               </div>
             </div>
