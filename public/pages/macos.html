@@ -64,7 +64,7 @@
     </aside>
     <main class="main">
       <h1>macOS 전용 오류</h1>
-      <p class="page-subtitle">4개의 오류 유형 | 총 10개의 해결 방법</p>
+      <p class="page-subtitle">5개의 오류 유형 | 총 12개의 해결 방법</p>
       
       <div class="search-bar">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -463,10 +463,91 @@ npm config delete https-proxy</code></pre>
             </div>
           </div>
         </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-high">심각</span>
+              <h2>sharp/libvips 빌드 실패 (시스템 libvips 충돌)</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">3분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>npm install -g openclaw 시 sharp 빌드 에러</li>
+                <li>libvips 관련 컴파일 오류</li>
+                <li>'sharp: Installation error' 메시지</li>
+                <li>Homebrew로 설치한 libvips와 충돌</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>macOS에서 Homebrew 등으로 시스템 libvips가 설치되어 있으면, sharp 모듈이 시스템 libvips를 사용하려다 버전 충돌이 발생합니다. OpenClaw 인스톨러는 기본적으로 SHARP_IGNORE_GLOBAL_LIBVIPS=1을 설정하여 이 문제를 방지합니다. (출처: installer.md - 'sharp/libvips issues', 환경변수 SHARP_IGNORE_GLOBAL_LIBVIPS=1 기본값)</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: SHARP_IGNORE_GLOBAL_LIBVIPS 환경변수 설정 (권장)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 시스템 libvips를 무시하고 prebuilt 바이너리 사용
+SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest
+
+# 영구 설정 (쉘에 추가)
+echo 'export SHARP_IGNORE_GLOBAL_LIBVIPS=1' &gt;&gt; ~/.zshrc
+source ~/.zshrc</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: OpenClaw 인스톨러 스크립트 사용 (자동 처리)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 인스톨러가 SHARP_IGNORE_GLOBAL_LIBVIPS=1을 자동으로 설정합니다
+curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <footer class="site-footer">
         <div class="footer-content">
-          <p>OpenClaw Error Guide v2.0 | 최종 업데이트: 2026-02-08</p>
+          <p>OpenClaw Error Guide v2.1 | 최종 업데이트: 2026-02-08</p>
           <div class="footer-links">
             <a href="https://github.com/anthropics/openclaw" target="_blank" rel="noopener">GitHub</a>
             <a href="https://openclaw.ai" target="_blank" rel="noopener">OpenClaw</a>

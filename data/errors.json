@@ -2,9 +2,9 @@
   "metadata": {
     "title": "OpenClaw 종합 설치 오류 & 해결방안 가이드",
     "lastUpdated": "2026-02-08",
-    "version": "2.0",
-    "totalErrors": 54,
-    "totalSolutions": 116
+    "version": "2.1",
+    "totalErrors": 62,
+    "totalSolutions": 130
   },
   "categories": [
     {
@@ -457,6 +457,87 @@
               ]
             }
           ]
+        },
+        {
+          "id": "win-11",
+          "title": "npm error spawn git / ENOENT (Git 미설치)",
+          "severity": "high",
+          "symptoms": [
+            "npm install -g openclaw 실행 시 'npm error spawn git ENOENT' 에러",
+            "Git 관련 의존성 설치 실패",
+            "ENOENT 에러와 함께 설치 중단"
+          ],
+          "cause": "Windows에 Git이 설치되어 있지 않습니다. OpenClaw 설치 시 일부 의존성이 git URL을 사용하므로, Git이 PATH에 없으면 spawn git ENOENT 에러가 발생합니다. (출처: installer.md Troubleshooting - 'Windows: npm error spawn git / ENOENT')",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "A",
+              "title": "Git for Windows 설치 후 재시작",
+              "trustLevel": 3,
+              "steps": [
+                "# 1. Git for Windows 설치",
+                "# https://git-scm.com/download/win 에서 다운로드 후 설치",
+                "",
+                "# 2. PowerShell을 완전히 닫고 새로 열기",
+                "",
+                "# 3. Git 설치 확인",
+                "git --version",
+                "",
+                "# 4. OpenClaw 설치 재시도",
+                "npm install -g openclaw@latest"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "winget으로 Git 설치",
+              "trustLevel": 3,
+              "steps": [
+                "# winget으로 Git 설치",
+                "winget install Git.Git",
+                "",
+                "# PowerShell 재시작 후 확인",
+                "git --version",
+                "",
+                "# OpenClaw 설치 재시도",
+                "npm install -g openclaw@latest"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "win-12",
+          "title": "\"openclaw is not recognized\" (Windows PATH 미설정)",
+          "severity": "high",
+          "symptoms": [
+            "'openclaw' is not recognized as an internal or external command",
+            "npm install -g openclaw 성공했는데 실행 안 됨",
+            "PowerShell에서 openclaw 명령어 인식 불가"
+          ],
+          "cause": "npm 글로벌 바이너리 디렉토리가 Windows PATH 환경 변수에 등록되지 않았습니다. npm config get prefix 결과의 하위 bin 폴더를 PATH에 추가해야 합니다. (출처: installer.md Troubleshooting - 'Windows: openclaw is not recognized')",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "A",
+              "title": "npm prefix 확인 후 PATH에 추가",
+              "trustLevel": 3,
+              "steps": [
+                "# 1. npm 글로벌 prefix 확인",
+                "npm config get prefix",
+                "# 예시 결과: C:\\Users\\username\\AppData\\Roaming\\npm",
+                "",
+                "# 2. 위 결과에 \\bin 을 붙인 경로를 PATH에 추가",
+                "# 시스템 설정 -> 고급 -> 환경 변수 -> 사용자 변수 -> Path -> 편집",
+                "# 또는 PowerShell에서:",
+                "$npmPrefix = npm config get prefix",
+                "[Environment]::SetEnvironmentVariable('PATH', $env:PATH + \";$npmPrefix\", 'User')",
+                "",
+                "# 3. PowerShell을 완전히 닫고 새로 열기",
+                "",
+                "# 4. 확인",
+                "openclaw --version"
+              ]
+            }
+          ]
         }
       ]
     },
@@ -660,6 +741,43 @@
                 "# 프록시가 잘못 설정되어 있다면 삭제",
                 "npm config delete proxy",
                 "npm config delete https-proxy"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "mac-5",
+          "title": "sharp/libvips 빌드 실패 (시스템 libvips 충돌)",
+          "severity": "high",
+          "symptoms": [
+            "npm install -g openclaw 시 sharp 빌드 에러",
+            "libvips 관련 컴파일 오류",
+            "'sharp: Installation error' 메시지",
+            "Homebrew로 설치한 libvips와 충돌"
+          ],
+          "cause": "macOS에서 Homebrew 등으로 시스템 libvips가 설치되어 있으면, sharp 모듈이 시스템 libvips를 사용하려다 버전 충돌이 발생합니다. OpenClaw 인스톨러는 기본적으로 SHARP_IGNORE_GLOBAL_LIBVIPS=1을 설정하여 이 문제를 방지합니다. (출처: installer.md - 'sharp/libvips issues', 환경변수 SHARP_IGNORE_GLOBAL_LIBVIPS=1 기본값)",
+          "solveTime": 3,
+          "solutions": [
+            {
+              "method": "A",
+              "title": "SHARP_IGNORE_GLOBAL_LIBVIPS 환경변수 설정 (권장)",
+              "trustLevel": 3,
+              "steps": [
+                "# 시스템 libvips를 무시하고 prebuilt 바이너리 사용",
+                "SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest",
+                "",
+                "# 영구 설정 (쉘에 추가)",
+                "echo 'export SHARP_IGNORE_GLOBAL_LIBVIPS=1' >> ~/.zshrc",
+                "source ~/.zshrc"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "OpenClaw 인스톨러 스크립트 사용 (자동 처리)",
+              "trustLevel": 3,
+              "steps": [
+                "# 인스톨러가 SHARP_IGNORE_GLOBAL_LIBVIPS=1을 자동으로 설정합니다",
+                "curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash"
               ]
             }
           ]
@@ -1207,6 +1325,60 @@
                 "# 클라이언트 설정에서 토큰 입력",
                 "# Claude Code: settings에서 OpenClaw Gateway Token 입력",
                 "# Cursor: OpenClaw 확장의 설정에서 토큰 입력"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "common-7",
+          "title": "설치 후 openclaw 명령어를 찾을 수 없음",
+          "severity": "medium",
+          "symptoms": [
+            "npm install -g openclaw 성공 후 'openclaw: command not found'",
+            "설치 완료 메시지는 나왔지만 새 터미널에서 실행 안 됨",
+            "which openclaw 결과가 없음"
+          ],
+          "cause": "npm 글로벌 바이너리 경로가 시스템 PATH에 포함되어 있지 않습니다. nvm, fnm 등 버전 관리자를 사용하는 경우, 쉘 시작 파일에서 초기화가 제대로 되어 있는지 확인해야 합니다. (출처: installer.md - 'openclaw not found after install', node.md Troubleshooting)",
+          "solveTime": 3,
+          "solutions": [
+            {
+              "method": "A",
+              "title": "npm prefix 확인 및 PATH 추가",
+              "trustLevel": 3,
+              "steps": [
+                "# npm 글로벌 prefix 확인",
+                "npm prefix -g",
+                "",
+                "# PATH에 해당 경로의 bin 디렉토리 추가",
+                "# macOS/Linux:",
+                "echo 'export PATH=\"$(npm prefix -g)/bin:$PATH\"' >> ~/.zshrc",
+                "source ~/.zshrc",
+                "",
+                "# 또는 bash 사용 시:",
+                "echo 'export PATH=\"$(npm prefix -g)/bin:$PATH\"' >> ~/.bashrc",
+                "source ~/.bashrc",
+                "",
+                "# 확인",
+                "which openclaw",
+                "openclaw --version"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "Linux에서 npm prefix를 사용자 디렉토리로 변경",
+              "trustLevel": 3,
+              "steps": [
+                "# npm 글로벌 디렉토리를 사용자 홈으로 변경",
+                "mkdir -p \"$HOME/.npm-global\"",
+                "npm config set prefix \"$HOME/.npm-global\"",
+                "export PATH=\"$HOME/.npm-global/bin:$PATH\"",
+                "",
+                "# 영구 설정",
+                "echo 'export PATH=\"$HOME/.npm-global/bin:$PATH\"' >> ~/.bashrc",
+                "source ~/.bashrc",
+                "",
+                "# OpenClaw 재설치",
+                "npm install -g openclaw@latest"
               ]
             }
           ]
@@ -1852,6 +2024,210 @@
                 "# 설정 초기화 (최후의 수단)",
                 "mv ~/.openclaw/openclaw.json ~/.openclaw/openclaw.json.backup",
                 "openclaw onboard"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch-3",
+          "title": "Telegram Privacy Mode로 그룹 메시지 수신 불가",
+          "severity": "high",
+          "symptoms": [
+            "Telegram 그룹에서 봇이 메시지에 반응하지 않음",
+            "멘션 없는 메시지를 봇이 전혀 못 봄",
+            "requireMention: false로 설정했는데도 그룹 메시지 무시",
+            "로그에 'skipping group message' 표시"
+          ],
+          "cause": "Telegram 봇은 기본적으로 Privacy Mode가 활성화되어 있어, 그룹에서 봇에게 직접 보낸 명령이나 @멘션만 수신합니다. 모든 그룹 메시지를 수신하려면 Privacy Mode를 비활성화하거나 봇에 관리자 권한을 부여해야 합니다. Privacy Mode 변경 후에는 봇을 그룹에서 제거했다가 다시 추가해야 적용됩니다. (출처: telegram.md - 'Group message visibility (Privacy Mode)')",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "A",
+              "title": "/setprivacy 비활성화 (BotFather)",
+              "trustLevel": 3,
+              "steps": [
+                "# 1. Telegram에서 @BotFather에게 메시지 전송",
+                "# 2. /setprivacy 명령 전송",
+                "# 3. 봇 선택",
+                "# 4. 'Disable' 선택 (Privacy Mode 비활성화)",
+                "",
+                "# 중요: 변경 후 봇을 그룹에서 제거했다가 다시 추가해야 적용됨",
+                "# 그룹 설정 -> 봇 제거 -> 봇 재추가",
+                "",
+                "# OpenClaw 설정 확인",
+                "openclaw channels status --probe"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "봇에 관리자 권한 부여 (Privacy Mode 유지)",
+              "trustLevel": 3,
+              "steps": [
+                "# 관리자 봇은 Privacy Mode와 관계없이 모든 그룹 메시지를 수신합니다",
+                "",
+                "# 1. Telegram 그룹 설정 열기",
+                "# 2. 관리자 -> 관리자 추가 -> 봇 선택",
+                "# 3. 필요한 권한 부여",
+                "",
+                "# OpenClaw 채널 상태 확인",
+                "openclaw channels status --probe"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch-4",
+          "title": "Telegram Long-polling vs Webhook 설정",
+          "severity": "medium",
+          "symptoms": [
+            "원격 서버에서 Telegram 봇 연결이 불안정",
+            "메시지 수신이 간헐적으로 실패",
+            "높은 레이턴시 또는 메시지 누락",
+            "IPv6 관련 네트워크 에러"
+          ],
+          "cause": "OpenClaw은 기본적으로 Long-polling 방식으로 Telegram 메시지를 수신합니다. 원격 서버에서 네트워크가 불안정하거나 IPv6 문제가 있는 경우, Webhook 모드로 전환하면 안정성이 향상됩니다. Webhook 모드에는 공개 URL과 secret 설정이 필요합니다. (출처: telegram.md - 'Long-polling vs webhook')",
+          "solveTime": 10,
+          "solutions": [
+            {
+              "method": "A",
+              "title": "Webhook 모드로 전환",
+              "trustLevel": 3,
+              "steps": [
+                "# openclaw.json에서 webhook 설정 추가",
+                "# {",
+                "#   \"channels\": {",
+                "#     \"telegram\": {",
+                "#       \"webhookUrl\": \"https://your-domain.com/telegram-webhook\",",
+                "#       \"webhookSecret\": \"your-secret-here\",",
+                "#       \"webhookPath\": \"/telegram-webhook\"",
+                "#     }",
+                "#   }",
+                "# }",
+                "",
+                "# 또는 CLI로 설정",
+                "openclaw config set channels.telegram.webhookUrl 'https://your-domain.com/telegram-webhook'",
+                "openclaw config set channels.telegram.webhookSecret 'your-secret-here'",
+                "",
+                "# 게이트웨이 재시작",
+                "openclaw gateway restart"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "IPv4 강제 사용 (Long-polling 유지)",
+              "trustLevel": 2,
+              "steps": [
+                "# api.telegram.org가 IPv6로 먼저 해석되어 문제가 발생하는 경우",
+                "# IPv4 강제 해석:",
+                "",
+                "# DNS 확인",
+                "dig +short api.telegram.org A",
+                "dig +short api.telegram.org AAAA",
+                "",
+                "# /etc/hosts에 IPv4 주소 추가 (IPv6 문제 우회)",
+                "# sudo echo '149.154.167.220 api.telegram.org' >> /etc/hosts",
+                "",
+                "# 또는 OpenClaw 설정에서 네트워크 설정",
+                "# channels.telegram.network.autoSelectFamily: false"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch-5",
+          "title": "JSON5 설정 파일 파싱 오류",
+          "severity": "medium",
+          "symptoms": [
+            "게이트웨이 시작 시 설정 파일 파싱 에러",
+            "openclaw.json 구문 오류",
+            "'config validation failed' 메시지",
+            "게이트웨이가 시작을 거부하며 diagnostic 명령만 허용"
+          ],
+          "cause": "openclaw.json은 JSON5 형식을 사용합니다(주석, trailing comma 허용). 하지만 잘못된 구문이 있으면 파싱에 실패합니다. OpenClaw은 유효하지 않은 설정이 있으면 안전을 위해 게이트웨이 시작을 거부합니다. openclaw doctor로 진단 및 수정이 가능합니다. (출처: configuration.md - 'Strict config validation')",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "A",
+              "title": "openclaw doctor로 진단 및 수정 (권장)",
+              "trustLevel": 3,
+              "steps": [
+                "# 설정 문제 진단",
+                "openclaw doctor",
+                "",
+                "# 자동 수정 적용",
+                "openclaw doctor --fix",
+                "",
+                "# 모든 수정을 자동 승인 (비대화형)",
+                "openclaw doctor --yes",
+                "",
+                "# 게이트웨이 재시작",
+                "openclaw gateway restart"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "설정 파일 수동 확인",
+              "trustLevel": 2,
+              "steps": [
+                "# 설정 파일 내용 확인",
+                "cat ~/.openclaw/openclaw.json",
+                "",
+                "# JSON5 문법 체크 포인트:",
+                "# - trailing comma (마지막 항목 뒤 콤마) 허용",
+                "# - 주석 허용 (// 또는 /* */)",
+                "# - 키 이름에 따옴표 생략 가능",
+                "# - 단, 유효한 키 이름만 사용 (오타 주의)",
+                "",
+                "# 설정 파일이 심하게 손상된 경우 백업 후 초기화",
+                "mv ~/.openclaw/openclaw.json ~/.openclaw/openclaw.json.backup",
+                "openclaw onboard"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch-6",
+          "title": "게이트웨이 시작 차단: 설정 검증 실패",
+          "severity": "high",
+          "symptoms": [
+            "'Gateway won't start - configuration invalid' 메시지",
+            "게이트웨이 시작 시 'Unknown key' 에러",
+            "diagnostic 명령(doctor, logs, status)만 실행 가능",
+            "업그레이드 후 기존 설정이 새 스키마와 불일치"
+          ],
+          "cause": "OpenClaw은 설정 파일의 모든 키를 스키마와 대조하여 검증합니다. 알 수 없는 키, 잘못된 타입, 유효하지 않은 값이 있으면 게이트웨이 시작을 거부합니다. 업그레이드 후 더 이상 지원되지 않는 레거시 키가 남아 있는 경우에도 발생합니다. (출처: configuration.md - 'Strict config validation', troubleshooting.md - 'Gateway won't start - configuration invalid')",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "A",
+              "title": "doctor로 마이그레이션 (권장)",
+              "trustLevel": 3,
+              "steps": [
+                "# 문제 진단 (설정 검증 실패해도 실행 가능)",
+                "openclaw doctor",
+                "",
+                "# 자동 수정 및 레거시 키 마이그레이션",
+                "openclaw doctor --fix",
+                "",
+                "# 심층 진단 (레거시 서비스 스캔 포함)",
+                "openclaw doctor --deep",
+                "",
+                "# 게이트웨이 재시작",
+                "openclaw gateway restart"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "로그 및 상태로 원인 파악",
+              "trustLevel": 2,
+              "steps": [
+                "# 설정 검증이 실패해도 진단 명령은 실행 가능:",
+                "openclaw logs --follow",
+                "openclaw status",
+                "openclaw gateway status",
+                "",
+                "# 설정 파일에서 문제 키 수동 확인",
+                "cat ~/.openclaw/openclaw.json"
               ]
             }
           ]

@@ -64,7 +64,7 @@
     </aside>
     <main class="main">
       <h1>공통 오류</h1>
-      <p class="page-subtitle">6개의 오류 유형 | 총 11개의 해결 방법</p>
+      <p class="page-subtitle">7개의 오류 유형 | 총 13개의 해결 방법</p>
       
       <div class="search-bar">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -594,10 +594,108 @@ openclaw status
             </div>
           </div>
         </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-medium">보통</span>
+              <h2>설치 후 openclaw 명령어를 찾을 수 없음</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">3분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>npm install -g openclaw 성공 후 'openclaw: command not found'</li>
+                <li>설치 완료 메시지는 나왔지만 새 터미널에서 실행 안 됨</li>
+                <li>which openclaw 결과가 없음</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>npm 글로벌 바이너리 경로가 시스템 PATH에 포함되어 있지 않습니다. nvm, fnm 등 버전 관리자를 사용하는 경우, 쉘 시작 파일에서 초기화가 제대로 되어 있는지 확인해야 합니다. (출처: installer.md - 'openclaw not found after install', node.md Troubleshooting)</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: npm prefix 확인 및 PATH 추가</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># npm 글로벌 prefix 확인
+npm prefix -g
+
+# PATH에 해당 경로의 bin 디렉토리 추가
+# macOS/Linux:
+echo 'export PATH=&quot;$(npm prefix -g)/bin:$PATH&quot;' &gt;&gt; ~/.zshrc
+source ~/.zshrc
+
+# 또는 bash 사용 시:
+echo 'export PATH=&quot;$(npm prefix -g)/bin:$PATH&quot;' &gt;&gt; ~/.bashrc
+source ~/.bashrc
+
+# 확인
+which openclaw
+openclaw --version</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: Linux에서 npm prefix를 사용자 디렉토리로 변경</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># npm 글로벌 디렉토리를 사용자 홈으로 변경
+mkdir -p &quot;$HOME/.npm-global&quot;
+npm config set prefix &quot;$HOME/.npm-global&quot;
+export PATH=&quot;$HOME/.npm-global/bin:$PATH&quot;
+
+# 영구 설정
+echo 'export PATH=&quot;$HOME/.npm-global/bin:$PATH&quot;' &gt;&gt; ~/.bashrc
+source ~/.bashrc
+
+# OpenClaw 재설치
+npm install -g openclaw@latest</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <footer class="site-footer">
         <div class="footer-content">
-          <p>OpenClaw Error Guide v2.0 | 최종 업데이트: 2026-02-08</p>
+          <p>OpenClaw Error Guide v2.1 | 최종 업데이트: 2026-02-08</p>
           <div class="footer-links">
             <a href="https://github.com/anthropics/openclaw" target="_blank" rel="noopener">GitHub</a>
             <a href="https://openclaw.ai" target="_blank" rel="noopener">OpenClaw</a>
