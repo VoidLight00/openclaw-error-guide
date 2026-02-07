@@ -1,213 +1,459 @@
 {
   "metadata": {
     "title": "OpenClaw 종합 설치 오류 & 해결방안 가이드",
-    "lastUpdated": "2026-02-07",
-    "version": "1.0",
+    "lastUpdated": "2026-02-08",
+    "version": "2.0",
     "totalErrors": 39,
-    "totalSolutions": 39
+    "totalSolutions": 89
   },
   "categories": [
     {
       "id": "windows",
       "name": "Windows 전용 오류",
-      "icon": "🪟",
+      "icon": "windows",
       "errors": [
         {
-          "id": "error-1",
+          "id": "win-1",
           "title": "PowerShell 실행 정책 (Execution Policy) 차단",
           "severity": "high",
           "symptoms": [
-            "설정 오류 발생"
+            "PowerShell에서 openclaw 명령어 실행 시 빨간색 오류 메시지 출력",
+            "'File cannot be loaded because running scripts is disabled on this system' 메시지",
+            "install.ps1 스크립트 실행 불가"
           ],
-          "cause": "Windows PowerShell 기본 설정이 스크립트 실행을 차단함",
-          "solveTime": 5,
+          "cause": "Windows PowerShell의 기본 실행 정책이 'Restricted'로 설정되어 외부 스크립트 실행을 차단합니다. 보안 목적으로 기본 설정이 이렇게 되어 있으며, npm 전역 설치 후 openclaw CLI를 실행할 때 .ps1 파일 실행이 필요합니다.",
+          "solveTime": 3,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "현재 사용자만 정책 변경 (권장)",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# PowerShell을 관리자 권한으로 실행한 뒤:",
+                "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser",
+                "",
+                "# 변경 확인",
+                "Get-ExecutionPolicy -List",
+                "",
+                "# 이후 openclaw 다시 실행",
+                "openclaw --version"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "현재 세션에서만 임시 허용",
+              "trustLevel": 2,
+              "steps": [
+                "# 현재 PowerShell 세션에서만 스크립트 실행 허용 (재시작 시 원래대로)",
+                "Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process",
+                "",
+                "# 바로 설치 스크립트 실행",
+                "iwr -useb https://openclaw.ai/install.ps1 | iex"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "WSL2 사용 (근본적 해결)",
+              "trustLevel": 3,
+              "steps": [
+                "# Windows에서 PowerShell 문제를 피하려면 WSL2 사용을 권장합니다",
+                "wsl --install",
+                "",
+                "# WSL 재부팅 후 Ubuntu에서:",
+                "curl -fsSL https://openclaw.ai/install.sh | bash"
               ]
             }
           ]
         },
         {
-          "id": "error-2",
+          "id": "win-2",
           "title": "winget 소스 손상 (WinGet Error)",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "winget install 명령어 실행 시 'Failed to update source' 오류",
+            "'An unexpected error occurred while executing the command' 메시지",
+            "winget search 결과가 비정상적으로 적거나 없음"
           ],
-          "cause": "WinGet 패키지 매니저 내부 오류 (Microsoft 문제)",
+          "cause": "WinGet의 내부 SQLite 데이터베이스가 손상되었거나, Microsoft Store 앱 패키지 캐시에 문제가 있습니다. Windows 업데이트 후 또는 네트워크 문제로 인해 발생할 수 있습니다.",
           "solveTime": 5,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "winget 소스 초기화",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# winget 소스를 완전히 초기화합니다",
+                "winget source reset --force",
+                "",
+                "# 소스 업데이트 확인",
+                "winget source update",
+                "",
+                "# Node.js 설치 재시도",
+                "winget install OpenJS.NodeJS.LTS"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "Microsoft Store에서 App Installer 업데이트",
+              "trustLevel": 2,
+              "steps": [
+                "# Microsoft Store를 열어 'App Installer'를 검색하여 업데이트합니다",
+                "# 또는 PowerShell에서:",
+                "Add-AppxPackage -RegisterByFamilyName -MainPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe",
+                "",
+                "# 이후 winget 다시 시도",
+                "winget install OpenJS.NodeJS.LTS"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "Node.js 공식 인스톨러 사용 (대안)",
+              "trustLevel": 3,
+              "steps": [
+                "# winget이 계속 문제라면, Node.js 공식 사이트에서 직접 다운로드:",
+                "# https://nodejs.org/en/download 에서 Windows Installer (.msi) 다운로드",
+                "",
+                "# 설치 후 새 터미널을 열고 확인",
+                "node --version",
+                "npm --version"
               ]
             }
           ]
         },
         {
-          "id": "error-3",
+          "id": "win-3",
           "title": "Node.js 설치되었는데 \"command not found\"",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "'node' is not recognized as an internal or external command",
+            "PowerShell에서 node --version 실행 시 오류",
+            "설치 직후에는 작동하지만, 새 터미널에서 안 됨"
           ],
-          "cause": "Node.js 설치는 되었지만 PATH 환경 변수에 없음",
+          "cause": "Node.js가 설치되었지만, 설치 경로가 시스템 PATH 환경 변수에 추가되지 않았습니다. nvm-windows를 사용한 경우 터미널을 재시작해야 PATH가 갱신됩니다.",
           "solveTime": 5,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "터미널 재시작 및 PATH 확인",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 1. 모든 터미널 창을 닫고 새로 엽니다",
+                "",
+                "# 2. PATH에서 Node.js 경로 확인",
+                "$env:PATH -split ';' | Select-String 'node'",
+                "",
+                "# 3. 일반적으로 Node.js는 아래 경로에 설치됩니다",
+                "# C:\\Program Files\\nodejs\\",
+                "",
+                "# 4. 수동으로 PATH에 추가 (영구)",
+                "[Environment]::SetEnvironmentVariable('PATH', $env:PATH + ';C:\\Program Files\\nodejs\\', 'User')"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "nvm-windows 사용 시 버전 선택",
+              "trustLevel": 2,
+              "steps": [
+                "# nvm-windows를 사용 중이라면 사용할 버전을 지정해야 합니다",
+                "nvm list",
+                "nvm use 22",
+                "",
+                "# 확인",
+                "node --version"
               ]
             }
           ]
         },
         {
-          "id": "error-5",
+          "id": "win-4",
           "title": "WSL (Windows Subsystem for Linux) 관련",
           "severity": "low",
           "symptoms": [
-            "설정 오류 발생"
+            "'wsl' is not recognized 오류",
+            "wsl --install 실행 시 'Virtual Machine Platform' 관련 오류",
+            "WSL2 배포판이 시작되지 않음"
           ],
-          "cause": "WSL2 미설치 또는 활성화 안 됨",
-          "solveTime": 5,
+          "cause": "WSL2가 설치되지 않았거나, 가상화 기능이 BIOS/UEFI에서 비활성화되어 있습니다. OpenClaw 공식 문서에서도 Windows에서는 WSL2를 강력히 권장합니다.",
+          "solveTime": 15,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "WSL2 설치 (Windows 10 v2004+)",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 관리자 권한 PowerShell에서 WSL 설치",
+                "wsl --install",
+                "",
+                "# 재부팅 필요합니다",
+                "# 재부팅 후 Ubuntu가 자동으로 설정됩니다",
+                "",
+                "# WSL 버전 확인",
+                "wsl --list --verbose"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "가상화 확인 및 활성화",
+              "trustLevel": 2,
+              "steps": [
+                "# 가상화가 활성화되어 있는지 확인",
+                "systeminfo | findstr /i \"Hyper-V\"",
+                "",
+                "# 비활성화된 경우:",
+                "# 1. BIOS/UEFI 진입 (재부팅 시 F2/DEL 키)",
+                "# 2. Intel VT-x 또는 AMD-V 활성화",
+                "# 3. 저장 후 재부팅",
+                "",
+                "# Windows 기능 수동 활성화",
+                "dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart",
+                "dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart",
+                "",
+                "# 재부팅 후 기본 버전을 WSL2로 설정",
+                "wsl --set-default-version 2"
               ]
             }
           ]
         },
         {
-          "id": "error-1",
+          "id": "win-5",
           "title": "Node.js sharp 모듈 빌드 실패",
           "severity": "high",
           "symptoms": [
-            "설정 오류 발생"
+            "npm install -g openclaw 시 sharp 관련 빌드 에러",
+            "'sharp: Installation error: Could not install from prebuilt binaries'",
+            "node-gyp rebuild 실패 메시지",
+            "'Please add node-gyp to your dependencies' 경고"
           ],
-          "cause": "Node v22.22.0+ 에서 Xcode 빌드 도구 호환성 문제",
-          "solveTime": 5,
+          "cause": "sharp 모듈은 네이티브 이미지 처리 라이브러리(libvips)를 사용합니다. 시스템에 맞는 prebuilt 바이너리를 찾지 못하면 소스에서 빌드를 시도하는데, C++ 빌드 도구가 없으면 실패합니다.",
+          "solveTime": 10,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "prebuilt 바이너리 강제 사용 (권장)",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 글로벌 libvips를 무시하고 prebuilt 바이너리 강제 사용",
+                "set SHARP_IGNORE_GLOBAL_LIBVIPS=1",
+                "npm install -g openclaw@latest",
+                "",
+                "# PowerShell의 경우:",
+                "$env:SHARP_IGNORE_GLOBAL_LIBVIPS=1",
+                "npm install -g openclaw@latest"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "Windows 빌드 도구 설치",
+              "trustLevel": 2,
+              "steps": [
+                "# Visual Studio Build Tools 설치 (C++ 컴파일러 포함)",
+                "npm install -g windows-build-tools",
+                "",
+                "# 또는 Visual Studio Installer에서 'C++ 빌드 도구' 선택 설치",
+                "",
+                "# node-gyp 전역 설치",
+                "npm install -g node-gyp",
+                "",
+                "# 재시도",
+                "npm install -g openclaw@latest"
               ]
             }
           ]
         },
         {
-          "id": "error-1",
+          "id": "win-6",
           "title": "apt/yum 패키지 관리자로 Node.js 설치 문제",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "apt install nodejs 후 node --version이 v12 등 매우 낮은 버전",
+            "OpenClaw 실행 시 'Unsupported Node version' 에러",
+            "WSL Ubuntu에서 기본 apt로 설치한 Node가 너무 오래됨"
           ],
-          "cause": "기본 저장소에 없음 (너무 오래된 버전만)",
-          "solveTime": 5,
+          "cause": "Ubuntu/Debian 기본 저장소의 Node.js는 매우 오래된 버전(v12~v18)입니다. OpenClaw은 Node 22 이상을 요구하므로, NodeSource 또는 nvm을 통해 최신 버전을 설치해야 합니다.",
+          "solveTime": 10,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "nvm으로 최신 Node 설치 (권장)",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 기존 Node 제거",
+                "sudo apt remove nodejs npm -y",
+                "",
+                "# nvm 설치",
+                "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash",
+                "source ~/.bashrc",
+                "",
+                "# Node 22 LTS 설치",
+                "nvm install 22",
+                "nvm use 22",
+                "nvm alias default 22",
+                "",
+                "# 확인",
+                "node --version  # v22.x.x 이상"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "NodeSource 저장소 사용",
+              "trustLevel": 2,
+              "steps": [
+                "# NodeSource에서 Node 22.x 저장소 추가",
+                "curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -",
+                "sudo apt install -y nodejs",
+                "",
+                "# 확인",
+                "node --version",
+                "npm --version"
               ]
             }
           ]
         },
         {
-          "id": "error-1",
+          "id": "win-7",
           "title": "WSL2 커널 업데이트 필요",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "'WSL 2 requires an update to its kernel component' 메시지",
+            "WSL 배포판 실행 시 에러 코드 표시",
+            "wsl --update 실행 시 실패"
           ],
-          "cause": "WSL2 커널이 너무 오래됨",
+          "cause": "WSL2 Linux 커널이 최신 버전으로 업데이트되지 않았습니다. Windows 업데이트와 별도로 WSL 커널 업데이트가 필요할 수 있습니다.",
           "solveTime": 5,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "WSL 커널 업데이트",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 관리자 권한 PowerShell에서:",
+                "wsl --update",
+                "",
+                "# 업데이트 후 WSL 재시작",
+                "wsl --shutdown",
+                "wsl",
+                "",
+                "# 그래도 안 되면 수동 커널 패키지 설치:",
+                "# https://aka.ms/wsl2kernel 에서 다운로드 후 실행"
               ]
             }
           ]
         },
         {
-          "id": "error-2",
+          "id": "win-8",
           "title": "WSL2 Ubuntu 설치 후 Node 못 찾음",
           "severity": "high",
           "symptoms": [
-            "설정 오류 발생"
+            "WSL Ubuntu에서 'node: command not found'",
+            "Windows에서는 Node가 되지만 WSL에서는 안 됨",
+            "which node 결과 없음"
           ],
-          "cause": "WSL Ubuntu에 Node.js 미설치",
-          "solveTime": 5,
+          "cause": "Windows에 설치된 Node.js와 WSL의 Linux 환경은 별개입니다. WSL 내부에서 별도로 Node.js를 설치해야 합니다. Windows PATH가 WSL로 전달되더라도, Windows용 .exe를 Linux에서 실행하면 호환성 문제가 발생합니다.",
+          "solveTime": 10,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "WSL 내부에 Node.js 설치 (nvm 권장)",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# WSL Ubuntu 내부에서 실행",
+                "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash",
+                "source ~/.bashrc",
+                "",
+                "nvm install 22",
+                "nvm alias default 22",
+                "",
+                "# OpenClaw 설치",
+                "npm install -g openclaw@latest",
+                "openclaw onboard --install-daemon"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "OpenClaw 인스톨러 스크립트 사용",
+              "trustLevel": 3,
+              "steps": [
+                "# WSL 내부에서 인스톨러가 Node 설치까지 자동 처리",
+                "curl -fsSL https://openclaw.ai/install.sh | bash"
               ]
             }
           ]
         },
         {
-          "id": "error-3",
+          "id": "win-9",
           "title": "WSL과 Windows 간 Path 혼동",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "WSL에서 Windows 경로(C:\\Users\\...)를 사용하면 에러",
+            "파일 경로에 백슬래시(\\) 포함 시 오류",
+            "openclaw config에서 Windows 경로 사용 시 동작 안 함"
           ],
-          "cause": "Windows 경로 vs Linux 경로 혼동",
-          "solveTime": 5,
+          "cause": "WSL에서 Windows 파일 시스템은 /mnt/c/ 아래에 마운트됩니다. Windows 스타일 경로(C:\\Users\\...)는 WSL Linux 환경에서 인식되지 않으며, 항상 Linux 스타일 경로를 사용해야 합니다.",
+          "solveTime": 3,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "경로 변환 사용",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# Windows 경로를 WSL 경로로 변환하는 도구:",
+                "wslpath 'C:\\Users\\username\\Documents'",
+                "# 결과: /mnt/c/Users/username/Documents",
+                "",
+                "# 반대 방향 변환:",
+                "wslpath -w /home/user/project",
+                "# 결과: \\\\wsl$\\Ubuntu\\home\\user\\project"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "WSL 홈 디렉토리에서 작업 (권장)",
+              "trustLevel": 3,
+              "steps": [
+                "# 성능과 호환성을 위해 WSL 네이티브 파일 시스템 사용을 권장",
+                "# /mnt/c/ 접근은 느리고 권한 문제 발생 가능",
+                "",
+                "cd ~",
+                "mkdir -p projects",
+                "# OpenClaw workspace도 WSL 내부에 설정",
+                "# ~/.openclaw/ 디렉토리가 자동으로 사용됩니다"
               ]
             }
           ]
         },
         {
-          "id": "error-8",
+          "id": "win-10",
           "title": "WSL에서 시간대(Timezone) 불일치",
           "severity": "low",
           "symptoms": [
-            "설정 오류 발생"
+            "WSL에서 date 명령어 결과가 실제 시간과 다름",
+            "로그 타임스탬프가 일치하지 않음",
+            "OpenClaw 스케줄 관련 기능이 시간이 맞지 않음"
           ],
-          "cause": "WSL과 Windows의 타임존 불일치",
-          "solveTime": 5,
+          "cause": "WSL은 기본적으로 UTC를 사용하며, Windows의 로컬 타임존을 자동으로 따르지 않을 수 있습니다.",
+          "solveTime": 2,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "WSL 타임존 동기화 설정",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# /etc/wsl.conf 파일을 편집하여 자동 시간 동기화 활성화",
+                "sudo tee /etc/wsl.conf << 'EOF'",
+                "[automount]",
+                "enabled = true",
+                "[interop]",
+                "enabled = true",
+                "[boot]",
+                "systemd = true",
+                "EOF",
+                "",
+                "# 타임존 수동 설정 (예: 한국)",
+                "sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime",
+                "",
+                "# WSL 재시작 (PowerShell에서)",
+                "# wsl --shutdown",
+                "# wsl"
               ]
             }
           ]
@@ -217,84 +463,203 @@
     {
       "id": "macos",
       "name": "macOS 전용 오류",
-      "icon": "🍎",
+      "icon": "apple",
       "errors": [
         {
-          "id": "error-3",
+          "id": "mac-1",
           "title": "npm 권한 문제 (sudo 요청)",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "npm install -g 시 EACCES 에러 발생",
+            "'Error: EACCES: permission denied, mkdir /usr/local/lib/node_modules/...'",
+            "sudo npm install 사용을 권유받음"
           ],
-          "cause": "/usr/local 폴더 소유권 문제",
+          "cause": "/usr/local/lib/node_modules 디렉토리의 소유권이 root로 되어 있어, 일반 사용자가 글로벌 패키지를 설치할 수 없습니다. sudo로 npm을 실행하는 것은 보안상 위험하므로 권장하지 않습니다.",
           "solveTime": 5,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
+              "method": "A",
+              "title": "npm 글로벌 디렉토리 변경 (권장)",
+              "trustLevel": 3,
+              "steps": [
+                "# 사용자 홈에 npm 글로벌 디렉토리 생성",
+                "mkdir -p ~/.npm-global",
+                "npm config set prefix '~/.npm-global'",
+                "",
+                "# PATH에 추가 (~/.zshrc 또는 ~/.bashrc)",
+                "echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.zshrc",
+                "source ~/.zshrc",
+                "",
+                "# 이제 sudo 없이 설치 가능",
+                "npm install -g openclaw@latest"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "nvm으로 Node 관리 (권장)",
+              "trustLevel": 3,
+              "steps": [
+                "# nvm은 홈 디렉토리에 Node를 설치하여 권한 문제 회피",
+                "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash",
+                "source ~/.zshrc",
+                "",
+                "nvm install 22",
+                "nvm alias default 22",
+                "",
+                "# nvm 환경에서는 sudo 불필요",
+                "npm install -g openclaw@latest"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "/usr/local 소유권 변경 (주의)",
               "trustLevel": 1,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 주의: 시스템 디렉토리 소유권 변경은 다른 도구에 영향 줄 수 있음",
+                "sudo chown -R $(whoami) /usr/local/lib/node_modules",
+                "sudo chown -R $(whoami) /usr/local/bin",
+                "",
+                "# 이후 sudo 없이 설치",
+                "npm install -g openclaw@latest"
               ]
             }
           ]
         },
         {
-          "id": "error-3",
+          "id": "mac-2",
           "title": "npm 전역 설치 권한 문제",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "npm ERR! code EACCES",
+            "npm ERR! syscall access",
+            "'/usr/local/lib/node_modules' 접근 거부"
           ],
-          "cause": "/usr/local에 쓰기 권한 없음",
+          "cause": "macOS에서 Homebrew로 Node를 설치한 경우, /usr/local 디렉토리의 권한이 복잡하게 설정되어 있을 수 있습니다. 특히 macOS Ventura 이후 보안 정책이 강화되면서 더 자주 발생합니다.",
           "solveTime": 5,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "OpenClaw 인스톨러 스크립트 사용 (가장 간편)",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 인스톨러가 권한 문제를 자동으로 처리합니다",
+                "curl -fsSL https://openclaw.ai/install.sh | bash"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "Homebrew로 Node 재설치",
+              "trustLevel": 2,
+              "steps": [
+                "# 기존 Node 제거 후 Homebrew로 깔끔하게 재설치",
+                "brew uninstall node",
+                "brew cleanup",
+                "brew install node@22",
+                "",
+                "# Homebrew가 설치한 Node는 권한 문제가 적음",
+                "npm install -g openclaw@latest"
               ]
             }
           ]
         },
         {
-          "id": "error-1",
+          "id": "mac-3",
           "title": "npm 캐시 손상",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "npm install 시 'Unexpected token' 또는 'Invalid JSON' 에러",
+            "npm ERR! code EINTEGRITY",
+            "npm cache verify 경고 메시지",
+            "특정 패키지만 반복적으로 설치 실패"
           ],
-          "cause": "npm 캐시 손상",
-          "solveTime": 5,
+          "cause": "npm 캐시 디렉토리(~/.npm/_cacache)에 저장된 패키지 데이터가 손상되었습니다. 네트워크 불안정, 디스크 오류, 또는 동시 설치 시도로 인해 발생할 수 있습니다.",
+          "solveTime": 3,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "npm 캐시 완전 초기화",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# npm 캐시 강제 삭제",
+                "npm cache clean --force",
+                "",
+                "# 캐시 상태 확인",
+                "npm cache verify",
+                "",
+                "# 재설치",
+                "npm install -g openclaw@latest"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "캐시 디렉토리 수동 삭제",
+              "trustLevel": 2,
+              "steps": [
+                "# npm 캐시 디렉토리 직접 삭제",
+                "rm -rf ~/.npm/_cacache",
+                "",
+                "# package-lock 도 문제라면 프로젝트 내에서:",
+                "rm -rf node_modules package-lock.json",
+                "npm install"
               ]
             }
           ]
         },
         {
-          "id": "error-4",
+          "id": "mac-4",
           "title": "npm install 타임아웃",
           "severity": "low",
           "symptoms": [
-            "설정 오류 발생"
+            "npm ERR! network timeout at: https://registry.npmjs.org/...",
+            "npm ERR! code ETIMEDOUT",
+            "설치가 진행되다가 오래 멈춘 후 실패",
+            "fetch failed 에러"
           ],
-          "cause": "네트워크 느림 또는 npm 서버 문제",
+          "cause": "npm 레지스트리 서버와의 연결이 타임아웃되었습니다. 느린 네트워크, VPN 사용, 회사 방화벽, 또는 npm 서버 자체의 일시적 장애일 수 있습니다.",
           "solveTime": 5,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "타임아웃 시간 늘리기",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 기본 타임아웃을 300초(5분)로 늘리기",
+                "npm config set fetch-timeout 300000",
+                "npm config set fetch-retry-maxtimeout 120000",
+                "",
+                "# 재설치 시도",
+                "npm install -g openclaw@latest"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "레지스트리 미러 사용",
+              "trustLevel": 2,
+              "steps": [
+                "# 한국/아시아 사용자는 npmmirror 사용 가능 (속도 개선)",
+                "npm install -g openclaw@latest --registry https://registry.npmmirror.com",
+                "",
+                "# 또는 영구 설정",
+                "npm config set registry https://registry.npmmirror.com",
+                "",
+                "# 원래대로 복구하려면:",
+                "npm config set registry https://registry.npmjs.org"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "VPN/프록시 확인",
+              "trustLevel": 2,
+              "steps": [
+                "# VPN을 사용 중이라면 일시적으로 해제 후 시도",
+                "",
+                "# 프록시 설정 확인",
+                "npm config get proxy",
+                "npm config get https-proxy",
+                "",
+                "# 프록시가 잘못 설정되어 있다면 삭제",
+                "npm config delete proxy",
+                "npm config delete https-proxy"
               ]
             }
           ]
@@ -304,44 +669,112 @@
     {
       "id": "linux",
       "name": "Linux 전용 오류",
-      "icon": "🐧",
+      "icon": "terminal",
       "errors": [
         {
-          "id": "error-2",
+          "id": "linux-1",
           "title": "빌드 도구 누락 (build-essential)",
           "severity": "high",
           "symptoms": [
-            "설정 오류 발생"
+            "npm install 시 'gyp ERR! build error' 메시지",
+            "'make: not found' 또는 'g++: not found' 에러",
+            "sharp, sqlite3 등 네이티브 모듈 빌드 실패",
+            "node-gyp rebuild 실패"
           ],
-          "cause": "C++ 컴파일러 없음 (sharp, node-gyp 필요)",
+          "cause": "sharp, better-sqlite3 등의 네이티브 Node.js 모듈은 C/C++ 컴파일러가 필요합니다. 최소 설치 Linux 서버에는 빌드 도구가 없는 경우가 많습니다.",
           "solveTime": 5,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "빌드 도구 설치 (Ubuntu/Debian)",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 필수 빌드 도구 패키지 설치",
+                "sudo apt update",
+                "sudo apt install -y build-essential python3 make g++",
+                "",
+                "# node-gyp 전역 설치",
+                "npm install -g node-gyp",
+                "",
+                "# OpenClaw 재설치",
+                "npm install -g openclaw@latest"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "빌드 도구 설치 (RHEL/CentOS/Fedora)",
+              "trustLevel": 3,
+              "steps": [
+                "# 개발 도구 그룹 설치",
+                "sudo dnf groupinstall 'Development Tools'",
+                "# 또는 CentOS 7:",
+                "sudo yum groupinstall 'Development Tools'",
+                "",
+                "# Python도 필요할 수 있음",
+                "sudo dnf install python3",
+                "",
+                "# 재설치",
+                "npm install -g openclaw@latest"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "prebuilt 바이너리 강제 (빌드 없이)",
+              "trustLevel": 2,
+              "steps": [
+                "# 빌드 도구 설치가 어려운 환경에서:",
+                "SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest",
+                "",
+                "# 또는 Docker 사용 (빌드 도구 불필요)",
+                "docker pull openclaw/openclaw",
+                "docker run -d --name openclaw openclaw/openclaw"
               ]
             }
           ]
         },
         {
-          "id": "error-7",
+          "id": "linux-2",
           "title": "원격 Linux 서버에서 가상 디스플레이 문제",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "브라우저 도구 사용 시 'Cannot open display' 에러",
+            "Playwright/Puppeteer가 헤드리스 모드에서도 실패",
+            "DISPLAY 환경 변수 관련 경고"
           ],
-          "cause": "원격 서버에 X11/GUI 환경 없음",
-          "solveTime": 5,
+          "cause": "원격 서버(VPS, 클라우드)에는 X11 그래픽 서버가 없습니다. OpenClaw의 브라우저 도구는 일반적으로 헤드리스로 실행되지만, 일부 설정에서는 가상 디스플레이(Xvfb)가 필요할 수 있습니다.",
+          "solveTime": 10,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "Xvfb (가상 프레임 버퍼) 설치",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# Xvfb 설치",
+                "sudo apt install -y xvfb",
+                "",
+                "# 가상 디스플레이 시작",
+                "Xvfb :99 -screen 0 1280x720x24 &",
+                "export DISPLAY=:99",
+                "",
+                "# OpenClaw 실행",
+                "openclaw gateway start"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "필요한 라이브러리 설치",
+              "trustLevel": 3,
+              "steps": [
+                "# Chromium/Playwright에 필요한 시스템 라이브러리 설치",
+                "sudo apt install -y \\",
+                "  libnss3 libatk1.0-0 libatk-bridge2.0-0 \\",
+                "  libcups2 libdrm2 libxkbcommon0 \\",
+                "  libxcomposite1 libxdamage1 libxfixes3 \\",
+                "  libxrandr2 libgbm1 libpango-1.0-0 \\",
+                "  libcairo2 libasound2",
+                "",
+                "# 또는 Playwright가 자동으로 설치하는 방법:",
+                "npx playwright install-deps chromium"
               ]
             }
           ]
@@ -351,64 +784,156 @@
     {
       "id": "virtualenv",
       "name": "가상환경 설정 오류",
-      "icon": "⚙️",
+      "icon": "container",
       "errors": [
         {
-          "id": "error-4",
+          "id": "docker-1",
           "title": "Docker에서 포트 바인딩 실패",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "'Bind for 0.0.0.0:18789 failed: port is already allocated'",
+            "docker run 시 포트 관련 에러",
+            "컨테이너는 실행되지만 외부에서 접근 불가"
           ],
-          "cause": "Docker 컨테이너의 포트 맵핑 오류",
+          "cause": "호스트의 18789 포트가 이미 다른 프로세스(또는 이전 OpenClaw 인스턴스)에 의해 사용 중이거나, Docker의 포트 매핑(-p) 설정이 올바르지 않습니다.",
           "solveTime": 5,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "사용 중인 포트 프로세스 확인 및 종료",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 18789 포트를 사용 중인 프로세스 확인",
+                "sudo lsof -i :18789",
+                "# 또는",
+                "sudo ss -tlnp | grep 18789",
+                "",
+                "# 해당 프로세스 종료",
+                "sudo kill -9 <PID>",
+                "",
+                "# 이전 Docker 컨테이너가 남아있다면:",
+                "docker ps -a | grep openclaw",
+                "docker rm -f <container_id>",
+                "",
+                "# 재실행",
+                "docker run -d -p 18789:18789 --name openclaw openclaw/openclaw"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "다른 포트 사용",
+              "trustLevel": 3,
+              "steps": [
+                "# 호스트 포트를 변경하여 실행",
+                "docker run -d -p 28789:18789 --name openclaw openclaw/openclaw",
+                "",
+                "# 접속 시 변경된 포트 사용",
+                "# http://localhost:28789"
               ]
             }
           ]
         },
         {
-          "id": "error-5",
+          "id": "docker-2",
           "title": "Docker에서 환경 변수 미설정",
           "severity": "high",
           "symptoms": [
-            "설정 오류 발생"
+            "컨테이너 실행 후 'No API key found' 에러",
+            "Telegram 봇이 연결되지 않음",
+            "로그에 'missing required configuration' 표시"
           ],
-          "cause": "Docker 컨테이너에 환경 변수 전달 안 됨",
+          "cause": "Docker 컨테이너는 호스트의 환경 변수를 자동으로 상속받지 않습니다. OpenClaw에 필요한 토큰과 설정은 명시적으로 전달해야 합니다.",
           "solveTime": 5,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "환경 변수 파일(.env) 사용 (권장)",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# .env 파일 생성",
+                "cat > .env << 'EOF'",
+                "TELEGRAM_BOT_TOKEN=your_telegram_token_here",
+                "ANTHROPIC_API_KEY=your_api_key_here",
+                "EOF",
+                "",
+                "# .env 파일과 함께 컨테이너 실행",
+                "docker run -d --env-file .env -p 18789:18789 --name openclaw openclaw/openclaw"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "-e 플래그로 개별 전달",
+              "trustLevel": 2,
+              "steps": [
+                "# 각 환경 변수를 -e 플래그로 전달",
+                "docker run -d \\",
+                "  -e TELEGRAM_BOT_TOKEN=your_token \\",
+                "  -e ANTHROPIC_API_KEY=your_key \\",
+                "  -p 18789:18789 \\",
+                "  --name openclaw \\",
+                "  openclaw/openclaw"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "설정 파일 마운트",
+              "trustLevel": 3,
+              "steps": [
+                "# 호스트의 openclaw 설정 디렉토리를 컨테이너에 마운트",
+                "docker run -d \\",
+                "  -v ~/.openclaw:/root/.openclaw \\",
+                "  -p 18789:18789 \\",
+                "  --name openclaw \\",
+                "  openclaw/openclaw"
               ]
             }
           ]
         },
         {
-          "id": "error-6",
+          "id": "docker-3",
           "title": "Docker에서 데이터 유지 (Volumes)",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "컨테이너 재시작 시 모든 설정이 사라짐",
+            "대화 기록, 인증 정보가 초기화됨",
+            "docker restart 후 다시 onboard 필요"
           ],
-          "cause": "Docker 컨테이너의 데이터가 영구 저장되지 않음",
+          "cause": "Docker 컨테이너는 기본적으로 임시 파일 시스템을 사용합니다. 컨테이너를 삭제하면 내부 데이터도 모두 사라집니다. 영구 저장이 필요한 데이터는 볼륨을 사용해야 합니다.",
           "solveTime": 5,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "Named Volume 사용 (권장)",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# Docker named volume으로 OpenClaw 데이터 영구 저장",
+                "docker volume create openclaw-data",
+                "",
+                "docker run -d \\",
+                "  -v openclaw-data:/root/.openclaw \\",
+                "  -p 18789:18789 \\",
+                "  --name openclaw \\",
+                "  openclaw/openclaw",
+                "",
+                "# 볼륨 확인",
+                "docker volume inspect openclaw-data"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "호스트 디렉토리 바인드 마운트",
+              "trustLevel": 3,
+              "steps": [
+                "# 호스트의 특정 디렉토리를 마운트",
+                "mkdir -p ~/openclaw-docker-data",
+                "",
+                "docker run -d \\",
+                "  -v ~/openclaw-docker-data:/root/.openclaw \\",
+                "  -p 18789:18789 \\",
+                "  --name openclaw \\",
+                "  openclaw/openclaw",
+                "",
+                "# 이렇게 하면 호스트에서도 파일을 직접 확인/편집 가능"
               ]
             }
           ]
@@ -418,124 +943,270 @@
     {
       "id": "common",
       "name": "공통 오류",
-      "icon": "⚠️",
+      "icon": "alert",
       "errors": [
         {
-          "id": "error-4",
+          "id": "common-1",
           "title": "권한 부족 (EACCES / Permission Denied)",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "npm ERR! code EACCES",
+            "Permission denied 에러",
+            "sudo 사용 권유 메시지",
+            "글로벌 패키지 설치 실패"
           ],
-          "cause": "npm 글로벌 폴더 권한 문제",
+          "cause": "npm 글로벌 설치 디렉토리의 소유권 문제입니다. 시스템 패키지 매니저로 Node를 설치한 경우, 글로벌 모듈 디렉토리가 root 소유로 되어 있어 일반 사용자가 쓸 수 없습니다.",
           "solveTime": 5,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "npm prefix 변경 (권장)",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 사용자 홈에 글로벌 디렉토리 생성",
+                "mkdir -p ~/.npm-global",
+                "npm config set prefix '~/.npm-global'",
+                "",
+                "# PATH 추가 (쉘에 맞게 선택)",
+                "# bash:",
+                "echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc && source ~/.bashrc",
+                "# zsh:",
+                "echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.zshrc && source ~/.zshrc",
+                "",
+                "# 재설치",
+                "npm install -g openclaw@latest"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "nvm 사용으로 전환",
+              "trustLevel": 3,
+              "steps": [
+                "# nvm은 홈 디렉토리에 설치되어 권한 문제 없음",
+                "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash",
+                "source ~/.bashrc  # 또는 source ~/.zshrc",
+                "",
+                "nvm install 22",
+                "npm install -g openclaw@latest"
               ]
             }
           ]
         },
         {
-          "id": "error-2",
+          "id": "common-2",
           "title": "\"openclaw: command not found\"",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "openclaw 명령어 실행 시 'command not found'",
+            "npm install -g openclaw 성공했는데 실행 안 됨",
+            "which openclaw 결과 없음"
           ],
-          "cause": "npm 경로가 $PATH에 없음",
-          "solveTime": 5,
+          "cause": "npm 글로벌 바이너리 디렉토리가 시스템 PATH에 등록되어 있지 않습니다. npm prefix 설정에 따라 바이너리가 설치되는 위치가 다릅니다.",
+          "solveTime": 3,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "npm 바이너리 경로 확인 및 PATH 추가",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# npm 글로벌 바이너리 경로 확인",
+                "npm config get prefix",
+                "# 결과 예: /usr/local 또는 ~/.npm-global",
+                "",
+                "# 해당 경로의 bin 디렉토리를 PATH에 추가",
+                "# 예: prefix가 ~/.npm-global이면:",
+                "echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.zshrc",
+                "source ~/.zshrc",
+                "",
+                "# 확인",
+                "which openclaw",
+                "openclaw --version"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "npx로 직접 실행 (임시)",
+              "trustLevel": 2,
+              "steps": [
+                "# PATH 설정 없이 바로 실행하려면 npx 사용",
+                "npx openclaw --version",
+                "npx openclaw onboard --install-daemon"
               ]
             }
           ]
         },
         {
-          "id": "error-4",
+          "id": "common-3",
           "title": "시스템 패키지 충돌",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "which node가 /usr/bin/node를 가리킴 (시스템 버전)",
+            "nvm use 후에도 시스템 Node가 사용됨",
+            "Node 버전이 예상과 다름",
+            "여러 Node 설치본 간 충돌"
           ],
-          "cause": "기존 system Node.js와 충돌",
-          "solveTime": 5,
+          "cause": "시스템 패키지 매니저(apt, brew 등)로 설치한 Node.js와 nvm 등으로 설치한 Node.js가 PATH에서 충돌합니다.",
+          "solveTime": 10,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "시스템 Node 제거 후 nvm 사용",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# Ubuntu/Debian에서 시스템 Node 제거",
+                "sudo apt remove nodejs npm -y",
+                "sudo apt autoremove -y",
+                "",
+                "# macOS에서 Homebrew Node 제거",
+                "# brew uninstall node",
+                "",
+                "# nvm이 없다면 설치",
+                "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash",
+                "source ~/.bashrc",
+                "",
+                "# nvm으로 Node 설치",
+                "nvm install 22",
+                "nvm alias default 22",
+                "",
+                "# 확인",
+                "which node  # ~/.nvm/... 경로여야 정상"
               ]
             }
           ]
         },
         {
-          "id": "error-2",
+          "id": "common-4",
           "title": "Port 18789 충돌",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "openclaw gateway start 시 'EADDRINUSE: address already in use :::18789'",
+            "게이트웨이가 시작되지 않음",
+            "이미 실행 중인 OpenClaw 인스턴스 존재"
           ],
-          "cause": "다른 프로세스가 포트 18789 사용 중",
-          "solveTime": 5,
+          "cause": "OpenClaw 게이트웨이의 기본 포트인 18789가 이미 다른 프로세스에 의해 사용 중입니다. 이전에 비정상 종료된 OpenClaw 프로세스나 다른 서비스가 해당 포트를 점유하고 있을 수 있습니다.",
+          "solveTime": 3,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "기존 프로세스 확인 및 종료",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# macOS/Linux: 포트 사용 프로세스 확인",
+                "lsof -i :18789",
+                "",
+                "# 해당 프로세스 종료",
+                "kill -9 <PID>",
+                "",
+                "# 또는 OpenClaw 게이트웨이 정리 재시작",
+                "openclaw gateway stop",
+                "openclaw gateway start"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "다른 포트 사용",
+              "trustLevel": 2,
+              "steps": [
+                "# openclaw.json에서 포트 변경",
+                "# ~/.openclaw/openclaw.json 에 아래 내용 추가:",
+                "{",
+                "  \"gateway\": {",
+                "    \"port\": 28789",
+                "  }",
+                "}",
+                "",
+                "# 게이트웨이 재시작",
+                "openclaw gateway restart"
               ]
             }
           ]
         },
         {
-          "id": "error-3",
+          "id": "common-5",
           "title": "Node 버전 호환성",
           "severity": "high",
           "symptoms": [
-            "설정 오류 발생"
+            "'Unsupported Node.js version' 에러",
+            "SyntaxError: Unexpected token 에러 (최신 JS 문법)",
+            "node --version이 v18 이하",
+            "OpenClaw 설치 또는 실행 시 버전 경고"
           ],
-          "cause": "OpenClaw와 호환되지 않는 Node 버전",
-          "solveTime": 5,
+          "cause": "OpenClaw은 Node.js 22 이상을 요구합니다. 이전 버전에서는 최신 JavaScript 기능(ES2023+)과 특정 Node.js API를 사용할 수 없어 실행에 실패합니다.",
+          "solveTime": 10,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "nvm으로 Node 22 설치",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 현재 버전 확인",
+                "node --version",
+                "",
+                "# nvm으로 Node 22 설치 및 전환",
+                "nvm install 22",
+                "nvm use 22",
+                "nvm alias default 22",
+                "",
+                "# OpenClaw 재설치 (새 Node 버전에서)",
+                "npm install -g openclaw@latest",
+                "",
+                "# 확인",
+                "node --version  # v22.x.x",
+                "openclaw --version"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "OpenClaw 인스톨러 사용 (Node도 자동 설치)",
+              "trustLevel": 3,
+              "steps": [
+                "# 인스톨러가 Node 22 미만이면 자동으로 설치해줍니다",
+                "curl -fsSL https://openclaw.ai/install.sh | bash"
               ]
             }
           ]
         },
         {
-          "id": "error-1",
+          "id": "common-6",
           "title": "\"Pairing Required\" (1008)",
           "severity": "high",
           "symptoms": [
-            "설정 오류 발생"
+            "Claude Code 또는 Cursor에서 'Pairing Required' 메시지",
+            "WebSocket 연결 후 코드 1008로 끊김",
+            "클라이언트가 게이트웨이에 연결은 되지만 인증 실패"
           ],
-          "cause": "Claude Code/Cursor와 OpenClaw 게이트웨이 간 초기 페어링 미완료",
+          "cause": "Claude Code/Cursor와 OpenClaw 게이트웨이 간의 초기 페어링이 완료되지 않았습니다. 클라이언트가 처음 연결할 때 device pairing을 통해 인증해야 하며, 이 과정이 승인되지 않으면 1008 코드와 함께 연결이 끊깁니다.",
           "solveTime": 5,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "페어링 승인 (CLI)",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 대기 중인 페어링 요청 확인",
+                "openclaw nodes pending",
+                "",
+                "# 요청 승인 (requestId는 pending 목록에서 확인)",
+                "openclaw nodes approve <requestId>",
+                "",
+                "# 페어링 상태 확인",
+                "openclaw nodes status"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "게이트웨이 토큰 직접 사용",
+              "trustLevel": 2,
+              "steps": [
+                "# 게이트웨이 상태 확인",
+                "openclaw gateway status",
+                "",
+                "# 게이트웨이 토큰 확인",
+                "openclaw status",
+                "",
+                "# 클라이언트 설정에서 토큰 입력",
+                "# Claude Code: settings에서 OpenClaw Gateway Token 입력",
+                "# Cursor: OpenClaw 확장의 설정에서 토큰 입력"
               ]
             }
           ]
@@ -545,124 +1216,265 @@
     {
       "id": "oauth",
       "name": "인증 (OAuth) 오류",
-      "icon": "🔐",
+      "icon": "lock",
       "errors": [
         {
-          "id": "error-1",
+          "id": "oauth-1",
           "title": "setup-token 생성 실패",
           "severity": "high",
           "symptoms": [
-            "설정 오류 발생"
+            "openclaw models auth setup-token 실행 시 에러",
+            "Claude 데스크탑 앱에서 토큰 복사가 안 됨",
+            "'Unable to generate setup token' 메시지"
           ],
-          "cause": "Claude 데스크탑 앱 미설치 또는 로그인 안 됨",
-          "solveTime": 5,
+          "cause": "setup-token은 Claude 데스크탑 앱(Claude for Desktop)의 인증 정보를 기반으로 생성됩니다. Claude 앱이 설치되어 있지 않거나 로그인되어 있지 않으면 토큰을 생성할 수 없습니다.",
+          "solveTime": 10,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "Claude 데스크탑 앱 설치 및 로그인",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 1. Claude 데스크탑 앱 다운로드 및 설치",
+                "# https://claude.ai/download",
+                "",
+                "# 2. 앱을 열고 Anthropic 계정으로 로그인",
+                "",
+                "# 3. 로그인 완료 후 setup-token 생성",
+                "openclaw models auth setup-token --provider anthropic",
+                "",
+                "# 4. 생성된 토큰을 게이트웨이 호스트에서 붙여넣기",
+                "openclaw models auth paste-token --provider anthropic"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "API 키 직접 사용 (대안)",
+              "trustLevel": 3,
+              "steps": [
+                "# Claude 앱 없이 API 키를 직접 사용할 수 있습니다",
+                "# https://console.anthropic.com/settings/keys 에서 API 키 발급",
+                "",
+                "# 환경 변수로 설정",
+                "export ANTHROPIC_API_KEY=sk-ant-...",
+                "",
+                "# 또는 openclaw.json에 직접 설정",
+                "openclaw config set providers.anthropic.apiKey 'sk-ant-...'"
               ]
             }
           ]
         },
         {
-          "id": "error-2",
+          "id": "oauth-2",
           "title": "\"No API key found for provider anthropic\"",
           "severity": "high",
           "symptoms": [
-            "설정 오류 발생"
+            "'No API key found for provider anthropic' 에러",
+            "openclaw models status에서 anthropic이 'unconfigured'",
+            "채팅 시작 시 인증 관련 에러"
           ],
-          "cause": "auth-profiles.json에 토큰 없음",
+          "cause": "에이전트의 auth 저장소(auth-profiles.json)에 Anthropic 인증 정보가 없습니다. 인증은 에이전트별로 관리되므로, 새 에이전트는 main 에이전트의 키를 자동으로 상속받지 않습니다.",
           "solveTime": 5,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "setup-token으로 인증 (권장)",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 게이트웨이 호스트에서 실행",
+                "openclaw models auth setup-token --provider anthropic",
+                "",
+                "# 또는 다른 곳에서 생성한 토큰 붙여넣기",
+                "openclaw models auth paste-token --provider anthropic",
+                "",
+                "# 상태 확인",
+                "openclaw models status"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "환경 변수 설정",
+              "trustLevel": 3,
+              "steps": [
+                "# ANTHROPIC_API_KEY 환경 변수 설정",
+                "export ANTHROPIC_API_KEY=sk-ant-api03-...",
+                "",
+                "# 영구 설정 (쉘 설정 파일에 추가)",
+                "echo 'export ANTHROPIC_API_KEY=sk-ant-api03-...' >> ~/.zshrc",
+                "",
+                "# 게이트웨이 재시작",
+                "openclaw gateway restart",
+                "openclaw models status"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "다른 에이전트에서 인증 복사",
+              "trustLevel": 2,
+              "steps": [
+                "# main 에이전트의 auth를 다른 에이전트에 복사",
+                "# auth-profiles.json 위치 확인",
+                "ls ~/.openclaw/agents/main/",
+                "",
+                "# 대상 에이전트 디렉토리로 복사",
+                "cp ~/.openclaw/agents/main/auth-profiles.json ~/.openclaw/agents/<target-agent>/",
+                "",
+                "# 게이트웨이 재시작",
+                "openclaw gateway restart"
               ]
             }
           ]
         },
         {
-          "id": "error-3",
+          "id": "oauth-3",
           "title": "setup-token 만료됨",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "'Token expired' 또는 'Invalid token' 에러",
+            "setup-token 붙여넣기 시 인증 실패",
+            "이전에 생성한 토큰이 더 이상 작동하지 않음"
           ],
-          "cause": "setup-token은 1시간만 유효",
-          "solveTime": 5,
+          "cause": "setup-token은 보안상 1시간의 유효 기간을 가집니다. 생성 후 1시간이 지나면 만료되어 사용할 수 없습니다.",
+          "solveTime": 3,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "새 토큰 생성",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 새 setup-token 생성 (Claude 데스크탑 앱이 실행 중이어야 함)",
+                "openclaw models auth setup-token --provider anthropic",
+                "",
+                "# 생성 후 바로 붙여넣기 (1시간 내)",
+                "openclaw models auth paste-token --provider anthropic",
+                "",
+                "# 확인",
+                "openclaw models status"
               ]
             }
           ]
         },
         {
-          "id": "error-4",
+          "id": "oauth-4",
           "title": "다중 에이전트 인증 미상속",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "서브 에이전트에서 'No API key' 에러",
+            "main 에이전트는 작동하지만 다른 에이전트는 인증 실패",
+            "새로 만든 에이전트가 모델에 접근 불가"
           ],
-          "cause": "새 에이전트가 main 에이전트의 인증을 상속받지 않음",
+          "cause": "OpenClaw에서 인증(auth)은 에이전트별로 독립적으로 관리됩니다. 새 에이전트를 만들면 main 에이전트의 인증 정보를 자동으로 상속받지 않으므로, 별도로 설정해야 합니다.",
           "solveTime": 5,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "에이전트별 인증 설정",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 방법 1: 대상 에이전트에서 직접 인증 실행",
+                "openclaw models auth setup-token --provider anthropic --agent <agent-name>",
+                "",
+                "# 방법 2: main에서 auth-profiles.json 복사",
+                "cp ~/.openclaw/agents/main/auth-profiles.json ~/.openclaw/agents/<agent-name>/",
+                "",
+                "# 방법 3: 환경 변수는 모든 에이전트에 공통 적용",
+                "export ANTHROPIC_API_KEY=sk-ant-...",
+                "openclaw gateway restart"
               ]
             }
           ]
         },
         {
-          "id": "error-6",
+          "id": "oauth-5",
           "title": "OAuth 콜백 실패 (원격 설정)",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "OAuth 인증 시 브라우저 콜백이 실패",
+            "'redirect_uri mismatch' 에러",
+            "원격 서버에서 OAuth 로그인 후 에러 페이지 표시"
           ],
-          "cause": "원격 서버에서 OAuth 콜백 URL이 맞지 않음",
-          "solveTime": 5,
+          "cause": "OAuth 콜백 URL은 기본적으로 localhost를 가리킵니다. 원격 서버(VPS, 클라우드)에서 실행 중인 경우, 로컬 브라우저에서 열린 OAuth 페이지가 원격 서버의 콜백 URL에 도달할 수 없습니다.",
+          "solveTime": 10,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "SSH 포트 포워딩 사용",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 로컬 머신에서 원격 서버로 포트 포워딩",
+                "ssh -L 18789:localhost:18789 user@remote-server",
+                "",
+                "# 이제 로컬 브라우저에서 http://localhost:18789 접속 가능",
+                "# OAuth 콜백도 localhost로 돌아오므로 정상 작동"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "setup-token 방식 사용 (SSH 불필요)",
+              "trustLevel": 3,
+              "steps": [
+                "# 로컬에서 setup-token 생성 후 원격 서버에 붙여넣기",
+                "",
+                "# 로컬에서:",
+                "openclaw models auth setup-token --provider anthropic",
+                "# 출력된 토큰을 복사",
+                "",
+                "# 원격 서버에서:",
+                "openclaw models auth paste-token --provider anthropic",
+                "# 토큰 붙여넣기"
               ]
             }
           ]
         },
         {
-          "id": "error-1",
+          "id": "oauth-6",
           "title": "Telegram 인증 실패 (401 Unauthorized)",
           "severity": "high",
           "symptoms": [
-            "설정 오류 발생"
+            "게이트웨이 로그에 '401 Unauthorized' 에러",
+            "Telegram 봇이 시작되지 않음",
+            "'Not Found: method not available' 에러"
           ],
-          "cause": "Telegram 봇 토큰이 잘못되었거나 유효하지 않음",
+          "cause": "Telegram 봇 토큰이 잘못되었거나, BotFather에서 토큰이 재생성(revoke)되어 기존 토큰이 무효화되었습니다.",
           "solveTime": 5,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "봇 토큰 확인 및 재설정",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 1. Telegram에서 @BotFather 에게 메시지",
+                "# /mybots -> 봇 선택 -> API Token",
+                "# 토큰 형식: 123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ",
+                "",
+                "# 2. openclaw.json에서 토큰 업데이트",
+                "openclaw config set channels.telegram.botToken '<new_token>'",
+                "",
+                "# 또는 환경 변수로:",
+                "export TELEGRAM_BOT_TOKEN='123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ'",
+                "",
+                "# 3. 게이트웨이 재시작",
+                "openclaw gateway restart",
+                "",
+                "# 4. 채널 상태 확인",
+                "openclaw channels status --probe"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "봇 토큰 재생성",
+              "trustLevel": 2,
+              "steps": [
+                "# BotFather에서 새 토큰 발급:",
+                "# 1. @BotFather에게 /revoke 전송",
+                "# 2. 해당 봇 선택",
+                "# 3. 새 토큰 복사",
+                "",
+                "# 주의: 기존 토큰은 즉시 무효화됩니다",
+                "",
+                "# 새 토큰으로 설정 업데이트",
+                "openclaw config set channels.telegram.botToken '<new_token>'",
+                "openclaw gateway restart"
               ]
             }
           ]
@@ -672,104 +1484,255 @@
     {
       "id": "gateway",
       "name": "게이트웨이 접속 오류",
-      "icon": "🚪",
+      "icon": "server",
       "errors": [
         {
-          "id": "error-1",
+          "id": "gw-1",
           "title": "게이트웨이 접근 거부 (403 / Unauthorized)",
           "severity": "high",
           "symptoms": [
-            "설정 오류 발생"
+            "Control UI 접속 시 403 Forbidden",
+            "'Unauthorized' 에러 메시지",
+            "API 호출 시 인증 실패",
+            "'device identity required' 에러"
           ],
-          "cause": "게이트웨이 토큰이 없거나 인증 실패",
+          "cause": "게이트웨이 토큰이 없거나 잘못되었습니다. 또는 HTTP(비보안)로 접속 시 WebCrypto가 차단되어 device identity를 생성할 수 없습니다.",
           "solveTime": 5,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
+              "method": "A",
+              "title": "HTTPS 또는 localhost 사용",
+              "trustLevel": 3,
+              "steps": [
+                "# HTTP로 접속 시 device identity 생성 불가",
+                "# 해결 방법 1: localhost로 접속 (같은 머신에서)",
+                "# http://127.0.0.1:18789/",
+                "",
+                "# 해결 방법 2: Tailscale Serve로 HTTPS 설정",
+                "tailscale serve --bg 18789",
+                "# 이후 https://<machine>.ts.net/ 으로 접속"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "게이트웨이 토큰 확인",
+              "trustLevel": 3,
+              "steps": [
+                "# 게이트웨이 상태 및 토큰 확인",
+                "openclaw status",
+                "",
+                "# 토큰이 표시되면 클라이언트에서 해당 토큰 사용",
+                "# Control UI URL 예: http://127.0.0.1:18789/"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "비보안 HTTP 허용 (개발 환경만)",
               "trustLevel": 1,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 주의: 프로덕션에서는 사용하지 마세요",
+                "# openclaw.json에 추가:",
+                "{",
+                "  \"gateway\": {",
+                "    \"controlUi\": {",
+                "      \"allowInsecureAuth\": true",
+                "    }",
+                "  }",
+                "}",
+                "",
+                "openclaw gateway restart"
               ]
             }
           ]
         },
         {
-          "id": "error-2",
+          "id": "gw-2",
           "title": "포트 바인딩 실패 (localhost만 허용)",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "LAN의 다른 기기에서 게이트웨이에 접속 불가",
+            "외부에서 http://<ip>:18789 접속 시 연결 거부",
+            "localhost에서는 작동하지만 다른 IP에서는 안 됨"
           ],
-          "cause": "OpenClaw는 기본적으로 127.0.0.1 (localhost)에만 바인딩",
+          "cause": "OpenClaw 게이트웨이는 보안상 기본적으로 127.0.0.1(localhost)에만 바인딩됩니다. 외부 접속을 허용하려면 명시적으로 설정을 변경해야 합니다.",
           "solveTime": 5,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
+              "method": "A",
+              "title": "Tailscale 사용 (권장, 가장 안전)",
+              "trustLevel": 3,
+              "steps": [
+                "# Tailscale VPN을 통한 안전한 원격 접속",
+                "# 1. Tailscale 설치: https://tailscale.com/download",
+                "tailscale up",
+                "",
+                "# 2. Tailscale Serve로 HTTPS 프록시",
+                "tailscale serve --bg 18789",
+                "",
+                "# 3. 다른 Tailscale 기기에서 접속",
+                "# https://<machine-name>.ts.net/"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "바인딩 주소 변경 (주의 필요)",
               "trustLevel": 1,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 주의: 0.0.0.0 바인딩은 모든 네트워크 인터페이스에 노출됩니다",
+                "# 반드시 방화벽과 함께 사용하세요",
+                "",
+                "# openclaw.json 설정:",
+                "{",
+                "  \"gateway\": {",
+                "    \"host\": \"0.0.0.0\"",
+                "  }",
+                "}",
+                "",
+                "openclaw gateway restart"
               ]
             }
           ]
         },
         {
-          "id": "error-3",
+          "id": "gw-3",
           "title": "WebSocket 연결 실패",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "클라이언트에서 'WebSocket connection failed' 에러",
+            "Nginx/Caddy 리버스 프록시 뒤에서 연결 끊김",
+            "Connection: Upgrade 헤더 관련 에러"
           ],
-          "cause": "Nginx/Caddy 등 리버스 프록시가 WebSocket 미지원",
-          "solveTime": 5,
+          "cause": "Nginx, Caddy, Cloudflare 등의 리버스 프록시가 WebSocket 업그레이드를 제대로 전달하지 않습니다. WebSocket은 HTTP 업그레이드가 필요한데, 기본 프록시 설정에서는 이를 지원하지 않을 수 있습니다.",
+          "solveTime": 10,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "Nginx WebSocket 프록시 설정",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# /etc/nginx/sites-available/openclaw 파일:",
+                "server {",
+                "    listen 443 ssl;",
+                "    server_name openclaw.example.com;",
+                "",
+                "    location / {",
+                "        proxy_pass http://127.0.0.1:18789;",
+                "        proxy_http_version 1.1;",
+                "        proxy_set_header Upgrade $http_upgrade;",
+                "        proxy_set_header Connection \"upgrade\";",
+                "        proxy_set_header Host $host;",
+                "        proxy_set_header X-Real-IP $remote_addr;",
+                "        proxy_read_timeout 86400s;",
+                "        proxy_send_timeout 86400s;",
+                "    }",
+                "}",
+                "",
+                "# 설정 테스트 및 적용",
+                "sudo nginx -t",
+                "sudo systemctl reload nginx"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "Caddy WebSocket 프록시 설정",
+              "trustLevel": 3,
+              "steps": [
+                "# Caddyfile:",
+                "openclaw.example.com {",
+                "    reverse_proxy localhost:18789",
+                "}",
+                "",
+                "# Caddy는 WebSocket을 자동으로 프록시합니다",
+                "# 별도 설정 불필요",
+                "sudo systemctl reload caddy"
               ]
             }
           ]
         },
         {
-          "id": "error-4",
+          "id": "gw-4",
           "title": "다른 포트 바인딩",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "기본 포트(18789)가 이미 사용 중",
+            "여러 OpenClaw 인스턴스 실행 필요",
+            "다른 서비스와 포트 충돌"
           ],
-          "cause": "다른 서비스가 OpenClaw 포트 사용",
-          "solveTime": 5,
+          "cause": "기본 포트 18789가 다른 서비스에 의해 사용되고 있거나, 여러 OpenClaw 인스턴스를 동시에 실행해야 하는 상황입니다.",
+          "solveTime": 3,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "설정 파일에서 포트 변경",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# ~/.openclaw/openclaw.json 에 포트 설정 추가:",
+                "{",
+                "  \"gateway\": {",
+                "    \"port\": 28789",
+                "  }",
+                "}",
+                "",
+                "# 게이트웨이 재시작",
+                "openclaw gateway restart",
+                "",
+                "# 새 포트로 접속 확인",
+                "curl http://localhost:28789/health"
               ]
             }
           ]
         },
         {
-          "id": "error-5",
+          "id": "gw-5",
           "title": "방화벽 차단",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "로컬에서는 접속되지만 원격에서 연결 거부",
+            "curl로 테스트 시 connection refused",
+            "텔레그램 봇은 작동하지만 Control UI 접근 불가"
           ],
-          "cause": "방화벽이 18789 포트 차단",
+          "cause": "운영체제 방화벽(ufw, firewalld, Windows Defender Firewall) 또는 클라우드 보안 그룹이 OpenClaw 포트(18789)를 차단하고 있습니다.",
           "solveTime": 5,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "UFW 방화벽 설정 (Ubuntu)",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# UFW에서 포트 허용",
+                "sudo ufw allow 18789/tcp",
+                "sudo ufw reload",
+                "",
+                "# 상태 확인",
+                "sudo ufw status"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "firewalld 설정 (RHEL/CentOS)",
+              "trustLevel": 3,
+              "steps": [
+                "# firewalld에서 포트 허용",
+                "sudo firewall-cmd --permanent --add-port=18789/tcp",
+                "sudo firewall-cmd --reload",
+                "",
+                "# 확인",
+                "sudo firewall-cmd --list-ports"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "클라우드 보안 그룹 확인",
+              "trustLevel": 2,
+              "steps": [
+                "# AWS, GCP, Azure 등 클라우드 사용 시:",
+                "# 1. 해당 클라우드 콘솔에서 Security Group / Firewall Rules 확인",
+                "# 2. 인바운드 규칙에 TCP 18789 허용 추가",
+                "# 3. 소스 IP를 필요한 범위로 제한 (0.0.0.0/0 대신 특정 IP 권장)",
+                "",
+                "# 또는 Tailscale 사용으로 방화벽 설정 불필요하게 만들기",
+                "tailscale up",
+                "tailscale serve --bg 18789"
               ]
             }
           ]
@@ -779,44 +1742,116 @@
     {
       "id": "channels",
       "name": "채널 통합 오류",
-      "icon": "📱",
+      "icon": "message",
       "errors": [
         {
-          "id": "error-2",
+          "id": "ch-1",
           "title": "Discord 권한 부족 (Missing Access 50001)",
           "severity": "high",
           "symptoms": [
-            "설정 오류 발생"
+            "Discord 봇이 메시지를 읽거나 보내지 못함",
+            "'Missing Access' (에러 코드 50001) 에러",
+            "봇이 서버에 초대되었는데 특정 채널에서 작동 안 함"
           ],
-          "cause": "봇이 서버에 없거나 채널 접근 권한 부족",
-          "solveTime": 5,
+          "cause": "Discord 봇에 필요한 권한(Intent)이 부여되지 않았거나, 특정 채널/카테고리에서 봇의 역할 권한이 제한되어 있습니다. Discord의 Privileged Gateway Intents(Message Content Intent 등)가 활성화되지 않으면 메시지 내용을 읽을 수 없습니다.",
+          "solveTime": 10,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "Discord Developer Portal에서 Intents 활성화",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 1. https://discord.com/developers/applications 접속",
+                "# 2. 봇 애플리케이션 선택",
+                "# 3. 왼쪽 메뉴에서 'Bot' 클릭",
+                "# 4. 'Privileged Gateway Intents' 섹션에서 활성화:",
+                "#    - MESSAGE CONTENT INTENT (필수)",
+                "#    - SERVER MEMBERS INTENT (그룹 기능 필요 시)",
+                "#    - PRESENCE INTENT (선택)",
+                "",
+                "# 5. 변경 저장 후 게이트웨이 재시작",
+                "openclaw gateway restart"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "봇 초대 URL 권한 확인",
+              "trustLevel": 3,
+              "steps": [
+                "# 봇 초대 시 필요한 권한 포함된 URL 생성:",
+                "# Discord Developer Portal -> OAuth2 -> URL Generator",
+                "# 필요한 Scopes: bot, applications.commands",
+                "# 필요한 Bot Permissions:",
+                "#   - Send Messages",
+                "#   - Read Message History",
+                "#   - Embed Links",
+                "#   - Attach Files",
+                "#   - Add Reactions",
+                "",
+                "# 생성된 URL로 봇 재초대 (기존 봇은 자동 업데이트)"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "채널별 권한 확인",
+              "trustLevel": 2,
+              "steps": [
+                "# Discord 서버에서:",
+                "# 1. 문제 채널 우클릭 -> 채널 편집 -> 권한",
+                "# 2. 봇의 역할이 메시지 읽기/보내기 권한이 있는지 확인",
+                "# 3. '봇' 역할에 필요한 권한이 없다면 추가",
+                "",
+                "# OpenClaw 채널 상태 확인:",
+                "openclaw channels status --probe"
               ]
             }
           ]
         },
         {
-          "id": "error-3",
+          "id": "ch-2",
           "title": "플러그인 설정 검증 오류",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "게이트웨이 시작 시 config validation 에러",
+            "'Unknown key' 또는 'Invalid type' 에러 메시지",
+            "openclaw doctor에서 설정 문제 보고",
+            "게이트웨이가 시작을 거부함"
           ],
-          "cause": "채널 플러그인 설정 문법 오류",
+          "cause": "openclaw.json 설정 파일에 문법 오류, 알 수 없는 키, 또는 잘못된 값이 포함되어 있습니다. OpenClaw은 안전을 위해 유효하지 않은 설정이 있으면 게이트웨이 시작을 거부합니다.",
           "solveTime": 5,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "openclaw doctor로 진단",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 설정 문제 진단",
+                "openclaw doctor",
+                "",
+                "# 자동 수정 시도",
+                "openclaw doctor --fix",
+                "",
+                "# 또는 모든 수정을 자동 승인",
+                "openclaw doctor --yes"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "설정 파일 직접 검증",
+              "trustLevel": 2,
+              "steps": [
+                "# 설정 파일 내용 확인",
+                "cat ~/.openclaw/openclaw.json",
+                "",
+                "# JSON5 문법 확인 포인트:",
+                "# - 마지막 항목 뒤 콤마(trailing comma) OK (JSON5)",
+                "# - 주석 OK (// 또는 /* */)",
+                "# - 키 이름에 따옴표 생략 OK",
+                "# - 단, 유효한 키 이름만 사용 (오타 주의!)",
+                "",
+                "# 설정 초기화 (최후의 수단)",
+                "mv ~/.openclaw/openclaw.json ~/.openclaw/openclaw.json.backup",
+                "openclaw onboard"
               ]
             }
           ]
@@ -826,24 +1861,75 @@
     {
       "id": "client",
       "name": "클라이언트 연결 오류",
-      "icon": "💻",
+      "icon": "monitor",
       "errors": [
         {
-          "id": "error-2",
+          "id": "client-1",
           "title": "Claude Code/Cursor 응답 없음",
           "severity": "medium",
           "symptoms": [
-            "설정 오류 발생"
+            "메시지를 보내도 응답이 오지 않음",
+            "채팅창에서 로딩만 계속됨",
+            "WebSocket 연결은 되었지만 응답 타임아웃",
+            "30분 이상 대기 후 연결 끊김"
           ],
-          "cause": "게이트웨이 타임아웃 (기본 30분) 또는 네트워크 불안정",
-          "solveTime": 30,
+          "cause": "게이트웨이의 기본 타임아웃(30분)이 초과되었거나, 네트워크 불안정으로 WebSocket 연결이 중간에 끊어졌지만 클라이언트가 이를 감지하지 못한 상태입니다. 또는 AI 모델 제공자(Anthropic) 측의 일시적 장애일 수 있습니다.",
+          "solveTime": 10,
           "solutions": [
             {
-              "method": "1",
-              "title": "다시 시도",
-              "trustLevel": 1,
+              "method": "A",
+              "title": "기본 진단",
+              "trustLevel": 3,
               "steps": [
-                "# 설정 확인 후 다시 시도"
+                "# 1. 게이트웨이 상태 확인",
+                "openclaw status",
+                "",
+                "# 2. 실시간 로그 확인",
+                "openclaw logs --follow",
+                "",
+                "# 3. 모델 제공자 상태 확인",
+                "openclaw models status",
+                "openclaw status --deep",
+                "",
+                "# 4. 게이트웨이 재시작",
+                "openclaw gateway restart"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "타임아웃 설정 조정",
+              "trustLevel": 2,
+              "steps": [
+                "# 게이트웨이 heartbeat/timeout 설정 확인",
+                "# openclaw.json에서 조정 가능:",
+                "{",
+                "  \"gateway\": {",
+                "    \"heartbeat\": {",
+                "      \"intervalMs\": 30000,",
+                "      \"timeoutMs\": 60000",
+                "    }",
+                "  }",
+                "}",
+                "",
+                "openclaw gateway restart"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "네트워크 문제 확인",
+              "trustLevel": 2,
+              "steps": [
+                "# Anthropic API 연결 확인",
+                "curl -s https://api.anthropic.com/v1/messages -o /dev/null -w '%{http_code}'",
+                "",
+                "# 게이트웨이 health check",
+                "curl http://localhost:18789/health",
+                "",
+                "# DNS 확인",
+                "nslookup api.anthropic.com",
+                "",
+                "# VPN/프록시가 WebSocket을 차단하는지 확인",
+                "# VPN을 일시적으로 비활성화 후 테스트"
               ]
             }
           ]

@@ -1,229 +1,675 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>인증 (OAuth) 오류</title>
+  <title>인증 (OAuth) 오류 - OpenClaw Guide</title>
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+    <header class="mobile-header" id="mobileHeader">
+      <button class="hamburger" id="hamburgerBtn" aria-label="메뉴 열기">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <span class="mobile-title">OpenClaw Guide</span>
+    </header><div class="sidebar-overlay" id="sidebarOverlay"></div>
   <div class="layout">
-    <aside class="sidebar">
-      <a href="../index.html" class="sidebar-logo">
-        [CLAW] OpenClaw <span>Guide</span>
-      </a>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="sidebar-logo">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          OpenClaw <span>Guide</span>
+        </a>
+        <button class="sidebar-close" id="sidebarClose" aria-label="메뉴 닫기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
       
       <nav>
         <ul class="sidebar-nav">
-          <li><a href="../index.html">Home</a></li>
+          <li><a href="../index.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            홈
+          </a></li>
         </ul>
         
-        <div class="sidebar-section">Installation</div>
+        <div class="sidebar-section">카테고리</div>
         <ul class="sidebar-nav">
-          <li><a href="windows.html" >1. Windows 전용 오류</a></li><li><a href="macos.html" >2. macOS 전용 오류</a></li><li><a href="linux.html" >3. Linux 전용 오류</a></li><li><a href="virtualenv.html" >4. 가상환경 설정 오류</a></li><li><a href="common.html" >5. 공통 오류</a></li><li><a href="oauth.html" class="active">6. 인증 (OAuth) 오류</a></li><li><a href="gateway.html" >7. 게이트웨이 접속 오류</a></li><li><a href="channels.html" >8. 채널 통합 오류</a></li><li><a href="client.html" >9. 클라이언트 연결 오류</a></li>
+          <li><a href="windows.html">1. Windows 전용 오류</a></li>
+          <li><a href="macos.html">2. macOS 전용 오류</a></li>
+          <li><a href="linux.html">3. Linux 전용 오류</a></li>
+          <li><a href="virtualenv.html">4. 가상환경 설정 오류</a></li>
+          <li><a href="common.html">5. 공통 오류</a></li>
+          <li><a href="oauth.html" class="active">6. 인증 (OAuth) 오류</a></li>
+          <li><a href="gateway.html">7. 게이트웨이 접속 오류</a></li>
+          <li><a href="channels.html">8. 채널 통합 오류</a></li>
+          <li><a href="client.html">9. 클라이언트 연결 오류</a></li>
+        </ul>
+        
+        <div class="sidebar-section">리소스</div>
+        <ul class="sidebar-nav">
+          <li><a href="https://github.com/anthropics/openclaw" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            GitHub
+          </a></li>
         </ul>
       </nav>
     </aside>
-
     <main class="main">
       <h1>인증 (OAuth) 오류</h1>
+      <p class="page-subtitle">6개의 오류 유형 | 총 11개의 해결 방법</p>
       
-      <div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
-          <h2>setup-token 생성 실패</h2>
-          
-          <div class="hero-badges" style="margin-bottom: 1.5rem;">
-            <span class="badge badge-info">CRITICAL</span>
-            <span class="badge">5 min</span>
-          </div>
+      <div class="search-bar">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="오류 검색..." class="search-input">
+      </div>
 
-          <h3>Symptoms</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 0.5rem; color: var(--text-secondary);">• 설정 오류 발생</li>
-          </ul>
-
-          <h3>Root Cause</h3>
-          <div class="alert alert-info">
-            <p>Claude 데스크탑 앱 미설치 또는 로그인 안 됨</p>
-          </div>
-
-          <h3>Solutions</h3>
-          
-            <div class="step">
-              <h4>1: 다시 시도</h4>
-              <p>Trust Level: ★☆☆</p>
-              <div class="code-header">
-                <span>Code</span>
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              </div>
-              <pre><code># 설정 확인 후 다시 시도</code></pre>
-              
+      <div class="accordion">
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-high">심각</span>
+              <h2>setup-token 생성 실패</h2>
             </div>
-          
-        </div><div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
-          <h2>"No API key found for provider anthropic"</h2>
-          
-          <div class="hero-badges" style="margin-bottom: 1.5rem;">
-            <span class="badge badge-info">CRITICAL</span>
-            <span class="badge">5 min</span>
-          </div>
-
-          <h3>Symptoms</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 0.5rem; color: var(--text-secondary);">• 설정 오류 발생</li>
-          </ul>
-
-          <h3>Root Cause</h3>
-          <div class="alert alert-info">
-            <p>auth-profiles.json에 토큰 없음</p>
-          </div>
-
-          <h3>Solutions</h3>
-          
-            <div class="step">
-              <h4>1: 다시 시도</h4>
-              <p>Trust Level: ★☆☆</p>
-              <div class="code-header">
-                <span>Code</span>
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              </div>
-              <pre><code># 설정 확인 후 다시 시도</code></pre>
-              
+            <div class="accordion-meta">
+              <span class="solve-time">10분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
-          
-        </div><div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
-          <h2>setup-token 만료됨</h2>
-          
-          <div class="hero-badges" style="margin-bottom: 1.5rem;">
-            <span class="badge badge-info">HIGH</span>
-            <span class="badge">5 min</span>
           </div>
-
-          <h3>Symptoms</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 0.5rem; color: var(--text-secondary);">• 설정 오류 발생</li>
-          </ul>
-
-          <h3>Root Cause</h3>
-          <div class="alert alert-info">
-            <p>setup-token은 1시간만 유효</p>
-          </div>
-
-          <h3>Solutions</h3>
-          
-            <div class="step">
-              <h4>1: 다시 시도</h4>
-              <p>Trust Level: ★☆☆</p>
-              <div class="code-header">
-                <span>Code</span>
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              </div>
-              <pre><code># 설정 확인 후 다시 시도</code></pre>
-              
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>openclaw models auth setup-token 실행 시 에러</li>
+                <li>Claude 데스크탑 앱에서 토큰 복사가 안 됨</li>
+                <li>'Unable to generate setup token' 메시지</li>
+              </ul>
             </div>
-          
-        </div><div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
-          <h2>다중 에이전트 인증 미상속</h2>
-          
-          <div class="hero-badges" style="margin-bottom: 1.5rem;">
-            <span class="badge badge-info">HIGH</span>
-            <span class="badge">5 min</span>
-          </div>
 
-          <h3>Symptoms</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 0.5rem; color: var(--text-secondary);">• 설정 오류 발생</li>
-          </ul>
-
-          <h3>Root Cause</h3>
-          <div class="alert alert-info">
-            <p>새 에이전트가 main 에이전트의 인증을 상속받지 않음</p>
-          </div>
-
-          <h3>Solutions</h3>
-          
-            <div class="step">
-              <h4>1: 다시 시도</h4>
-              <p>Trust Level: ★☆☆</p>
-              <div class="code-header">
-                <span>Code</span>
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>setup-token은 Claude 데스크탑 앱(Claude for Desktop)의 인증 정보를 기반으로 생성됩니다. Claude 앱이 설치되어 있지 않거나 로그인되어 있지 않으면 토큰을 생성할 수 없습니다.</p>
               </div>
-              <pre><code># 설정 확인 후 다시 시도</code></pre>
-              
             </div>
-          
-        </div><div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
-          <h2>OAuth 콜백 실패 (원격 설정)</h2>
-          
-          <div class="hero-badges" style="margin-bottom: 1.5rem;">
-            <span class="badge badge-info">HIGH</span>
-            <span class="badge">5 min</span>
-          </div>
 
-          <h3>Symptoms</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 0.5rem; color: var(--text-secondary);">• 설정 오류 발생</li>
-          </ul>
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: Claude 데스크탑 앱 설치 및 로그인</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 1. Claude 데스크탑 앱 다운로드 및 설치
+# https://claude.ai/download
 
-          <h3>Root Cause</h3>
-          <div class="alert alert-info">
-            <p>원격 서버에서 OAuth 콜백 URL이 맞지 않음</p>
-          </div>
+# 2. 앱을 열고 Anthropic 계정으로 로그인
 
-          <h3>Solutions</h3>
-          
-            <div class="step">
-              <h4>1: 다시 시도</h4>
-              <p>Trust Level: ★☆☆</p>
-              <div class="code-header">
-                <span>Code</span>
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+# 3. 로그인 완료 후 setup-token 생성
+openclaw models auth setup-token --provider anthropic
+
+# 4. 생성된 토큰을 게이트웨이 호스트에서 붙여넣기
+openclaw models auth paste-token --provider anthropic</code></pre>
+                </div>
               </div>
-              <pre><code># 설정 확인 후 다시 시도</code></pre>
-              
-            </div>
-          
-        </div><div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
-          <h2>Telegram 인증 실패 (401 Unauthorized)</h2>
-          
-          <div class="hero-badges" style="margin-bottom: 1.5rem;">
-            <span class="badge badge-info">CRITICAL</span>
-            <span class="badge">5 min</span>
-          </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: API 키 직접 사용 (대안)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># Claude 앱 없이 API 키를 직접 사용할 수 있습니다
+# https://console.anthropic.com/settings/keys 에서 API 키 발급
 
-          <h3>Symptoms</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 0.5rem; color: var(--text-secondary);">• 설정 오류 발생</li>
-          </ul>
+# 환경 변수로 설정
+export ANTHROPIC_API_KEY=sk-ant-...
 
-          <h3>Root Cause</h3>
-          <div class="alert alert-info">
-            <p>Telegram 봇 토큰이 잘못되었거나 유효하지 않음</p>
-          </div>
-
-          <h3>Solutions</h3>
-          
-            <div class="step">
-              <h4>1: 다시 시도</h4>
-              <p>Trust Level: ★☆☆</p>
-              <div class="code-header">
-                <span>Code</span>
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+# 또는 openclaw.json에 직접 설정
+openclaw config set providers.anthropic.apiKey 'sk-ant-...'</code></pre>
+                </div>
               </div>
-              <pre><code># 설정 확인 후 다시 시도</code></pre>
-              
             </div>
-          
+          </div>
         </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-high">심각</span>
+              <h2>&quot;No API key found for provider anthropic&quot;</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">5분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>'No API key found for provider anthropic' 에러</li>
+                <li>openclaw models status에서 anthropic이 'unconfigured'</li>
+                <li>채팅 시작 시 인증 관련 에러</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>에이전트의 auth 저장소(auth-profiles.json)에 Anthropic 인증 정보가 없습니다. 인증은 에이전트별로 관리되므로, 새 에이전트는 main 에이전트의 키를 자동으로 상속받지 않습니다.</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: setup-token으로 인증 (권장)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 게이트웨이 호스트에서 실행
+openclaw models auth setup-token --provider anthropic
+
+# 또는 다른 곳에서 생성한 토큰 붙여넣기
+openclaw models auth paste-token --provider anthropic
+
+# 상태 확인
+openclaw models status</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: 환경 변수 설정</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># ANTHROPIC_API_KEY 환경 변수 설정
+export ANTHROPIC_API_KEY=sk-ant-api03-...
+
+# 영구 설정 (쉘 설정 파일에 추가)
+echo 'export ANTHROPIC_API_KEY=sk-ant-api03-...' &gt;&gt; ~/.zshrc
+
+# 게이트웨이 재시작
+openclaw gateway restart
+openclaw models status</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 C: 다른 에이전트에서 인증 복사</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># main 에이전트의 auth를 다른 에이전트에 복사
+# auth-profiles.json 위치 확인
+ls ~/.openclaw/agents/main/
+
+# 대상 에이전트 디렉토리로 복사
+cp ~/.openclaw/agents/main/auth-profiles.json ~/.openclaw/agents/&lt;target-agent&gt;/
+
+# 게이트웨이 재시작
+openclaw gateway restart</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-medium">보통</span>
+              <h2>setup-token 만료됨</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">3분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>'Token expired' 또는 'Invalid token' 에러</li>
+                <li>setup-token 붙여넣기 시 인증 실패</li>
+                <li>이전에 생성한 토큰이 더 이상 작동하지 않음</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>setup-token은 보안상 1시간의 유효 기간을 가집니다. 생성 후 1시간이 지나면 만료되어 사용할 수 없습니다.</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: 새 토큰 생성</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 새 setup-token 생성 (Claude 데스크탑 앱이 실행 중이어야 함)
+openclaw models auth setup-token --provider anthropic
+
+# 생성 후 바로 붙여넣기 (1시간 내)
+openclaw models auth paste-token --provider anthropic
+
+# 확인
+openclaw models status</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-medium">보통</span>
+              <h2>다중 에이전트 인증 미상속</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">5분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>서브 에이전트에서 'No API key' 에러</li>
+                <li>main 에이전트는 작동하지만 다른 에이전트는 인증 실패</li>
+                <li>새로 만든 에이전트가 모델에 접근 불가</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>OpenClaw에서 인증(auth)은 에이전트별로 독립적으로 관리됩니다. 새 에이전트를 만들면 main 에이전트의 인증 정보를 자동으로 상속받지 않으므로, 별도로 설정해야 합니다.</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: 에이전트별 인증 설정</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 방법 1: 대상 에이전트에서 직접 인증 실행
+openclaw models auth setup-token --provider anthropic --agent &lt;agent-name&gt;
+
+# 방법 2: main에서 auth-profiles.json 복사
+cp ~/.openclaw/agents/main/auth-profiles.json ~/.openclaw/agents/&lt;agent-name&gt;/
+
+# 방법 3: 환경 변수는 모든 에이전트에 공통 적용
+export ANTHROPIC_API_KEY=sk-ant-...
+openclaw gateway restart</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-medium">보통</span>
+              <h2>OAuth 콜백 실패 (원격 설정)</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">10분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>OAuth 인증 시 브라우저 콜백이 실패</li>
+                <li>'redirect_uri mismatch' 에러</li>
+                <li>원격 서버에서 OAuth 로그인 후 에러 페이지 표시</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>OAuth 콜백 URL은 기본적으로 localhost를 가리킵니다. 원격 서버(VPS, 클라우드)에서 실행 중인 경우, 로컬 브라우저에서 열린 OAuth 페이지가 원격 서버의 콜백 URL에 도달할 수 없습니다.</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: SSH 포트 포워딩 사용</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 로컬 머신에서 원격 서버로 포트 포워딩
+ssh -L 18789:localhost:18789 user@remote-server
+
+# 이제 로컬 브라우저에서 http://localhost:18789 접속 가능
+# OAuth 콜백도 localhost로 돌아오므로 정상 작동</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: setup-token 방식 사용 (SSH 불필요)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 로컬에서 setup-token 생성 후 원격 서버에 붙여넣기
+
+# 로컬에서:
+openclaw models auth setup-token --provider anthropic
+# 출력된 토큰을 복사
+
+# 원격 서버에서:
+openclaw models auth paste-token --provider anthropic
+# 토큰 붙여넣기</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-high">심각</span>
+              <h2>Telegram 인증 실패 (401 Unauthorized)</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">5분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>게이트웨이 로그에 '401 Unauthorized' 에러</li>
+                <li>Telegram 봇이 시작되지 않음</li>
+                <li>'Not Found: method not available' 에러</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>Telegram 봇 토큰이 잘못되었거나, BotFather에서 토큰이 재생성(revoke)되어 기존 토큰이 무효화되었습니다.</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: 봇 토큰 확인 및 재설정</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 1. Telegram에서 @BotFather 에게 메시지
+# /mybots -&gt; 봇 선택 -&gt; API Token
+# 토큰 형식: 123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ
+
+# 2. openclaw.json에서 토큰 업데이트
+openclaw config set channels.telegram.botToken '&lt;new_token&gt;'
+
+# 또는 환경 변수로:
+export TELEGRAM_BOT_TOKEN='123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ'
+
+# 3. 게이트웨이 재시작
+openclaw gateway restart
+
+# 4. 채널 상태 확인
+openclaw channels status --probe</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: 봇 토큰 재생성</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># BotFather에서 새 토큰 발급:
+# 1. @BotFather에게 /revoke 전송
+# 2. 해당 봇 선택
+# 3. 새 토큰 복사
+
+# 주의: 기존 토큰은 즉시 무효화됩니다
+
+# 새 토큰으로 설정 업데이트
+openclaw config set channels.telegram.botToken '&lt;new_token&gt;'
+openclaw gateway restart</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="site-footer">
+        <div class="footer-content">
+          <p>OpenClaw Error Guide v2.0 | 최종 업데이트: 2026-02-08</p>
+          <div class="footer-links">
+            <a href="https://github.com/anthropics/openclaw" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://openclaw.ai" target="_blank" rel="noopener">OpenClaw</a>
+          </div>
+        </div>
+      </footer>
     </main>
   </div>
-
+    <button class="back-to-top" id="backToTop" aria-label="맨 위로">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
   <script>
+    // Copy code
     function copyCode(btn) {
-      const code = btn.nextElementSibling.textContent;
+      const pre = btn.closest('.code-block').querySelector('pre');
+      const code = pre.textContent;
       navigator.clipboard.writeText(code).then(() => {
-        btn.textContent = 'Copied!';
-        setTimeout(() => btn.textContent = 'Copy', 2000);
+        btn.textContent = '완료';
+        setTimeout(() => btn.textContent = '복사', 2000);
+      });
+    }
+
+    // Accordion toggle
+    function toggleAccordion(header) {
+      const item = header.parentElement;
+      const isOpen = item.classList.contains('open');
+      // Close all in same parent
+      item.parentElement.querySelectorAll('.accordion-item.open').forEach(el => {
+        if (el !== item) el.classList.remove('open');
+      });
+      item.classList.toggle('open', !isOpen);
+    }
+
+    // Mobile sidebar
+    const hamburger = document.getElementById('hamburgerBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const closeBtn = document.getElementById('sidebarClose');
+    
+    function openSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+    
+    if (hamburger) hamburger.addEventListener('click', openSidebar);
+    if (overlay) overlay.addEventListener('click', closeSidebar);
+    if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+
+    // Back to top
+    const backToTop = document.getElementById('backToTop');
+    const mainEl = document.querySelector('.main');
+    if (mainEl && backToTop) {
+      mainEl.addEventListener('scroll', () => {
+        backToTop.classList.toggle('show', mainEl.scrollTop > 400);
+      });
+      backToTop.addEventListener('click', () => {
+        mainEl.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // Search
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        document.querySelectorAll('.accordion-item, .search-target').forEach(item => {
+          if (!query) {
+            item.style.display = '';
+            return;
+          }
+          const text = item.textContent.toLowerCase();
+          item.style.display = text.includes(query) ? '' : 'none';
+        });
+        // Also filter category headings on index
+        document.querySelectorAll('.category-section').forEach(sec => {
+          const visible = sec.querySelectorAll('.card:not([style*="display: none"])').length;
+          // keep sections visible if they have matching cards or no filtering applied
+        });
       });
     }
   </script>

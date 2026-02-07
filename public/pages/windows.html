@@ -1,353 +1,1044 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Windows 전용 오류</title>
+  <title>Windows 전용 오류 - OpenClaw Guide</title>
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+    <header class="mobile-header" id="mobileHeader">
+      <button class="hamburger" id="hamburgerBtn" aria-label="메뉴 열기">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <span class="mobile-title">OpenClaw Guide</span>
+    </header><div class="sidebar-overlay" id="sidebarOverlay"></div>
   <div class="layout">
-    <aside class="sidebar">
-      <a href="../index.html" class="sidebar-logo">
-        [CLAW] OpenClaw <span>Guide</span>
-      </a>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="sidebar-logo">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          OpenClaw <span>Guide</span>
+        </a>
+        <button class="sidebar-close" id="sidebarClose" aria-label="메뉴 닫기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
       
       <nav>
         <ul class="sidebar-nav">
-          <li><a href="../index.html">Home</a></li>
+          <li><a href="../index.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            홈
+          </a></li>
         </ul>
         
-        <div class="sidebar-section">Installation</div>
+        <div class="sidebar-section">카테고리</div>
         <ul class="sidebar-nav">
-          <li><a href="windows.html" class="active">1. Windows 전용 오류</a></li><li><a href="macos.html" >2. macOS 전용 오류</a></li><li><a href="linux.html" >3. Linux 전용 오류</a></li><li><a href="virtualenv.html" >4. 가상환경 설정 오류</a></li><li><a href="common.html" >5. 공통 오류</a></li><li><a href="oauth.html" >6. 인증 (OAuth) 오류</a></li><li><a href="gateway.html" >7. 게이트웨이 접속 오류</a></li><li><a href="channels.html" >8. 채널 통합 오류</a></li><li><a href="client.html" >9. 클라이언트 연결 오류</a></li>
+          <li><a href="windows.html" class="active">1. Windows 전용 오류</a></li>
+          <li><a href="macos.html">2. macOS 전용 오류</a></li>
+          <li><a href="linux.html">3. Linux 전용 오류</a></li>
+          <li><a href="virtualenv.html">4. 가상환경 설정 오류</a></li>
+          <li><a href="common.html">5. 공통 오류</a></li>
+          <li><a href="oauth.html">6. 인증 (OAuth) 오류</a></li>
+          <li><a href="gateway.html">7. 게이트웨이 접속 오류</a></li>
+          <li><a href="channels.html">8. 채널 통합 오류</a></li>
+          <li><a href="client.html">9. 클라이언트 연결 오류</a></li>
+        </ul>
+        
+        <div class="sidebar-section">리소스</div>
+        <ul class="sidebar-nav">
+          <li><a href="https://github.com/anthropics/openclaw" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            GitHub
+          </a></li>
         </ul>
       </nav>
     </aside>
-
     <main class="main">
       <h1>Windows 전용 오류</h1>
+      <p class="page-subtitle">10개의 오류 유형 | 총 20개의 해결 방법</p>
       
-      <div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
-          <h2>PowerShell 실행 정책 (Execution Policy) 차단</h2>
-          
-          <div class="hero-badges" style="margin-bottom: 1.5rem;">
-            <span class="badge badge-info">CRITICAL</span>
-            <span class="badge">5 min</span>
-          </div>
+      <div class="search-bar">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="오류 검색..." class="search-input">
+      </div>
 
-          <h3>Symptoms</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 0.5rem; color: var(--text-secondary);">• 설정 오류 발생</li>
-          </ul>
-
-          <h3>Root Cause</h3>
-          <div class="alert alert-info">
-            <p>Windows PowerShell 기본 설정이 스크립트 실행을 차단함</p>
-          </div>
-
-          <h3>Solutions</h3>
-          
-            <div class="step">
-              <h4>1: 다시 시도</h4>
-              <p>Trust Level: ★☆☆</p>
-              <div class="code-header">
-                <span>Code</span>
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              </div>
-              <pre><code># 설정 확인 후 다시 시도</code></pre>
-              
+      <div class="accordion">
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-high">심각</span>
+              <h2>PowerShell 실행 정책 (Execution Policy) 차단</h2>
             </div>
-          
-        </div><div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
-          <h2>winget 소스 손상 (WinGet Error)</h2>
-          
-          <div class="hero-badges" style="margin-bottom: 1.5rem;">
-            <span class="badge badge-info">HIGH</span>
-            <span class="badge">5 min</span>
-          </div>
-
-          <h3>Symptoms</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 0.5rem; color: var(--text-secondary);">• 설정 오류 발생</li>
-          </ul>
-
-          <h3>Root Cause</h3>
-          <div class="alert alert-info">
-            <p>WinGet 패키지 매니저 내부 오류 (Microsoft 문제)</p>
-          </div>
-
-          <h3>Solutions</h3>
-          
-            <div class="step">
-              <h4>1: 다시 시도</h4>
-              <p>Trust Level: ★☆☆</p>
-              <div class="code-header">
-                <span>Code</span>
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              </div>
-              <pre><code># 설정 확인 후 다시 시도</code></pre>
-              
+            <div class="accordion-meta">
+              <span class="solve-time">3분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
-          
-        </div><div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
-          <h2>Node.js 설치되었는데 "command not found"</h2>
-          
-          <div class="hero-badges" style="margin-bottom: 1.5rem;">
-            <span class="badge badge-info">HIGH</span>
-            <span class="badge">5 min</span>
           </div>
-
-          <h3>Symptoms</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 0.5rem; color: var(--text-secondary);">• 설정 오류 발생</li>
-          </ul>
-
-          <h3>Root Cause</h3>
-          <div class="alert alert-info">
-            <p>Node.js 설치는 되었지만 PATH 환경 변수에 없음</p>
-          </div>
-
-          <h3>Solutions</h3>
-          
-            <div class="step">
-              <h4>1: 다시 시도</h4>
-              <p>Trust Level: ★☆☆</p>
-              <div class="code-header">
-                <span>Code</span>
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              </div>
-              <pre><code># 설정 확인 후 다시 시도</code></pre>
-              
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>PowerShell에서 openclaw 명령어 실행 시 빨간색 오류 메시지 출력</li>
+                <li>'File cannot be loaded because running scripts is disabled on this system' 메시지</li>
+                <li>install.ps1 스크립트 실행 불가</li>
+              </ul>
             </div>
-          
-        </div><div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
-          <h2>WSL (Windows Subsystem for Linux) 관련</h2>
-          
-          <div class="hero-badges" style="margin-bottom: 1.5rem;">
-            <span class="badge badge-info">MEDIUM</span>
-            <span class="badge">5 min</span>
-          </div>
 
-          <h3>Symptoms</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 0.5rem; color: var(--text-secondary);">• 설정 오류 발생</li>
-          </ul>
-
-          <h3>Root Cause</h3>
-          <div class="alert alert-info">
-            <p>WSL2 미설치 또는 활성화 안 됨</p>
-          </div>
-
-          <h3>Solutions</h3>
-          
-            <div class="step">
-              <h4>1: 다시 시도</h4>
-              <p>Trust Level: ★☆☆</p>
-              <div class="code-header">
-                <span>Code</span>
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>Windows PowerShell의 기본 실행 정책이 'Restricted'로 설정되어 외부 스크립트 실행을 차단합니다. 보안 목적으로 기본 설정이 이렇게 되어 있으며, npm 전역 설치 후 openclaw CLI를 실행할 때 .ps1 파일 실행이 필요합니다.</p>
               </div>
-              <pre><code># 설정 확인 후 다시 시도</code></pre>
-              
             </div>
-          
-        </div><div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
-          <h2>Node.js sharp 모듈 빌드 실패</h2>
-          
-          <div class="hero-badges" style="margin-bottom: 1.5rem;">
-            <span class="badge badge-info">CRITICAL</span>
-            <span class="badge">5 min</span>
-          </div>
 
-          <h3>Symptoms</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 0.5rem; color: var(--text-secondary);">• 설정 오류 발생</li>
-          </ul>
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: 현재 사용자만 정책 변경 (권장)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># PowerShell을 관리자 권한으로 실행한 뒤:
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
-          <h3>Root Cause</h3>
-          <div class="alert alert-info">
-            <p>Node v22.22.0+ 에서 Xcode 빌드 도구 호환성 문제</p>
-          </div>
+# 변경 확인
+Get-ExecutionPolicy -List
 
-          <h3>Solutions</h3>
-          
-            <div class="step">
-              <h4>1: 다시 시도</h4>
-              <p>Trust Level: ★☆☆</p>
-              <div class="code-header">
-                <span>Code</span>
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+# 이후 openclaw 다시 실행
+openclaw --version</code></pre>
+                </div>
               </div>
-              <pre><code># 설정 확인 후 다시 시도</code></pre>
-              
-            </div>
-          
-        </div><div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
-          <h2>apt/yum 패키지 관리자로 Node.js 설치 문제</h2>
-          
-          <div class="hero-badges" style="margin-bottom: 1.5rem;">
-            <span class="badge badge-info">HIGH</span>
-            <span class="badge">5 min</span>
-          </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: 현재 세션에서만 임시 허용</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 현재 PowerShell 세션에서만 스크립트 실행 허용 (재시작 시 원래대로)
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
 
-          <h3>Symptoms</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 0.5rem; color: var(--text-secondary);">• 설정 오류 발생</li>
-          </ul>
-
-          <h3>Root Cause</h3>
-          <div class="alert alert-info">
-            <p>기본 저장소에 없음 (너무 오래된 버전만)</p>
-          </div>
-
-          <h3>Solutions</h3>
-          
-            <div class="step">
-              <h4>1: 다시 시도</h4>
-              <p>Trust Level: ★☆☆</p>
-              <div class="code-header">
-                <span>Code</span>
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+# 바로 설치 스크립트 실행
+iwr -useb https://openclaw.ai/install.ps1 | iex</code></pre>
+                </div>
               </div>
-              <pre><code># 설정 확인 후 다시 시도</code></pre>
-              
-            </div>
-          
-        </div><div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
-          <h2>WSL2 커널 업데이트 필요</h2>
-          
-          <div class="hero-badges" style="margin-bottom: 1.5rem;">
-            <span class="badge badge-info">HIGH</span>
-            <span class="badge">5 min</span>
-          </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 C: WSL2 사용 (근본적 해결)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># Windows에서 PowerShell 문제를 피하려면 WSL2 사용을 권장합니다
+wsl --install
 
-          <h3>Symptoms</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 0.5rem; color: var(--text-secondary);">• 설정 오류 발생</li>
-          </ul>
-
-          <h3>Root Cause</h3>
-          <div class="alert alert-info">
-            <p>WSL2 커널이 너무 오래됨</p>
-          </div>
-
-          <h3>Solutions</h3>
-          
-            <div class="step">
-              <h4>1: 다시 시도</h4>
-              <p>Trust Level: ★☆☆</p>
-              <div class="code-header">
-                <span>Code</span>
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+# WSL 재부팅 후 Ubuntu에서:
+curl -fsSL https://openclaw.ai/install.sh | bash</code></pre>
+                </div>
               </div>
-              <pre><code># 설정 확인 후 다시 시도</code></pre>
-              
             </div>
-          
-        </div><div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
-          <h2>WSL2 Ubuntu 설치 후 Node 못 찾음</h2>
-          
-          <div class="hero-badges" style="margin-bottom: 1.5rem;">
-            <span class="badge badge-info">CRITICAL</span>
-            <span class="badge">5 min</span>
           </div>
-
-          <h3>Symptoms</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 0.5rem; color: var(--text-secondary);">• 설정 오류 발생</li>
-          </ul>
-
-          <h3>Root Cause</h3>
-          <div class="alert alert-info">
-            <p>WSL Ubuntu에 Node.js 미설치</p>
-          </div>
-
-          <h3>Solutions</h3>
-          
-            <div class="step">
-              <h4>1: 다시 시도</h4>
-              <p>Trust Level: ★☆☆</p>
-              <div class="code-header">
-                <span>Code</span>
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              </div>
-              <pre><code># 설정 확인 후 다시 시도</code></pre>
-              
-            </div>
-          
-        </div><div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
-          <h2>WSL과 Windows 간 Path 혼동</h2>
-          
-          <div class="hero-badges" style="margin-bottom: 1.5rem;">
-            <span class="badge badge-info">HIGH</span>
-            <span class="badge">5 min</span>
-          </div>
-
-          <h3>Symptoms</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 0.5rem; color: var(--text-secondary);">• 설정 오류 발생</li>
-          </ul>
-
-          <h3>Root Cause</h3>
-          <div class="alert alert-info">
-            <p>Windows 경로 vs Linux 경로 혼동</p>
-          </div>
-
-          <h3>Solutions</h3>
-          
-            <div class="step">
-              <h4>1: 다시 시도</h4>
-              <p>Trust Level: ★☆☆</p>
-              <div class="code-header">
-                <span>Code</span>
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              </div>
-              <pre><code># 설정 확인 후 다시 시도</code></pre>
-              
-            </div>
-          
-        </div><div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
-          <h2>WSL에서 시간대(Timezone) 불일치</h2>
-          
-          <div class="hero-badges" style="margin-bottom: 1.5rem;">
-            <span class="badge badge-info">MEDIUM</span>
-            <span class="badge">5 min</span>
-          </div>
-
-          <h3>Symptoms</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 0.5rem; color: var(--text-secondary);">• 설정 오류 발생</li>
-          </ul>
-
-          <h3>Root Cause</h3>
-          <div class="alert alert-info">
-            <p>WSL과 Windows의 타임존 불일치</p>
-          </div>
-
-          <h3>Solutions</h3>
-          
-            <div class="step">
-              <h4>1: 다시 시도</h4>
-              <p>Trust Level: ★☆☆</p>
-              <div class="code-header">
-                <span>Code</span>
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              </div>
-              <pre><code># 설정 확인 후 다시 시도</code></pre>
-              
-            </div>
-          
         </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-medium">보통</span>
+              <h2>winget 소스 손상 (WinGet Error)</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">5분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>winget install 명령어 실행 시 'Failed to update source' 오류</li>
+                <li>'An unexpected error occurred while executing the command' 메시지</li>
+                <li>winget search 결과가 비정상적으로 적거나 없음</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>WinGet의 내부 SQLite 데이터베이스가 손상되었거나, Microsoft Store 앱 패키지 캐시에 문제가 있습니다. Windows 업데이트 후 또는 네트워크 문제로 인해 발생할 수 있습니다.</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: winget 소스 초기화</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># winget 소스를 완전히 초기화합니다
+winget source reset --force
+
+# 소스 업데이트 확인
+winget source update
+
+# Node.js 설치 재시도
+winget install OpenJS.NodeJS.LTS</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: Microsoft Store에서 App Installer 업데이트</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># Microsoft Store를 열어 'App Installer'를 검색하여 업데이트합니다
+# 또는 PowerShell에서:
+Add-AppxPackage -RegisterByFamilyName -MainPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe
+
+# 이후 winget 다시 시도
+winget install OpenJS.NodeJS.LTS</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 C: Node.js 공식 인스톨러 사용 (대안)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># winget이 계속 문제라면, Node.js 공식 사이트에서 직접 다운로드:
+# https://nodejs.org/en/download 에서 Windows Installer (.msi) 다운로드
+
+# 설치 후 새 터미널을 열고 확인
+node --version
+npm --version</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-medium">보통</span>
+              <h2>Node.js 설치되었는데 &quot;command not found&quot;</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">5분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>'node' is not recognized as an internal or external command</li>
+                <li>PowerShell에서 node --version 실행 시 오류</li>
+                <li>설치 직후에는 작동하지만, 새 터미널에서 안 됨</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>Node.js가 설치되었지만, 설치 경로가 시스템 PATH 환경 변수에 추가되지 않았습니다. nvm-windows를 사용한 경우 터미널을 재시작해야 PATH가 갱신됩니다.</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: 터미널 재시작 및 PATH 확인</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 1. 모든 터미널 창을 닫고 새로 엽니다
+
+# 2. PATH에서 Node.js 경로 확인
+$env:PATH -split ';' | Select-String 'node'
+
+# 3. 일반적으로 Node.js는 아래 경로에 설치됩니다
+# C:\Program Files\nodejs\
+
+# 4. 수동으로 PATH에 추가 (영구)
+[Environment]::SetEnvironmentVariable('PATH', $env:PATH + ';C:\Program Files\nodejs\', 'User')</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: nvm-windows 사용 시 버전 선택</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># nvm-windows를 사용 중이라면 사용할 버전을 지정해야 합니다
+nvm list
+nvm use 22
+
+# 확인
+node --version</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-low">낮음</span>
+              <h2>WSL (Windows Subsystem for Linux) 관련</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">15분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>'wsl' is not recognized 오류</li>
+                <li>wsl --install 실행 시 'Virtual Machine Platform' 관련 오류</li>
+                <li>WSL2 배포판이 시작되지 않음</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>WSL2가 설치되지 않았거나, 가상화 기능이 BIOS/UEFI에서 비활성화되어 있습니다. OpenClaw 공식 문서에서도 Windows에서는 WSL2를 강력히 권장합니다.</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: WSL2 설치 (Windows 10 v2004+)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 관리자 권한 PowerShell에서 WSL 설치
+wsl --install
+
+# 재부팅 필요합니다
+# 재부팅 후 Ubuntu가 자동으로 설정됩니다
+
+# WSL 버전 확인
+wsl --list --verbose</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: 가상화 확인 및 활성화</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 가상화가 활성화되어 있는지 확인
+systeminfo | findstr /i &quot;Hyper-V&quot;
+
+# 비활성화된 경우:
+# 1. BIOS/UEFI 진입 (재부팅 시 F2/DEL 키)
+# 2. Intel VT-x 또는 AMD-V 활성화
+# 3. 저장 후 재부팅
+
+# Windows 기능 수동 활성화
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+
+# 재부팅 후 기본 버전을 WSL2로 설정
+wsl --set-default-version 2</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-high">심각</span>
+              <h2>Node.js sharp 모듈 빌드 실패</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">10분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>npm install -g openclaw 시 sharp 관련 빌드 에러</li>
+                <li>'sharp: Installation error: Could not install from prebuilt binaries'</li>
+                <li>node-gyp rebuild 실패 메시지</li>
+                <li>'Please add node-gyp to your dependencies' 경고</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>sharp 모듈은 네이티브 이미지 처리 라이브러리(libvips)를 사용합니다. 시스템에 맞는 prebuilt 바이너리를 찾지 못하면 소스에서 빌드를 시도하는데, C++ 빌드 도구가 없으면 실패합니다.</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: prebuilt 바이너리 강제 사용 (권장)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 글로벌 libvips를 무시하고 prebuilt 바이너리 강제 사용
+set SHARP_IGNORE_GLOBAL_LIBVIPS=1
+npm install -g openclaw@latest
+
+# PowerShell의 경우:
+$env:SHARP_IGNORE_GLOBAL_LIBVIPS=1
+npm install -g openclaw@latest</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: Windows 빌드 도구 설치</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># Visual Studio Build Tools 설치 (C++ 컴파일러 포함)
+npm install -g windows-build-tools
+
+# 또는 Visual Studio Installer에서 'C++ 빌드 도구' 선택 설치
+
+# node-gyp 전역 설치
+npm install -g node-gyp
+
+# 재시도
+npm install -g openclaw@latest</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-medium">보통</span>
+              <h2>apt/yum 패키지 관리자로 Node.js 설치 문제</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">10분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>apt install nodejs 후 node --version이 v12 등 매우 낮은 버전</li>
+                <li>OpenClaw 실행 시 'Unsupported Node version' 에러</li>
+                <li>WSL Ubuntu에서 기본 apt로 설치한 Node가 너무 오래됨</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>Ubuntu/Debian 기본 저장소의 Node.js는 매우 오래된 버전(v12~v18)입니다. OpenClaw은 Node 22 이상을 요구하므로, NodeSource 또는 nvm을 통해 최신 버전을 설치해야 합니다.</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: nvm으로 최신 Node 설치 (권장)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 기존 Node 제거
+sudo apt remove nodejs npm -y
+
+# nvm 설치
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+source ~/.bashrc
+
+# Node 22 LTS 설치
+nvm install 22
+nvm use 22
+nvm alias default 22
+
+# 확인
+node --version  # v22.x.x 이상</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: NodeSource 저장소 사용</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># NodeSource에서 Node 22.x 저장소 추가
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# 확인
+node --version
+npm --version</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-medium">보통</span>
+              <h2>WSL2 커널 업데이트 필요</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">5분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>'WSL 2 requires an update to its kernel component' 메시지</li>
+                <li>WSL 배포판 실행 시 에러 코드 표시</li>
+                <li>wsl --update 실행 시 실패</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>WSL2 Linux 커널이 최신 버전으로 업데이트되지 않았습니다. Windows 업데이트와 별도로 WSL 커널 업데이트가 필요할 수 있습니다.</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: WSL 커널 업데이트</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 관리자 권한 PowerShell에서:
+wsl --update
+
+# 업데이트 후 WSL 재시작
+wsl --shutdown
+wsl
+
+# 그래도 안 되면 수동 커널 패키지 설치:
+# https://aka.ms/wsl2kernel 에서 다운로드 후 실행</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-high">심각</span>
+              <h2>WSL2 Ubuntu 설치 후 Node 못 찾음</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">10분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>WSL Ubuntu에서 'node: command not found'</li>
+                <li>Windows에서는 Node가 되지만 WSL에서는 안 됨</li>
+                <li>which node 결과 없음</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>Windows에 설치된 Node.js와 WSL의 Linux 환경은 별개입니다. WSL 내부에서 별도로 Node.js를 설치해야 합니다. Windows PATH가 WSL로 전달되더라도, Windows용 .exe를 Linux에서 실행하면 호환성 문제가 발생합니다.</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: WSL 내부에 Node.js 설치 (nvm 권장)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># WSL Ubuntu 내부에서 실행
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+source ~/.bashrc
+
+nvm install 22
+nvm alias default 22
+
+# OpenClaw 설치
+npm install -g openclaw@latest
+openclaw onboard --install-daemon</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: OpenClaw 인스톨러 스크립트 사용</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># WSL 내부에서 인스톨러가 Node 설치까지 자동 처리
+curl -fsSL https://openclaw.ai/install.sh | bash</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-medium">보통</span>
+              <h2>WSL과 Windows 간 Path 혼동</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">3분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>WSL에서 Windows 경로(C:\Users\...)를 사용하면 에러</li>
+                <li>파일 경로에 백슬래시(\) 포함 시 오류</li>
+                <li>openclaw config에서 Windows 경로 사용 시 동작 안 함</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>WSL에서 Windows 파일 시스템은 /mnt/c/ 아래에 마운트됩니다. Windows 스타일 경로(C:\Users\...)는 WSL Linux 환경에서 인식되지 않으며, 항상 Linux 스타일 경로를 사용해야 합니다.</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: 경로 변환 사용</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># Windows 경로를 WSL 경로로 변환하는 도구:
+wslpath 'C:\Users\username\Documents'
+# 결과: /mnt/c/Users/username/Documents
+
+# 반대 방향 변환:
+wslpath -w /home/user/project
+# 결과: \\wsl$\Ubuntu\home\user\project</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: WSL 홈 디렉토리에서 작업 (권장)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 성능과 호환성을 위해 WSL 네이티브 파일 시스템 사용을 권장
+# /mnt/c/ 접근은 느리고 권한 문제 발생 가능
+
+cd ~
+mkdir -p projects
+# OpenClaw workspace도 WSL 내부에 설정
+# ~/.openclaw/ 디렉토리가 자동으로 사용됩니다</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-low">낮음</span>
+              <h2>WSL에서 시간대(Timezone) 불일치</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">2분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>WSL에서 date 명령어 결과가 실제 시간과 다름</li>
+                <li>로그 타임스탬프가 일치하지 않음</li>
+                <li>OpenClaw 스케줄 관련 기능이 시간이 맞지 않음</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>WSL은 기본적으로 UTC를 사용하며, Windows의 로컬 타임존을 자동으로 따르지 않을 수 있습니다.</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: WSL 타임존 동기화 설정</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># /etc/wsl.conf 파일을 편집하여 자동 시간 동기화 활성화
+sudo tee /etc/wsl.conf &lt;&lt; 'EOF'
+[automount]
+enabled = true
+[interop]
+enabled = true
+[boot]
+systemd = true
+EOF
+
+# 타임존 수동 설정 (예: 한국)
+sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+
+# WSL 재시작 (PowerShell에서)
+# wsl --shutdown
+# wsl</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="site-footer">
+        <div class="footer-content">
+          <p>OpenClaw Error Guide v2.0 | 최종 업데이트: 2026-02-08</p>
+          <div class="footer-links">
+            <a href="https://github.com/anthropics/openclaw" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://openclaw.ai" target="_blank" rel="noopener">OpenClaw</a>
+          </div>
+        </div>
+      </footer>
     </main>
   </div>
-
+    <button class="back-to-top" id="backToTop" aria-label="맨 위로">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
   <script>
+    // Copy code
     function copyCode(btn) {
-      const code = btn.nextElementSibling.textContent;
+      const pre = btn.closest('.code-block').querySelector('pre');
+      const code = pre.textContent;
       navigator.clipboard.writeText(code).then(() => {
-        btn.textContent = 'Copied!';
-        setTimeout(() => btn.textContent = 'Copy', 2000);
+        btn.textContent = '완료';
+        setTimeout(() => btn.textContent = '복사', 2000);
+      });
+    }
+
+    // Accordion toggle
+    function toggleAccordion(header) {
+      const item = header.parentElement;
+      const isOpen = item.classList.contains('open');
+      // Close all in same parent
+      item.parentElement.querySelectorAll('.accordion-item.open').forEach(el => {
+        if (el !== item) el.classList.remove('open');
+      });
+      item.classList.toggle('open', !isOpen);
+    }
+
+    // Mobile sidebar
+    const hamburger = document.getElementById('hamburgerBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const closeBtn = document.getElementById('sidebarClose');
+    
+    function openSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+    
+    if (hamburger) hamburger.addEventListener('click', openSidebar);
+    if (overlay) overlay.addEventListener('click', closeSidebar);
+    if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+
+    // Back to top
+    const backToTop = document.getElementById('backToTop');
+    const mainEl = document.querySelector('.main');
+    if (mainEl && backToTop) {
+      mainEl.addEventListener('scroll', () => {
+        backToTop.classList.toggle('show', mainEl.scrollTop > 400);
+      });
+      backToTop.addEventListener('click', () => {
+        mainEl.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // Search
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        document.querySelectorAll('.accordion-item, .search-target').forEach(item => {
+          if (!query) {
+            item.style.display = '';
+            return;
+          }
+          const text = item.textContent.toLowerCase();
+          item.style.display = text.includes(query) ? '' : 'none';
+        });
+        // Also filter category headings on index
+        document.querySelectorAll('.category-section').forEach(sec => {
+          const visible = sec.querySelectorAll('.card:not([style*="display: none"])').length;
+          // keep sections visible if they have matching cards or no filtering applied
+        });
       });
     }
   </script>

@@ -1,139 +1,321 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OpenClaw Installation Guide</title>
+  <title>OpenClaw 종합 오류 해결 가이드 - OpenClaw Guide</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <header class="mobile-header" id="mobileHeader">
+      <button class="hamburger" id="hamburgerBtn" aria-label="메뉴 열기">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <span class="mobile-title">OpenClaw Guide</span>
+    </header><div class="sidebar-overlay" id="sidebarOverlay"></div>
   <div class="layout">
-    <aside class="sidebar">
-      <a href="index.html" class="sidebar-logo">
-        [CLAW] OpenClaw <span>Guide</span>
-      </a>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="sidebar-logo">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          OpenClaw <span>Guide</span>
+        </a>
+        <button class="sidebar-close" id="sidebarClose" aria-label="메뉴 닫기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
       
       <nav>
         <ul class="sidebar-nav">
-          <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="index.html" class="active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            홈
+          </a></li>
         </ul>
         
-        <div class="sidebar-section">Installation</div>
+        <div class="sidebar-section">카테고리</div>
         <ul class="sidebar-nav">
-          <li><a href="pages/windows.html">1. Windows 전용 오류</a></li><li><a href="pages/macos.html">2. macOS 전용 오류</a></li><li><a href="pages/linux.html">3. Linux 전용 오류</a></li><li><a href="pages/virtualenv.html">4. 가상환경 설정 오류</a></li><li><a href="pages/common.html">5. 공통 오류</a></li><li><a href="pages/oauth.html">6. 인증 (OAuth) 오류</a></li><li><a href="pages/gateway.html">7. 게이트웨이 접속 오류</a></li><li><a href="pages/channels.html">8. 채널 통합 오류</a></li><li><a href="pages/client.html">9. 클라이언트 연결 오류</a></li>
+          <li><a href="pages/windows.html">1. Windows 전용 오류</a></li>
+          <li><a href="pages/macos.html">2. macOS 전용 오류</a></li>
+          <li><a href="pages/linux.html">3. Linux 전용 오류</a></li>
+          <li><a href="pages/virtualenv.html">4. 가상환경 설정 오류</a></li>
+          <li><a href="pages/common.html">5. 공통 오류</a></li>
+          <li><a href="pages/oauth.html">6. 인증 (OAuth) 오류</a></li>
+          <li><a href="pages/gateway.html">7. 게이트웨이 접속 오류</a></li>
+          <li><a href="pages/channels.html">8. 채널 통합 오류</a></li>
+          <li><a href="pages/client.html">9. 클라이언트 연결 오류</a></li>
         </ul>
         
-        <div class="sidebar-section">Resources</div>
+        <div class="sidebar-section">리소스</div>
         <ul class="sidebar-nav">
-          <li><a href="https://docs.openclaw.ai" target="_blank">Official Docs</a></li>
-          <li><a href="https://github.com/openclaw/openclaw" target="_blank">GitHub</a></li>
+          <li><a href="https://github.com/anthropics/openclaw" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            GitHub
+          </a></li>
         </ul>
       </nav>
     </aside>
-
     <main class="main">
       <div class="hero">
-        <h1>OpenClaw Installation Guide</h1>
+        <h1>OpenClaw 오류 해결 가이드</h1>
         <p class="lead">
-          Complete installation and troubleshooting reference for OpenClaw setup and configuration.
+          OpenClaw 설치 및 설정에서 발생하는 모든 오류에 대한 종합 해결 가이드입니다.
+          실제 검증된 해결 방법과 단계별 명령어를 제공합니다.
         </p>
         <div class="hero-badges">
-          <span class="badge badge-info">39 Error Types</span>
-          <span class="badge">100+ Solutions</span>
+          <span class="badge badge-info">39개 오류 유형</span>
+          <span class="badge badge-info">89개 해결 방법</span>
+          <span class="badge">v2.0</span>
         </div>
       </div>
 
-      <h2>Quick Overview</h2>
+      <div class="search-bar">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="오류 검색 (예: EACCES, PowerShell, Telegram...)" class="search-input">
+      </div>
+
+      <h2>카테고리</h2>
       
       <div class="card-grid">
-        <div class="card">
+        <a href="pages/windows.html" class="card search-target">
+          <div class="card-header-row">
             <h4>Windows 전용 오류</h4>
-            <p>10 error types with multiple solutions for each.</p>
-          </div><div class="card">
-            <h4>macOS 전용 오류</h4>
-            <p>4 error types with multiple solutions for each.</p>
-          </div><div class="card">
-            <h4>Linux 전용 오류</h4>
-            <p>2 error types with multiple solutions for each.</p>
-          </div><div class="card">
-            <h4>가상환경 설정 오류</h4>
-            <p>3 error types with multiple solutions for each.</p>
-          </div><div class="card">
-            <h4>공통 오류</h4>
-            <p>6 error types with multiple solutions for each.</p>
-          </div><div class="card">
-            <h4>인증 (OAuth) 오류</h4>
-            <p>6 error types with multiple solutions for each.</p>
-          </div><div class="card">
-            <h4>게이트웨이 접속 오류</h4>
-            <p>5 error types with multiple solutions for each.</p>
-          </div><div class="card">
-            <h4>채널 통합 오류</h4>
-            <p>2 error types with multiple solutions for each.</p>
-          </div><div class="card">
-            <h4>클라이언트 연결 오류</h4>
-            <p>1 error types with multiple solutions for each.</p>
+            <span class="badge badge-high">3 심각</span>
           </div>
+          <p>10개 오류 | 20개 해결 방법</p>
+        </a>
+        <a href="pages/macos.html" class="card search-target">
+          <div class="card-header-row">
+            <h4>macOS 전용 오류</h4>
+            
+          </div>
+          <p>4개 오류 | 10개 해결 방법</p>
+        </a>
+        <a href="pages/linux.html" class="card search-target">
+          <div class="card-header-row">
+            <h4>Linux 전용 오류</h4>
+            <span class="badge badge-high">1 심각</span>
+          </div>
+          <p>2개 오류 | 5개 해결 방법</p>
+        </a>
+        <a href="pages/virtualenv.html" class="card search-target">
+          <div class="card-header-row">
+            <h4>가상환경 설정 오류</h4>
+            <span class="badge badge-high">1 심각</span>
+          </div>
+          <p>3개 오류 | 7개 해결 방법</p>
+        </a>
+        <a href="pages/common.html" class="card search-target">
+          <div class="card-header-row">
+            <h4>공통 오류</h4>
+            <span class="badge badge-high">2 심각</span>
+          </div>
+          <p>6개 오류 | 11개 해결 방법</p>
+        </a>
+        <a href="pages/oauth.html" class="card search-target">
+          <div class="card-header-row">
+            <h4>인증 (OAuth) 오류</h4>
+            <span class="badge badge-high">3 심각</span>
+          </div>
+          <p>6개 오류 | 11개 해결 방법</p>
+        </a>
+        <a href="pages/gateway.html" class="card search-target">
+          <div class="card-header-row">
+            <h4>게이트웨이 접속 오류</h4>
+            <span class="badge badge-high">1 심각</span>
+          </div>
+          <p>5개 오류 | 11개 해결 방법</p>
+        </a>
+        <a href="pages/channels.html" class="card search-target">
+          <div class="card-header-row">
+            <h4>채널 통합 오류</h4>
+            <span class="badge badge-high">1 심각</span>
+          </div>
+          <p>2개 오류 | 5개 해결 방법</p>
+        </a>
+        <a href="pages/client.html" class="card search-target">
+          <div class="card-header-row">
+            <h4>클라이언트 연결 오류</h4>
+            
+          </div>
+          <p>1개 오류 | 3개 해결 방법</p>
+        </a>
       </div>
 
-      <h2>Get Started</h2>
-      
-      <div class="alert alert-info">
-        <div class="alert-title">Start Learning</div>
-        <p>Select a category from the left sidebar to begin exploring error solutions.</p>
-      </div>
-
-      <h2>Statistics</h2>
+      <h2>전체 통계</h2>
       
       <table>
         <thead>
           <tr>
-            <th>Category</th>
-            <th>Errors</th>
-            <th>Solutions</th>
+            <th>카테고리</th>
+            <th>오류 수</th>
+            <th>해결 방법</th>
+            <th>심각</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-              <td><a href="pages/windows.html">Windows 전용 오류</a></td>
-              <td>10</td>
-              <td>10</td>
-            </tr><tr>
-              <td><a href="pages/macos.html">macOS 전용 오류</a></td>
-              <td>4</td>
-              <td>4</td>
-            </tr><tr>
-              <td><a href="pages/linux.html">Linux 전용 오류</a></td>
-              <td>2</td>
-              <td>2</td>
-            </tr><tr>
-              <td><a href="pages/virtualenv.html">가상환경 설정 오류</a></td>
-              <td>3</td>
-              <td>3</td>
-            </tr><tr>
-              <td><a href="pages/common.html">공통 오류</a></td>
-              <td>6</td>
-              <td>6</td>
-            </tr><tr>
-              <td><a href="pages/oauth.html">인증 (OAuth) 오류</a></td>
-              <td>6</td>
-              <td>6</td>
-            </tr><tr>
-              <td><a href="pages/gateway.html">게이트웨이 접속 오류</a></td>
-              <td>5</td>
-              <td>5</td>
-            </tr><tr>
-              <td><a href="pages/channels.html">채널 통합 오류</a></td>
-              <td>2</td>
-              <td>2</td>
-            </tr><tr>
-              <td><a href="pages/client.html">클라이언트 연결 오류</a></td>
-              <td>1</td>
-              <td>1</td>
-            </tr>
+            <td><a href="pages/windows.html">Windows 전용 오류</a></td>
+            <td>10</td>
+            <td>20</td>
+            <td><span class="badge badge-high">3</span></td>
+          </tr>
+          <tr>
+            <td><a href="pages/macos.html">macOS 전용 오류</a></td>
+            <td>4</td>
+            <td>10</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td><a href="pages/linux.html">Linux 전용 오류</a></td>
+            <td>2</td>
+            <td>5</td>
+            <td><span class="badge badge-high">1</span></td>
+          </tr>
+          <tr>
+            <td><a href="pages/virtualenv.html">가상환경 설정 오류</a></td>
+            <td>3</td>
+            <td>7</td>
+            <td><span class="badge badge-high">1</span></td>
+          </tr>
+          <tr>
+            <td><a href="pages/common.html">공통 오류</a></td>
+            <td>6</td>
+            <td>11</td>
+            <td><span class="badge badge-high">2</span></td>
+          </tr>
+          <tr>
+            <td><a href="pages/oauth.html">인증 (OAuth) 오류</a></td>
+            <td>6</td>
+            <td>11</td>
+            <td><span class="badge badge-high">3</span></td>
+          </tr>
+          <tr>
+            <td><a href="pages/gateway.html">게이트웨이 접속 오류</a></td>
+            <td>5</td>
+            <td>11</td>
+            <td><span class="badge badge-high">1</span></td>
+          </tr>
+          <tr>
+            <td><a href="pages/channels.html">채널 통합 오류</a></td>
+            <td>2</td>
+            <td>5</td>
+            <td><span class="badge badge-high">1</span></td>
+          </tr>
+          <tr>
+            <td><a href="pages/client.html">클라이언트 연결 오류</a></td>
+            <td>1</td>
+            <td>3</td>
+            <td>-</td>
+          </tr>
         </tbody>
       </table>
+
+      <div class="alert alert-info">
+        <div class="alert-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;vertical-align:middle;margin-right:6px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          빠른 진단 방법
+        </div>
+        <p>문제 발생 시 아래 명령어를 순서대로 실행해보세요:</p>
+        <div class="code-block" style="margin-top:0.75rem">
+          <div class="code-header">
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>openclaw status          # 전체 상태 확인
+openclaw doctor          # 설정 문제 진단
+openclaw logs --follow   # 실시간 로그 확인</code></pre>
+        </div>
+      </div>
+      <footer class="site-footer">
+        <div class="footer-content">
+          <p>OpenClaw Error Guide v2.0 | 최종 업데이트: 2026-02-08</p>
+          <div class="footer-links">
+            <a href="https://github.com/anthropics/openclaw" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://openclaw.ai" target="_blank" rel="noopener">OpenClaw</a>
+          </div>
+        </div>
+      </footer>
     </main>
   </div>
+    <button class="back-to-top" id="backToTop" aria-label="맨 위로">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+  <script>
+    // Copy code
+    function copyCode(btn) {
+      const pre = btn.closest('.code-block').querySelector('pre');
+      const code = pre.textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '완료';
+        setTimeout(() => btn.textContent = '복사', 2000);
+      });
+    }
+
+    // Accordion toggle
+    function toggleAccordion(header) {
+      const item = header.parentElement;
+      const isOpen = item.classList.contains('open');
+      // Close all in same parent
+      item.parentElement.querySelectorAll('.accordion-item.open').forEach(el => {
+        if (el !== item) el.classList.remove('open');
+      });
+      item.classList.toggle('open', !isOpen);
+    }
+
+    // Mobile sidebar
+    const hamburger = document.getElementById('hamburgerBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const closeBtn = document.getElementById('sidebarClose');
+    
+    function openSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+    
+    if (hamburger) hamburger.addEventListener('click', openSidebar);
+    if (overlay) overlay.addEventListener('click', closeSidebar);
+    if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+
+    // Back to top
+    const backToTop = document.getElementById('backToTop');
+    const mainEl = document.querySelector('.main');
+    if (mainEl && backToTop) {
+      mainEl.addEventListener('scroll', () => {
+        backToTop.classList.toggle('show', mainEl.scrollTop > 400);
+      });
+      backToTop.addEventListener('click', () => {
+        mainEl.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // Search
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        document.querySelectorAll('.accordion-item, .search-target').forEach(item => {
+          if (!query) {
+            item.style.display = '';
+            return;
+          }
+          const text = item.textContent.toLowerCase();
+          item.style.display = text.includes(query) ? '' : 'none';
+        });
+        // Also filter category headings on index
+        document.querySelectorAll('.category-section').forEach(sec => {
+          const visible = sec.querySelectorAll('.card:not([style*="display: none"])').length;
+          // keep sections visible if they have matching cards or no filtering applied
+        });
+      });
+    }
+  </script>
 </body>
 </html>

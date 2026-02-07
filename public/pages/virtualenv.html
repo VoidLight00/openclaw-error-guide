@@ -1,136 +1,450 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>가상환경 설정 오류</title>
+  <title>가상환경 설정 오류 - OpenClaw Guide</title>
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+    <header class="mobile-header" id="mobileHeader">
+      <button class="hamburger" id="hamburgerBtn" aria-label="메뉴 열기">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <span class="mobile-title">OpenClaw Guide</span>
+    </header><div class="sidebar-overlay" id="sidebarOverlay"></div>
   <div class="layout">
-    <aside class="sidebar">
-      <a href="../index.html" class="sidebar-logo">
-        [CLAW] OpenClaw <span>Guide</span>
-      </a>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="sidebar-logo">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          OpenClaw <span>Guide</span>
+        </a>
+        <button class="sidebar-close" id="sidebarClose" aria-label="메뉴 닫기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
       
       <nav>
         <ul class="sidebar-nav">
-          <li><a href="../index.html">Home</a></li>
+          <li><a href="../index.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            홈
+          </a></li>
         </ul>
         
-        <div class="sidebar-section">Installation</div>
+        <div class="sidebar-section">카테고리</div>
         <ul class="sidebar-nav">
-          <li><a href="windows.html" >1. Windows 전용 오류</a></li><li><a href="macos.html" >2. macOS 전용 오류</a></li><li><a href="linux.html" >3. Linux 전용 오류</a></li><li><a href="virtualenv.html" class="active">4. 가상환경 설정 오류</a></li><li><a href="common.html" >5. 공통 오류</a></li><li><a href="oauth.html" >6. 인증 (OAuth) 오류</a></li><li><a href="gateway.html" >7. 게이트웨이 접속 오류</a></li><li><a href="channels.html" >8. 채널 통합 오류</a></li><li><a href="client.html" >9. 클라이언트 연결 오류</a></li>
+          <li><a href="windows.html">1. Windows 전용 오류</a></li>
+          <li><a href="macos.html">2. macOS 전용 오류</a></li>
+          <li><a href="linux.html">3. Linux 전용 오류</a></li>
+          <li><a href="virtualenv.html" class="active">4. 가상환경 설정 오류</a></li>
+          <li><a href="common.html">5. 공통 오류</a></li>
+          <li><a href="oauth.html">6. 인증 (OAuth) 오류</a></li>
+          <li><a href="gateway.html">7. 게이트웨이 접속 오류</a></li>
+          <li><a href="channels.html">8. 채널 통합 오류</a></li>
+          <li><a href="client.html">9. 클라이언트 연결 오류</a></li>
+        </ul>
+        
+        <div class="sidebar-section">리소스</div>
+        <ul class="sidebar-nav">
+          <li><a href="https://github.com/anthropics/openclaw" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            GitHub
+          </a></li>
         </ul>
       </nav>
     </aside>
-
     <main class="main">
       <h1>가상환경 설정 오류</h1>
+      <p class="page-subtitle">3개의 오류 유형 | 총 7개의 해결 방법</p>
       
-      <div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
-          <h2>Docker에서 포트 바인딩 실패</h2>
-          
-          <div class="hero-badges" style="margin-bottom: 1.5rem;">
-            <span class="badge badge-info">HIGH</span>
-            <span class="badge">5 min</span>
-          </div>
+      <div class="search-bar">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="오류 검색..." class="search-input">
+      </div>
 
-          <h3>Symptoms</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 0.5rem; color: var(--text-secondary);">• 설정 오류 발생</li>
-          </ul>
-
-          <h3>Root Cause</h3>
-          <div class="alert alert-info">
-            <p>Docker 컨테이너의 포트 맵핑 오류</p>
-          </div>
-
-          <h3>Solutions</h3>
-          
-            <div class="step">
-              <h4>1: 다시 시도</h4>
-              <p>Trust Level: ★☆☆</p>
-              <div class="code-header">
-                <span>Code</span>
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              </div>
-              <pre><code># 설정 확인 후 다시 시도</code></pre>
-              
+      <div class="accordion">
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-medium">보통</span>
+              <h2>Docker에서 포트 바인딩 실패</h2>
             </div>
-          
-        </div><div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
-          <h2>Docker에서 환경 변수 미설정</h2>
-          
-          <div class="hero-badges" style="margin-bottom: 1.5rem;">
-            <span class="badge badge-info">CRITICAL</span>
-            <span class="badge">5 min</span>
-          </div>
-
-          <h3>Symptoms</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 0.5rem; color: var(--text-secondary);">• 설정 오류 발생</li>
-          </ul>
-
-          <h3>Root Cause</h3>
-          <div class="alert alert-info">
-            <p>Docker 컨테이너에 환경 변수 전달 안 됨</p>
-          </div>
-
-          <h3>Solutions</h3>
-          
-            <div class="step">
-              <h4>1: 다시 시도</h4>
-              <p>Trust Level: ★☆☆</p>
-              <div class="code-header">
-                <span>Code</span>
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              </div>
-              <pre><code># 설정 확인 후 다시 시도</code></pre>
-              
+            <div class="accordion-meta">
+              <span class="solve-time">5분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
-          
-        </div><div style="margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
-          <h2>Docker에서 데이터 유지 (Volumes)</h2>
-          
-          <div class="hero-badges" style="margin-bottom: 1.5rem;">
-            <span class="badge badge-info">HIGH</span>
-            <span class="badge">5 min</span>
           </div>
-
-          <h3>Symptoms</h3>
-          <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 0.5rem; color: var(--text-secondary);">• 설정 오류 발생</li>
-          </ul>
-
-          <h3>Root Cause</h3>
-          <div class="alert alert-info">
-            <p>Docker 컨테이너의 데이터가 영구 저장되지 않음</p>
-          </div>
-
-          <h3>Solutions</h3>
-          
-            <div class="step">
-              <h4>1: 다시 시도</h4>
-              <p>Trust Level: ★☆☆</p>
-              <div class="code-header">
-                <span>Code</span>
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              </div>
-              <pre><code># 설정 확인 후 다시 시도</code></pre>
-              
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>'Bind for 0.0.0.0:18789 failed: port is already allocated'</li>
+                <li>docker run 시 포트 관련 에러</li>
+                <li>컨테이너는 실행되지만 외부에서 접근 불가</li>
+              </ul>
             </div>
-          
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>호스트의 18789 포트가 이미 다른 프로세스(또는 이전 OpenClaw 인스턴스)에 의해 사용 중이거나, Docker의 포트 매핑(-p) 설정이 올바르지 않습니다.</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: 사용 중인 포트 프로세스 확인 및 종료</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 18789 포트를 사용 중인 프로세스 확인
+sudo lsof -i :18789
+# 또는
+sudo ss -tlnp | grep 18789
+
+# 해당 프로세스 종료
+sudo kill -9 &lt;PID&gt;
+
+# 이전 Docker 컨테이너가 남아있다면:
+docker ps -a | grep openclaw
+docker rm -f &lt;container_id&gt;
+
+# 재실행
+docker run -d -p 18789:18789 --name openclaw openclaw/openclaw</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: 다른 포트 사용</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 호스트 포트를 변경하여 실행
+docker run -d -p 28789:18789 --name openclaw openclaw/openclaw
+
+# 접속 시 변경된 포트 사용
+# http://localhost:28789</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-high">심각</span>
+              <h2>Docker에서 환경 변수 미설정</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">5분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>컨테이너 실행 후 'No API key found' 에러</li>
+                <li>Telegram 봇이 연결되지 않음</li>
+                <li>로그에 'missing required configuration' 표시</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>Docker 컨테이너는 호스트의 환경 변수를 자동으로 상속받지 않습니다. OpenClaw에 필요한 토큰과 설정은 명시적으로 전달해야 합니다.</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: 환경 변수 파일(.env) 사용 (권장)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># .env 파일 생성
+cat &gt; .env &lt;&lt; 'EOF'
+TELEGRAM_BOT_TOKEN=your_telegram_token_here
+ANTHROPIC_API_KEY=your_api_key_here
+EOF
+
+# .env 파일과 함께 컨테이너 실행
+docker run -d --env-file .env -p 18789:18789 --name openclaw openclaw/openclaw</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: -e 플래그로 개별 전달</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 각 환경 변수를 -e 플래그로 전달
+docker run -d \
+  -e TELEGRAM_BOT_TOKEN=your_token \
+  -e ANTHROPIC_API_KEY=your_key \
+  -p 18789:18789 \
+  --name openclaw \
+  openclaw/openclaw</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 C: 설정 파일 마운트</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 호스트의 openclaw 설정 디렉토리를 컨테이너에 마운트
+docker run -d \
+  -v ~/.openclaw:/root/.openclaw \
+  -p 18789:18789 \
+  --name openclaw \
+  openclaw/openclaw</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-medium">보통</span>
+              <h2>Docker에서 데이터 유지 (Volumes)</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">5분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>컨테이너 재시작 시 모든 설정이 사라짐</li>
+                <li>대화 기록, 인증 정보가 초기화됨</li>
+                <li>docker restart 후 다시 onboard 필요</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>Docker 컨테이너는 기본적으로 임시 파일 시스템을 사용합니다. 컨테이너를 삭제하면 내부 데이터도 모두 사라집니다. 영구 저장이 필요한 데이터는 볼륨을 사용해야 합니다.</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: Named Volume 사용 (권장)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># Docker named volume으로 OpenClaw 데이터 영구 저장
+docker volume create openclaw-data
+
+docker run -d \
+  -v openclaw-data:/root/.openclaw \
+  -p 18789:18789 \
+  --name openclaw \
+  openclaw/openclaw
+
+# 볼륨 확인
+docker volume inspect openclaw-data</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: 호스트 디렉토리 바인드 마운트</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 호스트의 특정 디렉토리를 마운트
+mkdir -p ~/openclaw-docker-data
+
+docker run -d \
+  -v ~/openclaw-docker-data:/root/.openclaw \
+  -p 18789:18789 \
+  --name openclaw \
+  openclaw/openclaw
+
+# 이렇게 하면 호스트에서도 파일을 직접 확인/편집 가능</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="site-footer">
+        <div class="footer-content">
+          <p>OpenClaw Error Guide v2.0 | 최종 업데이트: 2026-02-08</p>
+          <div class="footer-links">
+            <a href="https://github.com/anthropics/openclaw" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://openclaw.ai" target="_blank" rel="noopener">OpenClaw</a>
+          </div>
+        </div>
+      </footer>
     </main>
   </div>
-
+    <button class="back-to-top" id="backToTop" aria-label="맨 위로">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
   <script>
+    // Copy code
     function copyCode(btn) {
-      const code = btn.nextElementSibling.textContent;
+      const pre = btn.closest('.code-block').querySelector('pre');
+      const code = pre.textContent;
       navigator.clipboard.writeText(code).then(() => {
-        btn.textContent = 'Copied!';
-        setTimeout(() => btn.textContent = 'Copy', 2000);
+        btn.textContent = '완료';
+        setTimeout(() => btn.textContent = '복사', 2000);
+      });
+    }
+
+    // Accordion toggle
+    function toggleAccordion(header) {
+      const item = header.parentElement;
+      const isOpen = item.classList.contains('open');
+      // Close all in same parent
+      item.parentElement.querySelectorAll('.accordion-item.open').forEach(el => {
+        if (el !== item) el.classList.remove('open');
+      });
+      item.classList.toggle('open', !isOpen);
+    }
+
+    // Mobile sidebar
+    const hamburger = document.getElementById('hamburgerBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const closeBtn = document.getElementById('sidebarClose');
+    
+    function openSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+    
+    if (hamburger) hamburger.addEventListener('click', openSidebar);
+    if (overlay) overlay.addEventListener('click', closeSidebar);
+    if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+
+    // Back to top
+    const backToTop = document.getElementById('backToTop');
+    const mainEl = document.querySelector('.main');
+    if (mainEl && backToTop) {
+      mainEl.addEventListener('scroll', () => {
+        backToTop.classList.toggle('show', mainEl.scrollTop > 400);
+      });
+      backToTop.addEventListener('click', () => {
+        mainEl.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // Search
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        document.querySelectorAll('.accordion-item, .search-target').forEach(item => {
+          if (!query) {
+            item.style.display = '';
+            return;
+          }
+          const text = item.textContent.toLowerCase();
+          item.style.display = text.includes(query) ? '' : 'none';
+        });
+        // Also filter category headings on index
+        document.querySelectorAll('.category-section').forEach(sec => {
+          const visible = sec.querySelectorAll('.card:not([style*="display: none"])').length;
+          // keep sections visible if they have matching cards or no filtering applied
+        });
       });
     }
   </script>
