@@ -1,0 +1,12 @@
+{
+  "name": "openclaw-error-guide-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for OpenClaw error troubleshooting",
+  "main": "index.js",
+  "bin": {
+    "openclaw-error-mcp": "./index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1"
+  }
+}

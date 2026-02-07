@@ -41,6 +41,27 @@ node skill/search.js "Telegram"
 
 Install by pointing your agent's skill directory to `skill/`.
 
+## MCP Server (AI 에이전트용)
+
+`mcp/` 폴더에 MCP(Model Context Protocol) 서버가 포함되어 있어 Claude Code, Cursor 등의 AI 에이전트에서 직접 오류를 검색할 수 있습니다.
+
+**제공 도구:** `search_errors`, `list_categories`, `get_category`, `get_error`
+
+설정 예시 (`.mcp.json` 또는 Claude Desktop config):
+
+```json
+{
+  "mcpServers": {
+    "openclaw-errors": {
+      "command": "node",
+      "args": ["/path/to/openclaw-error-guide/mcp/index.js"]
+    }
+  }
+}
+```
+
+자세한 설정 방법은 [mcp/README.md](mcp/README.md)를 참고하세요.
+
 ## Project Structure
 
 ```
@@ -50,5 +71,6 @@ generate-llms.js      # llms.txt generator
 api/search.js         # Search API (Vercel serverless)
 api/errors.js         # Errors API (Vercel serverless)
 skill/                # OpenClaw skill package
+mcp/                  # MCP server for AI agents
 public/               # Generated static site
 ```
