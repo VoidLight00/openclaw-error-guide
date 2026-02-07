@@ -64,7 +64,7 @@
     </aside>
     <main class="main">
       <h1>Windows 전용 오류</h1>
-      <p class="page-subtitle">12개의 오류 유형 | 총 23개의 해결 방법</p>
+      <p class="page-subtitle">16개의 오류 유형 | 총 30개의 해결 방법</p>
       
       <div class="search-bar">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -1114,6 +1114,329 @@ $npmPrefix = npm config get prefix
 
 # 4. 확인
 openclaw --version</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-high">심각</span>
+              <h2>WSL2 systemd 미활성화로 서비스 설치 실패</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">5분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>openclaw onboard --install-daemon 실행 시 서비스 설치 실패</li>
+                <li>systemctl 명령어 사용 불가</li>
+                <li>게이트웨이 데몬이 자동 시작되지 않음</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>WSL2는 기본적으로 systemd가 비활성화되어 있어 Linux 서비스(daemon) 설치가 불가능함</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: /etc/wsl.conf에 systemd 활성화</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># WSL 터미널에서 실행
+sudo tee /etc/wsl.conf &gt;/dev/null &lt;&lt;'EOF'
+[boot]
+systemd=true
+EOF
+
+# PowerShell에서 WSL 재시작
+wsl --shutdown
+
+# WSL 다시 열고 확인
+systemctl --user status</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: 수동 실행 (systemd 없이)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># systemd 없이 직접 게이트웨이 실행
+openclaw gateway start</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-medium">보통</span>
+              <h2>WSL 내부 게이트웨이에 외부 접근 불가 (portproxy)</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">10분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>다른 기기에서 게이트웨이 접속 불가</li>
+                <li>WSL 내부에서는 정상 동작하지만 LAN에서 연결 안 됨</li>
+                <li>원격 노드가 게이트웨이를 찾지 못함</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>WSL2는 자체 가상 네트워크를 사용하므로 Windows 호스트에서 포트포워딩 설정이 필요함</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: netsh portproxy로 포트 포워딩</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># PowerShell (관리자 권한)에서 실행
+$Distro = &quot;Ubuntu-24.04&quot;
+$ListenPort = 18789
+$TargetPort = 18789
+
+$WslIp = (wsl -d $Distro -- hostname -I).Trim().Split(&quot; &quot;)[0]
+if (-not $WslIp) { throw &quot;WSL IP not found.&quot; }
+
+netsh interface portproxy add v4tov4 listenaddress=0.0.0.0 listenport=$ListenPort `
+  connectaddress=$WslIp connectport=$TargetPort
+
+# 방화벽 규칙 추가 (최초 1회)
+New-NetFirewallRule -DisplayName &quot;OpenClaw Gateway&quot; -Direction Inbound `
+  -Protocol TCP -LocalPort $ListenPort -Action Allow</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-medium">보통</span>
+              <h2>WSL 재시작 후 포트포워딩 연결 끊김 (IP 변경)</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">5분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>WSL 재시작 후 외부에서 게이트웨이 접속 불가</li>
+                <li>portproxy 설정했는데 갑자기 안 됨</li>
+                <li>WSL IP가 변경됨</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>WSL2는 재시작할 때마다 가상 네트워크 IP가 변경되어 기존 portproxy 규칙이 무효화됨</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: portproxy 규칙 갱신</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># PowerShell (관리자 권한)에서 실행
+$Distro = &quot;Ubuntu-24.04&quot;
+$ListenPort = 18789
+
+$WslIp = (wsl -d $Distro -- hostname -I).Trim().Split(&quot; &quot;)[0]
+
+# 기존 규칙 삭제 후 재등록
+netsh interface portproxy delete v4tov4 listenport=$ListenPort listenaddress=0.0.0.0 | Out-Null
+netsh interface portproxy add v4tov4 listenport=$ListenPort listenaddress=0.0.0.0 `
+  connectaddress=$WslIp connectport=$TargetPort | Out-Null</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: 자동 갱신 (작업 스케줄러)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 위 스크립트를 .ps1 파일로 저장 후
+# Windows 작업 스케줄러에서 로그인 시 자동 실행 등록</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-medium">보통</span>
+              <h2>nvm/fnm 사용 시 새 터미널에서 openclaw 못 찾음</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">5분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>새 터미널 열면 openclaw: command not found</li>
+                <li>nvm use로 Node 활성화하면 되지만 매번 해야 함</li>
+                <li>WSL 재시작 후 node/npm 못 찾음</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>버전 매니저(nvm, fnm 등)의 초기화 스크립트가 shell 시작 파일(~/.bashrc, ~/.zshrc)에 등록되지 않아 새 터미널 세션에서 Node PATH가 설정되지 않음</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: shell rc 파일에 초기화 추가 (fnm)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># fnm 사용 시 ~/.bashrc 또는 ~/.zshrc에 추가
+echo 'eval &quot;$(fnm env --use-on-cd)&quot;' &gt;&gt; ~/.bashrc
+source ~/.bashrc</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: shell rc 파일에 초기화 추가 (nvm)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># nvm 사용 시 ~/.bashrc에 추가 확인
+# 아래 내용이 있는지 확인:
+cat ~/.bashrc | grep NVM_DIR
+
+# 없으면 추가:
+echo 'export NVM_DIR=&quot;$HOME/.nvm&quot;' &gt;&gt; ~/.bashrc
+echo '[ -s &quot;$NVM_DIR/nvm.sh&quot; ] &amp;&amp; . &quot;$NVM_DIR/nvm.sh&quot;' &gt;&gt; ~/.bashrc
+source ~/.bashrc</code></pre>
                 </div>
               </div>
             </div>
