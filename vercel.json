@@ -1,5 +1,14 @@
 {
   "framework": null,
-  "buildCommand": "",
-  "outputDirectory": "public"
+  "buildCommand": "node build.js && node generate-llms.js",
+  "outputDirectory": "public",
+  "functions": {
+    "api/*.js": {
+      "memory": 128,
+      "maxDuration": 10
+    }
+  },
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" }
+  ]
 }

@@ -1,0 +1,2756 @@
+# OpenClaw Error Guide - Full Reference
+
+> 66개 에러, 137개 솔루션 | v2.1 | 2026-02-08
+
+## Windows 전용 오류
+
+### PowerShell 실행 정책 (Execution Policy) 차단
+- Severity: 심각
+- Solve Time: 3min
+
+**증상:**
+- PowerShell에서 openclaw 명령어 실행 시 빨간색 오류 메시지 출력
+- 'File cannot be loaded because running scripts is disabled on this system' 메시지
+- install.ps1 스크립트 실행 불가
+
+**원인:** Windows PowerShell의 기본 실행 정책이 'Restricted'로 설정되어 외부 스크립트 실행을 차단합니다. 보안 목적으로 기본 설정이 이렇게 되어 있으며, npm 전역 설치 후 openclaw CLI를 실행할 때 .ps1 파일 실행이 필요합니다.
+
+**해결 방법:**
+
+#### 방법 A: 현재 사용자만 정책 변경 (권장) (신뢰도: ★★★)
+```bash
+# PowerShell을 관리자 권한으로 실행한 뒤:
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+# 변경 확인
+Get-ExecutionPolicy -List
+
+# 이후 openclaw 다시 실행
+openclaw --version
+```
+
+#### 방법 B: 현재 세션에서만 임시 허용 (신뢰도: ★★☆)
+```bash
+# 현재 PowerShell 세션에서만 스크립트 실행 허용 (재시작 시 원래대로)
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+
+# 바로 설치 스크립트 실행
+iwr -useb https://openclaw.ai/install.ps1 | iex
+```
+
+#### 방법 C: WSL2 사용 (근본적 해결) (신뢰도: ★★★)
+```bash
+# Windows에서 PowerShell 문제를 피하려면 WSL2 사용을 권장합니다
+wsl --install
+
+# WSL 재부팅 후 Ubuntu에서:
+curl -fsSL https://openclaw.ai/install.sh | bash
+```
+
+### winget 소스 손상 (WinGet Error)
+- Severity: 보통
+- Solve Time: 5min
+
+**증상:**
+- winget install 명령어 실행 시 'Failed to update source' 오류
+- 'An unexpected error occurred while executing the command' 메시지
+- winget search 결과가 비정상적으로 적거나 없음
+
+**원인:** WinGet의 내부 SQLite 데이터베이스가 손상되었거나, Microsoft Store 앱 패키지 캐시에 문제가 있습니다. Windows 업데이트 후 또는 네트워크 문제로 인해 발생할 수 있습니다.
+
+**해결 방법:**
+
+#### 방법 A: winget 소스 초기화 (신뢰도: ★★★)
+```bash
+# winget 소스를 완전히 초기화합니다
+winget source reset --force
+
+# 소스 업데이트 확인
+winget source update
+
+# Node.js 설치 재시도
+winget install OpenJS.NodeJS.LTS
+```
+
+#### 방법 B: Microsoft Store에서 App Installer 업데이트 (신뢰도: ★★☆)
+```bash
+# Microsoft Store를 열어 'App Installer'를 검색하여 업데이트합니다
+# 또는 PowerShell에서:
+Add-AppxPackage -RegisterByFamilyName -MainPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe
+
+# 이후 winget 다시 시도
+winget install OpenJS.NodeJS.LTS
+```
+
+#### 방법 C: Node.js 공식 인스톨러 사용 (대안) (신뢰도: ★★★)
+```bash
+# winget이 계속 문제라면, Node.js 공식 사이트에서 직접 다운로드:
+# https://nodejs.org/en/download 에서 Windows Installer (.msi) 다운로드
+
+# 설치 후 새 터미널을 열고 확인
+node --version
+npm --version
+```
+
+### Node.js 설치되었는데 "command not found"
+- Severity: 보통
+- Solve Time: 5min
+
+**증상:**
+- 'node' is not recognized as an internal or external command
+- PowerShell에서 node --version 실행 시 오류
+- 설치 직후에는 작동하지만, 새 터미널에서 안 됨
+
+**원인:** Node.js가 설치되었지만, 설치 경로가 시스템 PATH 환경 변수에 추가되지 않았습니다. nvm-windows를 사용한 경우 터미널을 재시작해야 PATH가 갱신됩니다.
+
+**해결 방법:**
+
+#### 방법 A: 터미널 재시작 및 PATH 확인 (신뢰도: ★★★)
+```bash
+# 1. 모든 터미널 창을 닫고 새로 엽니다
+
+# 2. PATH에서 Node.js 경로 확인
+$env:PATH -split ';' | Select-String 'node'
+
+# 3. 일반적으로 Node.js는 아래 경로에 설치됩니다
+# C:\Program Files\nodejs\
+
+# 4. 수동으로 PATH에 추가 (영구)
+[Environment]::SetEnvironmentVariable('PATH', $env:PATH + ';C:\Program Files\nodejs\', 'User')
+```
+
+#### 방법 B: nvm-windows 사용 시 버전 선택 (신뢰도: ★★☆)
+```bash
+# nvm-windows를 사용 중이라면 사용할 버전을 지정해야 합니다
+nvm list
+nvm use 22
+
+# 확인
+node --version
+```
+
+### WSL (Windows Subsystem for Linux) 관련
+- Severity: 낮음
+- Solve Time: 15min
+
+**증상:**
+- 'wsl' is not recognized 오류
+- wsl --install 실행 시 'Virtual Machine Platform' 관련 오류
+- WSL2 배포판이 시작되지 않음
+
+**원인:** WSL2가 설치되지 않았거나, 가상화 기능이 BIOS/UEFI에서 비활성화되어 있습니다. OpenClaw 공식 문서에서도 Windows에서는 WSL2를 강력히 권장합니다.
+
+**해결 방법:**
+
+#### 방법 A: WSL2 설치 (Windows 10 v2004+) (신뢰도: ★★★)
+```bash
+# 관리자 권한 PowerShell에서 WSL 설치
+wsl --install
+
+# 재부팅 필요합니다
+# 재부팅 후 Ubuntu가 자동으로 설정됩니다
+
+# WSL 버전 확인
+wsl --list --verbose
+```
+
+#### 방법 B: 가상화 확인 및 활성화 (신뢰도: ★★☆)
+```bash
+# 가상화가 활성화되어 있는지 확인
+systeminfo | findstr /i "Hyper-V"
+
+# 비활성화된 경우:
+# 1. BIOS/UEFI 진입 (재부팅 시 F2/DEL 키)
+# 2. Intel VT-x 또는 AMD-V 활성화
+# 3. 저장 후 재부팅
+
+# Windows 기능 수동 활성화
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+
+# 재부팅 후 기본 버전을 WSL2로 설정
+wsl --set-default-version 2
+```
+
+### Node.js sharp 모듈 빌드 실패
+- Severity: 심각
+- Solve Time: 10min
+
+**증상:**
+- npm install -g openclaw 시 sharp 관련 빌드 에러
+- 'sharp: Installation error: Could not install from prebuilt binaries'
+- node-gyp rebuild 실패 메시지
+- 'Please add node-gyp to your dependencies' 경고
+
+**원인:** sharp 모듈은 네이티브 이미지 처리 라이브러리(libvips)를 사용합니다. 시스템에 맞는 prebuilt 바이너리를 찾지 못하면 소스에서 빌드를 시도하는데, C++ 빌드 도구가 없으면 실패합니다.
+
+**해결 방법:**
+
+#### 방법 A: prebuilt 바이너리 강제 사용 (권장) (신뢰도: ★★★)
+```bash
+# 글로벌 libvips를 무시하고 prebuilt 바이너리 강제 사용
+set SHARP_IGNORE_GLOBAL_LIBVIPS=1
+npm install -g openclaw@latest
+
+# PowerShell의 경우:
+$env:SHARP_IGNORE_GLOBAL_LIBVIPS=1
+npm install -g openclaw@latest
+```
+
+#### 방법 B: Windows 빌드 도구 설치 (신뢰도: ★★☆)
+```bash
+# Visual Studio Build Tools 설치 (C++ 컴파일러 포함)
+npm install -g windows-build-tools
+
+# 또는 Visual Studio Installer에서 'C++ 빌드 도구' 선택 설치
+
+# node-gyp 전역 설치
+npm install -g node-gyp
+
+# 재시도
+npm install -g openclaw@latest
+```
+
+### apt/yum 패키지 관리자로 Node.js 설치 문제
+- Severity: 보통
+- Solve Time: 10min
+
+**증상:**
+- apt install nodejs 후 node --version이 v12 등 매우 낮은 버전
+- OpenClaw 실행 시 'Unsupported Node version' 에러
+- WSL Ubuntu에서 기본 apt로 설치한 Node가 너무 오래됨
+
+**원인:** Ubuntu/Debian 기본 저장소의 Node.js는 매우 오래된 버전(v12~v18)입니다. OpenClaw은 Node 22 이상을 요구하므로, NodeSource 또는 nvm을 통해 최신 버전을 설치해야 합니다.
+
+**해결 방법:**
+
+#### 방법 A: nvm으로 최신 Node 설치 (권장) (신뢰도: ★★★)
+```bash
+# 기존 Node 제거
+sudo apt remove nodejs npm -y
+
+# nvm 설치
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+source ~/.bashrc
+
+# Node 22 LTS 설치
+nvm install 22
+nvm use 22
+nvm alias default 22
+
+# 확인
+node --version  # v22.x.x 이상
+```
+
+#### 방법 B: NodeSource 저장소 사용 (신뢰도: ★★☆)
+```bash
+# NodeSource에서 Node 22.x 저장소 추가
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# 확인
+node --version
+npm --version
+```
+
+### WSL2 커널 업데이트 필요
+- Severity: 보통
+- Solve Time: 5min
+
+**증상:**
+- 'WSL 2 requires an update to its kernel component' 메시지
+- WSL 배포판 실행 시 에러 코드 표시
+- wsl --update 실행 시 실패
+
+**원인:** WSL2 Linux 커널이 최신 버전으로 업데이트되지 않았습니다. Windows 업데이트와 별도로 WSL 커널 업데이트가 필요할 수 있습니다.
+
+**해결 방법:**
+
+#### 방법 A: WSL 커널 업데이트 (신뢰도: ★★★)
+```bash
+# 관리자 권한 PowerShell에서:
+wsl --update
+
+# 업데이트 후 WSL 재시작
+wsl --shutdown
+wsl
+
+# 그래도 안 되면 수동 커널 패키지 설치:
+# https://aka.ms/wsl2kernel 에서 다운로드 후 실행
+```
+
+### WSL2 Ubuntu 설치 후 Node 못 찾음
+- Severity: 심각
+- Solve Time: 10min
+
+**증상:**
+- WSL Ubuntu에서 'node: command not found'
+- Windows에서는 Node가 되지만 WSL에서는 안 됨
+- which node 결과 없음
+
+**원인:** Windows에 설치된 Node.js와 WSL의 Linux 환경은 별개입니다. WSL 내부에서 별도로 Node.js를 설치해야 합니다. Windows PATH가 WSL로 전달되더라도, Windows용 .exe를 Linux에서 실행하면 호환성 문제가 발생합니다.
+
+**해결 방법:**
+
+#### 방법 A: WSL 내부에 Node.js 설치 (nvm 권장) (신뢰도: ★★★)
+```bash
+# WSL Ubuntu 내부에서 실행
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+source ~/.bashrc
+
+nvm install 22
+nvm alias default 22
+
+# OpenClaw 설치
+npm install -g openclaw@latest
+openclaw onboard --install-daemon
+```
+
+#### 방법 B: OpenClaw 인스톨러 스크립트 사용 (신뢰도: ★★★)
+```bash
+# WSL 내부에서 인스톨러가 Node 설치까지 자동 처리
+curl -fsSL https://openclaw.ai/install.sh | bash
+```
+
+### WSL과 Windows 간 Path 혼동
+- Severity: 보통
+- Solve Time: 3min
+
+**증상:**
+- WSL에서 Windows 경로(C:\Users\...)를 사용하면 에러
+- 파일 경로에 백슬래시(\) 포함 시 오류
+- openclaw config에서 Windows 경로 사용 시 동작 안 함
+
+**원인:** WSL에서 Windows 파일 시스템은 /mnt/c/ 아래에 마운트됩니다. Windows 스타일 경로(C:\Users\...)는 WSL Linux 환경에서 인식되지 않으며, 항상 Linux 스타일 경로를 사용해야 합니다.
+
+**해결 방법:**
+
+#### 방법 A: 경로 변환 사용 (신뢰도: ★★★)
+```bash
+# Windows 경로를 WSL 경로로 변환하는 도구:
+wslpath 'C:\Users\username\Documents'
+# 결과: /mnt/c/Users/username/Documents
+
+# 반대 방향 변환:
+wslpath -w /home/user/project
+# 결과: \\wsl$\Ubuntu\home\user\project
+```
+
+#### 방법 B: WSL 홈 디렉토리에서 작업 (권장) (신뢰도: ★★★)
+```bash
+# 성능과 호환성을 위해 WSL 네이티브 파일 시스템 사용을 권장
+# /mnt/c/ 접근은 느리고 권한 문제 발생 가능
+
+cd ~
+mkdir -p projects
+# OpenClaw workspace도 WSL 내부에 설정
+# ~/.openclaw/ 디렉토리가 자동으로 사용됩니다
+```
+
+### WSL에서 시간대(Timezone) 불일치
+- Severity: 낮음
+- Solve Time: 2min
+
+**증상:**
+- WSL에서 date 명령어 결과가 실제 시간과 다름
+- 로그 타임스탬프가 일치하지 않음
+- OpenClaw 스케줄 관련 기능이 시간이 맞지 않음
+
+**원인:** WSL은 기본적으로 UTC를 사용하며, Windows의 로컬 타임존을 자동으로 따르지 않을 수 있습니다.
+
+**해결 방법:**
+
+#### 방법 A: WSL 타임존 동기화 설정 (신뢰도: ★★★)
+```bash
+# /etc/wsl.conf 파일을 편집하여 자동 시간 동기화 활성화
+sudo tee /etc/wsl.conf << 'EOF'
+[automount]
+enabled = true
+[interop]
+enabled = true
+[boot]
+systemd = true
+EOF
+
+# 타임존 수동 설정 (예: 한국)
+sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+
+# WSL 재시작 (PowerShell에서)
+# wsl --shutdown
+# wsl
+```
+
+### npm error spawn git / ENOENT (Git 미설치)
+- Severity: 심각
+- Solve Time: 5min
+
+**증상:**
+- npm install -g openclaw 실행 시 'npm error spawn git ENOENT' 에러
+- Git 관련 의존성 설치 실패
+- ENOENT 에러와 함께 설치 중단
+
+**원인:** Windows에 Git이 설치되어 있지 않습니다. OpenClaw 설치 시 일부 의존성이 git URL을 사용하므로, Git이 PATH에 없으면 spawn git ENOENT 에러가 발생합니다. (출처: installer.md Troubleshooting - 'Windows: npm error spawn git / ENOENT')
+
+**해결 방법:**
+
+#### 방법 A: Git for Windows 설치 후 재시작 (신뢰도: ★★★)
+```bash
+# 1. Git for Windows 설치
+# https://git-scm.com/download/win 에서 다운로드 후 설치
+
+# 2. PowerShell을 완전히 닫고 새로 열기
+
+# 3. Git 설치 확인
+git --version
+
+# 4. OpenClaw 설치 재시도
+npm install -g openclaw@latest
+```
+
+#### 방법 B: winget으로 Git 설치 (신뢰도: ★★★)
+```bash
+# winget으로 Git 설치
+winget install Git.Git
+
+# PowerShell 재시작 후 확인
+git --version
+
+# OpenClaw 설치 재시도
+npm install -g openclaw@latest
+```
+
+### "openclaw is not recognized" (Windows PATH 미설정)
+- Severity: 심각
+- Solve Time: 5min
+
+**증상:**
+- 'openclaw' is not recognized as an internal or external command
+- npm install -g openclaw 성공했는데 실행 안 됨
+- PowerShell에서 openclaw 명령어 인식 불가
+
+**원인:** npm 글로벌 바이너리 디렉토리가 Windows PATH 환경 변수에 등록되지 않았습니다. npm config get prefix 결과의 하위 bin 폴더를 PATH에 추가해야 합니다. (출처: installer.md Troubleshooting - 'Windows: openclaw is not recognized')
+
+**해결 방법:**
+
+#### 방법 A: npm prefix 확인 후 PATH에 추가 (신뢰도: ★★★)
+```bash
+# 1. npm 글로벌 prefix 확인
+npm config get prefix
+# 예시 결과: C:\Users\username\AppData\Roaming\npm
+
+# 2. 위 결과에 \bin 을 붙인 경로를 PATH에 추가
+# 시스템 설정 -> 고급 -> 환경 변수 -> 사용자 변수 -> Path -> 편집
+# 또는 PowerShell에서:
+$npmPrefix = npm config get prefix
+[Environment]::SetEnvironmentVariable('PATH', $env:PATH + ";$npmPrefix", 'User')
+
+# 3. PowerShell을 완전히 닫고 새로 열기
+
+# 4. 확인
+openclaw --version
+```
+
+### WSL2 systemd 미활성화로 서비스 설치 실패
+- Severity: 심각
+- Solve Time: 5min
+
+**증상:**
+- openclaw onboard --install-daemon 실행 시 서비스 설치 실패
+- systemctl 명령어 사용 불가
+- 게이트웨이 데몬이 자동 시작되지 않음
+
+**원인:** WSL2는 기본적으로 systemd가 비활성화되어 있어 Linux 서비스(daemon) 설치가 불가능함
+
+**해결 방법:**
+
+#### 방법 A: /etc/wsl.conf에 systemd 활성화 (신뢰도: ★★★)
+```bash
+# WSL 터미널에서 실행
+sudo tee /etc/wsl.conf >/dev/null <<'EOF'
+[boot]
+systemd=true
+EOF
+
+# PowerShell에서 WSL 재시작
+wsl --shutdown
+
+# WSL 다시 열고 확인
+systemctl --user status
+```
+
+#### 방법 B: 수동 실행 (systemd 없이) (신뢰도: ★☆☆)
+```bash
+# systemd 없이 직접 게이트웨이 실행
+openclaw gateway start
+```
+
+### WSL 내부 게이트웨이에 외부 접근 불가 (portproxy)
+- Severity: 보통
+- Solve Time: 10min
+
+**증상:**
+- 다른 기기에서 게이트웨이 접속 불가
+- WSL 내부에서는 정상 동작하지만 LAN에서 연결 안 됨
+- 원격 노드가 게이트웨이를 찾지 못함
+
+**원인:** WSL2는 자체 가상 네트워크를 사용하므로 Windows 호스트에서 포트포워딩 설정이 필요함
+
+**해결 방법:**
+
+#### 방법 A: netsh portproxy로 포트 포워딩 (신뢰도: ★★★)
+```bash
+# PowerShell (관리자 권한)에서 실행
+$Distro = "Ubuntu-24.04"
+$ListenPort = 18789
+$TargetPort = 18789
+
+$WslIp = (wsl -d $Distro -- hostname -I).Trim().Split(" ")[0]
+if (-not $WslIp) { throw "WSL IP not found." }
+
+netsh interface portproxy add v4tov4 listenaddress=0.0.0.0 listenport=$ListenPort `
+  connectaddress=$WslIp connectport=$TargetPort
+
+# 방화벽 규칙 추가 (최초 1회)
+New-NetFirewallRule -DisplayName "OpenClaw Gateway" -Direction Inbound `
+  -Protocol TCP -LocalPort $ListenPort -Action Allow
+```
+
+### WSL 재시작 후 포트포워딩 연결 끊김 (IP 변경)
+- Severity: 보통
+- Solve Time: 5min
+
+**증상:**
+- WSL 재시작 후 외부에서 게이트웨이 접속 불가
+- portproxy 설정했는데 갑자기 안 됨
+- WSL IP가 변경됨
+
+**원인:** WSL2는 재시작할 때마다 가상 네트워크 IP가 변경되어 기존 portproxy 규칙이 무효화됨
+
+**해결 방법:**
+
+#### 방법 A: portproxy 규칙 갱신 (신뢰도: ★★★)
+```bash
+# PowerShell (관리자 권한)에서 실행
+$Distro = "Ubuntu-24.04"
+$ListenPort = 18789
+
+$WslIp = (wsl -d $Distro -- hostname -I).Trim().Split(" ")[0]
+
+# 기존 규칙 삭제 후 재등록
+netsh interface portproxy delete v4tov4 listenport=$ListenPort listenaddress=0.0.0.0 | Out-Null
+netsh interface portproxy add v4tov4 listenport=$ListenPort listenaddress=0.0.0.0 `
+  connectaddress=$WslIp connectport=$TargetPort | Out-Null
+```
+
+#### 방법 B: 자동 갱신 (작업 스케줄러) (신뢰도: ★★☆)
+```bash
+# 위 스크립트를 .ps1 파일로 저장 후
+# Windows 작업 스케줄러에서 로그인 시 자동 실행 등록
+```
+
+### nvm/fnm 사용 시 새 터미널에서 openclaw 못 찾음
+- Severity: 보통
+- Solve Time: 5min
+
+**증상:**
+- 새 터미널 열면 openclaw: command not found
+- nvm use로 Node 활성화하면 되지만 매번 해야 함
+- WSL 재시작 후 node/npm 못 찾음
+
+**원인:** 버전 매니저(nvm, fnm 등)의 초기화 스크립트가 shell 시작 파일(~/.bashrc, ~/.zshrc)에 등록되지 않아 새 터미널 세션에서 Node PATH가 설정되지 않음
+
+**해결 방법:**
+
+#### 방법 A: shell rc 파일에 초기화 추가 (fnm) (신뢰도: ★★★)
+```bash
+# fnm 사용 시 ~/.bashrc 또는 ~/.zshrc에 추가
+echo 'eval "$(fnm env --use-on-cd)"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+#### 방법 B: shell rc 파일에 초기화 추가 (nvm) (신뢰도: ★★★)
+```bash
+# nvm 사용 시 ~/.bashrc에 추가 확인
+# 아래 내용이 있는지 확인:
+cat ~/.bashrc | grep NVM_DIR
+
+# 없으면 추가:
+echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.bashrc
+echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+## macOS 전용 오류
+
+### npm 권한 문제 (sudo 요청)
+- Severity: 보통
+- Solve Time: 5min
+
+**증상:**
+- npm install -g 시 EACCES 에러 발생
+- 'Error: EACCES: permission denied, mkdir /usr/local/lib/node_modules/...'
+- sudo npm install 사용을 권유받음
+
+**원인:** /usr/local/lib/node_modules 디렉토리의 소유권이 root로 되어 있어, 일반 사용자가 글로벌 패키지를 설치할 수 없습니다. sudo로 npm을 실행하는 것은 보안상 위험하므로 권장하지 않습니다.
+
+**해결 방법:**
+
+#### 방법 A: npm 글로벌 디렉토리 변경 (권장) (신뢰도: ★★★)
+```bash
+# 사용자 홈에 npm 글로벌 디렉토리 생성
+mkdir -p ~/.npm-global
+npm config set prefix '~/.npm-global'
+
+# PATH에 추가 (~/.zshrc 또는 ~/.bashrc)
+echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.zshrc
+source ~/.zshrc
+
+# 이제 sudo 없이 설치 가능
+npm install -g openclaw@latest
+```
+
+#### 방법 B: nvm으로 Node 관리 (권장) (신뢰도: ★★★)
+```bash
+# nvm은 홈 디렉토리에 Node를 설치하여 권한 문제 회피
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+source ~/.zshrc
+
+nvm install 22
+nvm alias default 22
+
+# nvm 환경에서는 sudo 불필요
+npm install -g openclaw@latest
+```
+
+#### 방법 C: /usr/local 소유권 변경 (주의) (신뢰도: ★☆☆)
+```bash
+# 주의: 시스템 디렉토리 소유권 변경은 다른 도구에 영향 줄 수 있음
+sudo chown -R $(whoami) /usr/local/lib/node_modules
+sudo chown -R $(whoami) /usr/local/bin
+
+# 이후 sudo 없이 설치
+npm install -g openclaw@latest
+```
+
+### npm 전역 설치 권한 문제
+- Severity: 보통
+- Solve Time: 5min
+
+**증상:**
+- npm ERR! code EACCES
+- npm ERR! syscall access
+- '/usr/local/lib/node_modules' 접근 거부
+
+**원인:** macOS에서 Homebrew로 Node를 설치한 경우, /usr/local 디렉토리의 권한이 복잡하게 설정되어 있을 수 있습니다. 특히 macOS Ventura 이후 보안 정책이 강화되면서 더 자주 발생합니다.
+
+**해결 방법:**
+
+#### 방법 A: OpenClaw 인스톨러 스크립트 사용 (가장 간편) (신뢰도: ★★★)
+```bash
+# 인스톨러가 권한 문제를 자동으로 처리합니다
+curl -fsSL https://openclaw.ai/install.sh | bash
+```
+
+#### 방법 B: Homebrew로 Node 재설치 (신뢰도: ★★☆)
+```bash
+# 기존 Node 제거 후 Homebrew로 깔끔하게 재설치
+brew uninstall node
+brew cleanup
+brew install node@22
+
+# Homebrew가 설치한 Node는 권한 문제가 적음
+npm install -g openclaw@latest
+```
+
+### npm 캐시 손상
+- Severity: 보통
+- Solve Time: 3min
+
+**증상:**
+- npm install 시 'Unexpected token' 또는 'Invalid JSON' 에러
+- npm ERR! code EINTEGRITY
+- npm cache verify 경고 메시지
+- 특정 패키지만 반복적으로 설치 실패
+
+**원인:** npm 캐시 디렉토리(~/.npm/_cacache)에 저장된 패키지 데이터가 손상되었습니다. 네트워크 불안정, 디스크 오류, 또는 동시 설치 시도로 인해 발생할 수 있습니다.
+
+**해결 방법:**
+
+#### 방법 A: npm 캐시 완전 초기화 (신뢰도: ★★★)
+```bash
+# npm 캐시 강제 삭제
+npm cache clean --force
+
+# 캐시 상태 확인
+npm cache verify
+
+# 재설치
+npm install -g openclaw@latest
+```
+
+#### 방법 B: 캐시 디렉토리 수동 삭제 (신뢰도: ★★☆)
+```bash
+# npm 캐시 디렉토리 직접 삭제
+rm -rf ~/.npm/_cacache
+
+# package-lock 도 문제라면 프로젝트 내에서:
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### npm install 타임아웃
+- Severity: 낮음
+- Solve Time: 5min
+
+**증상:**
+- npm ERR! network timeout at: https://registry.npmjs.org/...
+- npm ERR! code ETIMEDOUT
+- 설치가 진행되다가 오래 멈춘 후 실패
+- fetch failed 에러
+
+**원인:** npm 레지스트리 서버와의 연결이 타임아웃되었습니다. 느린 네트워크, VPN 사용, 회사 방화벽, 또는 npm 서버 자체의 일시적 장애일 수 있습니다.
+
+**해결 방법:**
+
+#### 방법 A: 타임아웃 시간 늘리기 (신뢰도: ★★★)
+```bash
+# 기본 타임아웃을 300초(5분)로 늘리기
+npm config set fetch-timeout 300000
+npm config set fetch-retry-maxtimeout 120000
+
+# 재설치 시도
+npm install -g openclaw@latest
+```
+
+#### 방법 B: 레지스트리 미러 사용 (신뢰도: ★★☆)
+```bash
+# 한국/아시아 사용자는 npmmirror 사용 가능 (속도 개선)
+npm install -g openclaw@latest --registry https://registry.npmmirror.com
+
+# 또는 영구 설정
+npm config set registry https://registry.npmmirror.com
+
+# 원래대로 복구하려면:
+npm config set registry https://registry.npmjs.org
+```
+
+#### 방법 C: VPN/프록시 확인 (신뢰도: ★★☆)
+```bash
+# VPN을 사용 중이라면 일시적으로 해제 후 시도
+
+# 프록시 설정 확인
+npm config get proxy
+npm config get https-proxy
+
+# 프록시가 잘못 설정되어 있다면 삭제
+npm config delete proxy
+npm config delete https-proxy
+```
+
+### sharp/libvips 빌드 실패 (시스템 libvips 충돌)
+- Severity: 심각
+- Solve Time: 3min
+
+**증상:**
+- npm install -g openclaw 시 sharp 빌드 에러
+- libvips 관련 컴파일 오류
+- 'sharp: Installation error' 메시지
+- Homebrew로 설치한 libvips와 충돌
+
+**원인:** macOS에서 Homebrew 등으로 시스템 libvips가 설치되어 있으면, sharp 모듈이 시스템 libvips를 사용하려다 버전 충돌이 발생합니다. OpenClaw 인스톨러는 기본적으로 SHARP_IGNORE_GLOBAL_LIBVIPS=1을 설정하여 이 문제를 방지합니다. (출처: installer.md - 'sharp/libvips issues', 환경변수 SHARP_IGNORE_GLOBAL_LIBVIPS=1 기본값)
+
+**해결 방법:**
+
+#### 방법 A: SHARP_IGNORE_GLOBAL_LIBVIPS 환경변수 설정 (권장) (신뢰도: ★★★)
+```bash
+# 시스템 libvips를 무시하고 prebuilt 바이너리 사용
+SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest
+
+# 영구 설정 (쉘에 추가)
+echo 'export SHARP_IGNORE_GLOBAL_LIBVIPS=1' >> ~/.zshrc
+source ~/.zshrc
+```
+
+#### 방법 B: OpenClaw 인스톨러 스크립트 사용 (자동 처리) (신뢰도: ★★★)
+```bash
+# 인스톨러가 SHARP_IGNORE_GLOBAL_LIBVIPS=1을 자동으로 설정합니다
+curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash
+```
+
+## Linux 전용 오류
+
+### 빌드 도구 누락 (build-essential)
+- Severity: 심각
+- Solve Time: 5min
+
+**증상:**
+- npm install 시 'gyp ERR! build error' 메시지
+- 'make: not found' 또는 'g++: not found' 에러
+- sharp, sqlite3 등 네이티브 모듈 빌드 실패
+- node-gyp rebuild 실패
+
+**원인:** sharp, better-sqlite3 등의 네이티브 Node.js 모듈은 C/C++ 컴파일러가 필요합니다. 최소 설치 Linux 서버에는 빌드 도구가 없는 경우가 많습니다.
+
+**해결 방법:**
+
+#### 방법 A: 빌드 도구 설치 (Ubuntu/Debian) (신뢰도: ★★★)
+```bash
+# 필수 빌드 도구 패키지 설치
+sudo apt update
+sudo apt install -y build-essential python3 make g++
+
+# node-gyp 전역 설치
+npm install -g node-gyp
+
+# OpenClaw 재설치
+npm install -g openclaw@latest
+```
+
+#### 방법 B: 빌드 도구 설치 (RHEL/CentOS/Fedora) (신뢰도: ★★★)
+```bash
+# 개발 도구 그룹 설치
+sudo dnf groupinstall 'Development Tools'
+# 또는 CentOS 7:
+sudo yum groupinstall 'Development Tools'
+
+# Python도 필요할 수 있음
+sudo dnf install python3
+
+# 재설치
+npm install -g openclaw@latest
+```
+
+#### 방법 C: prebuilt 바이너리 강제 (빌드 없이) (신뢰도: ★★☆)
+```bash
+# 빌드 도구 설치가 어려운 환경에서:
+SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest
+
+# 또는 Docker 사용 (빌드 도구 불필요)
+docker pull openclaw/openclaw
+docker run -d --name openclaw openclaw/openclaw
+```
+
+### 원격 Linux 서버에서 가상 디스플레이 문제
+- Severity: 보통
+- Solve Time: 10min
+
+**증상:**
+- 브라우저 도구 사용 시 'Cannot open display' 에러
+- Playwright/Puppeteer가 헤드리스 모드에서도 실패
+- DISPLAY 환경 변수 관련 경고
+
+**원인:** 원격 서버(VPS, 클라우드)에는 X11 그래픽 서버가 없습니다. OpenClaw의 브라우저 도구는 일반적으로 헤드리스로 실행되지만, 일부 설정에서는 가상 디스플레이(Xvfb)가 필요할 수 있습니다.
+
+**해결 방법:**
+
+#### 방법 A: Xvfb (가상 프레임 버퍼) 설치 (신뢰도: ★★★)
+```bash
+# Xvfb 설치
+sudo apt install -y xvfb
+
+# 가상 디스플레이 시작
+Xvfb :99 -screen 0 1280x720x24 &
+export DISPLAY=:99
+
+# OpenClaw 실행
+openclaw gateway start
+```
+
+#### 방법 B: 필요한 라이브러리 설치 (신뢰도: ★★★)
+```bash
+# Chromium/Playwright에 필요한 시스템 라이브러리 설치
+sudo apt install -y \
+  libnss3 libatk1.0-0 libatk-bridge2.0-0 \
+  libcups2 libdrm2 libxkbcommon0 \
+  libxcomposite1 libxdamage1 libxfixes3 \
+  libxrandr2 libgbm1 libpango-1.0-0 \
+  libcairo2 libasound2
+
+# 또는 Playwright가 자동으로 설치하는 방법:
+npx playwright install-deps chromium
+```
+
+## 가상환경 설정 오류
+
+### Docker에서 포트 바인딩 실패
+- Severity: 보통
+- Solve Time: 5min
+
+**증상:**
+- 'Bind for 0.0.0.0:18789 failed: port is already allocated'
+- docker run 시 포트 관련 에러
+- 컨테이너는 실행되지만 외부에서 접근 불가
+
+**원인:** 호스트의 18789 포트가 이미 다른 프로세스(또는 이전 OpenClaw 인스턴스)에 의해 사용 중이거나, Docker의 포트 매핑(-p) 설정이 올바르지 않습니다.
+
+**해결 방법:**
+
+#### 방법 A: 사용 중인 포트 프로세스 확인 및 종료 (신뢰도: ★★★)
+```bash
+# 18789 포트를 사용 중인 프로세스 확인
+sudo lsof -i :18789
+# 또는
+sudo ss -tlnp | grep 18789
+
+# 해당 프로세스 종료
+sudo kill -9 <PID>
+
+# 이전 Docker 컨테이너가 남아있다면:
+docker ps -a | grep openclaw
+docker rm -f <container_id>
+
+# 재실행
+docker run -d -p 18789:18789 --name openclaw openclaw/openclaw
+```
+
+#### 방법 B: 다른 포트 사용 (신뢰도: ★★★)
+```bash
+# 호스트 포트를 변경하여 실행
+docker run -d -p 28789:18789 --name openclaw openclaw/openclaw
+
+# 접속 시 변경된 포트 사용
+# http://localhost:28789
+```
+
+### Docker에서 환경 변수 미설정
+- Severity: 심각
+- Solve Time: 5min
+
+**증상:**
+- 컨테이너 실행 후 'No API key found' 에러
+- Telegram 봇이 연결되지 않음
+- 로그에 'missing required configuration' 표시
+
+**원인:** Docker 컨테이너는 호스트의 환경 변수를 자동으로 상속받지 않습니다. OpenClaw에 필요한 토큰과 설정은 명시적으로 전달해야 합니다.
+
+**해결 방법:**
+
+#### 방법 A: 환경 변수 파일(.env) 사용 (권장) (신뢰도: ★★★)
+```bash
+# .env 파일 생성
+cat > .env << 'EOF'
+TELEGRAM_BOT_TOKEN=your_telegram_token_here
+ANTHROPIC_API_KEY=your_api_key_here
+EOF
+
+# .env 파일과 함께 컨테이너 실행
+docker run -d --env-file .env -p 18789:18789 --name openclaw openclaw/openclaw
+```
+
+#### 방법 B: -e 플래그로 개별 전달 (신뢰도: ★★☆)
+```bash
+# 각 환경 변수를 -e 플래그로 전달
+docker run -d \
+  -e TELEGRAM_BOT_TOKEN=your_token \
+  -e ANTHROPIC_API_KEY=your_key \
+  -p 18789:18789 \
+  --name openclaw \
+  openclaw/openclaw
+```
+
+#### 방법 C: 설정 파일 마운트 (신뢰도: ★★★)
+```bash
+# 호스트의 openclaw 설정 디렉토리를 컨테이너에 마운트
+docker run -d \
+  -v ~/.openclaw:/root/.openclaw \
+  -p 18789:18789 \
+  --name openclaw \
+  openclaw/openclaw
+```
+
+### Docker에서 데이터 유지 (Volumes)
+- Severity: 보통
+- Solve Time: 5min
+
+**증상:**
+- 컨테이너 재시작 시 모든 설정이 사라짐
+- 대화 기록, 인증 정보가 초기화됨
+- docker restart 후 다시 onboard 필요
+
+**원인:** Docker 컨테이너는 기본적으로 임시 파일 시스템을 사용합니다. 컨테이너를 삭제하면 내부 데이터도 모두 사라집니다. 영구 저장이 필요한 데이터는 볼륨을 사용해야 합니다.
+
+**해결 방법:**
+
+#### 방법 A: Named Volume 사용 (권장) (신뢰도: ★★★)
+```bash
+# Docker named volume으로 OpenClaw 데이터 영구 저장
+docker volume create openclaw-data
+
+docker run -d \
+  -v openclaw-data:/root/.openclaw \
+  -p 18789:18789 \
+  --name openclaw \
+  openclaw/openclaw
+
+# 볼륨 확인
+docker volume inspect openclaw-data
+```
+
+#### 방법 B: 호스트 디렉토리 바인드 마운트 (신뢰도: ★★★)
+```bash
+# 호스트의 특정 디렉토리를 마운트
+mkdir -p ~/openclaw-docker-data
+
+docker run -d \
+  -v ~/openclaw-docker-data:/root/.openclaw \
+  -p 18789:18789 \
+  --name openclaw \
+  openclaw/openclaw
+
+# 이렇게 하면 호스트에서도 파일을 직접 확인/편집 가능
+```
+
+## 공통 오류
+
+### 권한 부족 (EACCES / Permission Denied)
+- Severity: 보통
+- Solve Time: 5min
+
+**증상:**
+- npm ERR! code EACCES
+- Permission denied 에러
+- sudo 사용 권유 메시지
+- 글로벌 패키지 설치 실패
+
+**원인:** npm 글로벌 설치 디렉토리의 소유권 문제입니다. 시스템 패키지 매니저로 Node를 설치한 경우, 글로벌 모듈 디렉토리가 root 소유로 되어 있어 일반 사용자가 쓸 수 없습니다.
+
+**해결 방법:**
+
+#### 방법 A: npm prefix 변경 (권장) (신뢰도: ★★★)
+```bash
+# 사용자 홈에 글로벌 디렉토리 생성
+mkdir -p ~/.npm-global
+npm config set prefix '~/.npm-global'
+
+# PATH 추가 (쉘에 맞게 선택)
+# bash:
+echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc && source ~/.bashrc
+# zsh:
+echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.zshrc && source ~/.zshrc
+
+# 재설치
+npm install -g openclaw@latest
+```
+
+#### 방법 B: nvm 사용으로 전환 (신뢰도: ★★★)
+```bash
+# nvm은 홈 디렉토리에 설치되어 권한 문제 없음
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+source ~/.bashrc  # 또는 source ~/.zshrc
+
+nvm install 22
+npm install -g openclaw@latest
+```
+
+### "openclaw: command not found"
+- Severity: 보통
+- Solve Time: 3min
+
+**증상:**
+- openclaw 명령어 실행 시 'command not found'
+- npm install -g openclaw 성공했는데 실행 안 됨
+- which openclaw 결과 없음
+
+**원인:** npm 글로벌 바이너리 디렉토리가 시스템 PATH에 등록되어 있지 않습니다. npm prefix 설정에 따라 바이너리가 설치되는 위치가 다릅니다.
+
+**해결 방법:**
+
+#### 방법 A: npm 바이너리 경로 확인 및 PATH 추가 (신뢰도: ★★★)
+```bash
+# npm 글로벌 바이너리 경로 확인
+npm config get prefix
+# 결과 예: /usr/local 또는 ~/.npm-global
+
+# 해당 경로의 bin 디렉토리를 PATH에 추가
+# 예: prefix가 ~/.npm-global이면:
+echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.zshrc
+source ~/.zshrc
+
+# 확인
+which openclaw
+openclaw --version
+```
+
+#### 방법 B: npx로 직접 실행 (임시) (신뢰도: ★★☆)
+```bash
+# PATH 설정 없이 바로 실행하려면 npx 사용
+npx openclaw --version
+npx openclaw onboard --install-daemon
+```
+
+### 시스템 패키지 충돌
+- Severity: 보통
+- Solve Time: 10min
+
+**증상:**
+- which node가 /usr/bin/node를 가리킴 (시스템 버전)
+- nvm use 후에도 시스템 Node가 사용됨
+- Node 버전이 예상과 다름
+- 여러 Node 설치본 간 충돌
+
+**원인:** 시스템 패키지 매니저(apt, brew 등)로 설치한 Node.js와 nvm 등으로 설치한 Node.js가 PATH에서 충돌합니다.
+
+**해결 방법:**
+
+#### 방법 A: 시스템 Node 제거 후 nvm 사용 (신뢰도: ★★★)
+```bash
+# Ubuntu/Debian에서 시스템 Node 제거
+sudo apt remove nodejs npm -y
+sudo apt autoremove -y
+
+# macOS에서 Homebrew Node 제거
+# brew uninstall node
+
+# nvm이 없다면 설치
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+source ~/.bashrc
+
+# nvm으로 Node 설치
+nvm install 22
+nvm alias default 22
+
+# 확인
+which node  # ~/.nvm/... 경로여야 정상
+```
+
+### Port 18789 충돌
+- Severity: 보통
+- Solve Time: 3min
+
+**증상:**
+- openclaw gateway start 시 'EADDRINUSE: address already in use :::18789'
+- 게이트웨이가 시작되지 않음
+- 이미 실행 중인 OpenClaw 인스턴스 존재
+
+**원인:** OpenClaw 게이트웨이의 기본 포트인 18789가 이미 다른 프로세스에 의해 사용 중입니다. 이전에 비정상 종료된 OpenClaw 프로세스나 다른 서비스가 해당 포트를 점유하고 있을 수 있습니다.
+
+**해결 방법:**
+
+#### 방법 A: 기존 프로세스 확인 및 종료 (신뢰도: ★★★)
+```bash
+# macOS/Linux: 포트 사용 프로세스 확인
+lsof -i :18789
+
+# 해당 프로세스 종료
+kill -9 <PID>
+
+# 또는 OpenClaw 게이트웨이 정리 재시작
+openclaw gateway stop
+openclaw gateway start
+```
+
+#### 방법 B: 다른 포트 사용 (신뢰도: ★★☆)
+```bash
+# openclaw.json에서 포트 변경
+# ~/.openclaw/openclaw.json 에 아래 내용 추가:
+{
+  "gateway": {
+    "port": 28789
+  }
+}
+
+# 게이트웨이 재시작
+openclaw gateway restart
+```
+
+### Node 버전 호환성
+- Severity: 심각
+- Solve Time: 10min
+
+**증상:**
+- 'Unsupported Node.js version' 에러
+- SyntaxError: Unexpected token 에러 (최신 JS 문법)
+- node --version이 v18 이하
+- OpenClaw 설치 또는 실행 시 버전 경고
+
+**원인:** OpenClaw은 Node.js 22 이상을 요구합니다. 이전 버전에서는 최신 JavaScript 기능(ES2023+)과 특정 Node.js API를 사용할 수 없어 실행에 실패합니다.
+
+**해결 방법:**
+
+#### 방법 A: nvm으로 Node 22 설치 (신뢰도: ★★★)
+```bash
+# 현재 버전 확인
+node --version
+
+# nvm으로 Node 22 설치 및 전환
+nvm install 22
+nvm use 22
+nvm alias default 22
+
+# OpenClaw 재설치 (새 Node 버전에서)
+npm install -g openclaw@latest
+
+# 확인
+node --version  # v22.x.x
+openclaw --version
+```
+
+#### 방법 B: OpenClaw 인스톨러 사용 (Node도 자동 설치) (신뢰도: ★★★)
+```bash
+# 인스톨러가 Node 22 미만이면 자동으로 설치해줍니다
+curl -fsSL https://openclaw.ai/install.sh | bash
+```
+
+### "Pairing Required" (1008)
+- Severity: 심각
+- Solve Time: 5min
+
+**증상:**
+- Claude Code 또는 Cursor에서 'Pairing Required' 메시지
+- WebSocket 연결 후 코드 1008로 끊김
+- 클라이언트가 게이트웨이에 연결은 되지만 인증 실패
+
+**원인:** Claude Code/Cursor와 OpenClaw 게이트웨이 간의 초기 페어링이 완료되지 않았습니다. 클라이언트가 처음 연결할 때 device pairing을 통해 인증해야 하며, 이 과정이 승인되지 않으면 1008 코드와 함께 연결이 끊깁니다.
+
+**해결 방법:**
+
+#### 방법 A: 페어링 승인 (CLI) (신뢰도: ★★★)
+```bash
+# 대기 중인 페어링 요청 확인
+openclaw nodes pending
+
+# 요청 승인 (requestId는 pending 목록에서 확인)
+openclaw nodes approve <requestId>
+
+# 페어링 상태 확인
+openclaw nodes status
+```
+
+#### 방법 B: 게이트웨이 토큰 직접 사용 (신뢰도: ★★☆)
+```bash
+# 게이트웨이 상태 확인
+openclaw gateway status
+
+# 게이트웨이 토큰 확인
+openclaw status
+
+# 클라이언트 설정에서 토큰 입력
+# Claude Code: settings에서 OpenClaw Gateway Token 입력
+# Cursor: OpenClaw 확장의 설정에서 토큰 입력
+```
+
+### 설치 후 openclaw 명령어를 찾을 수 없음
+- Severity: 보통
+- Solve Time: 3min
+
+**증상:**
+- npm install -g openclaw 성공 후 'openclaw: command not found'
+- 설치 완료 메시지는 나왔지만 새 터미널에서 실행 안 됨
+- which openclaw 결과가 없음
+
+**원인:** npm 글로벌 바이너리 경로가 시스템 PATH에 포함되어 있지 않습니다. nvm, fnm 등 버전 관리자를 사용하는 경우, 쉘 시작 파일에서 초기화가 제대로 되어 있는지 확인해야 합니다. (출처: installer.md - 'openclaw not found after install', node.md Troubleshooting)
+
+**해결 방법:**
+
+#### 방법 A: npm prefix 확인 및 PATH 추가 (신뢰도: ★★★)
+```bash
+# npm 글로벌 prefix 확인
+npm prefix -g
+
+# PATH에 해당 경로의 bin 디렉토리 추가
+# macOS/Linux:
+echo 'export PATH="$(npm prefix -g)/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+
+# 또는 bash 사용 시:
+echo 'export PATH="$(npm prefix -g)/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+
+# 확인
+which openclaw
+openclaw --version
+```
+
+#### 방법 B: Linux에서 npm prefix를 사용자 디렉토리로 변경 (신뢰도: ★★★)
+```bash
+# npm 글로벌 디렉토리를 사용자 홈으로 변경
+mkdir -p "$HOME/.npm-global"
+npm config set prefix "$HOME/.npm-global"
+export PATH="$HOME/.npm-global/bin:$PATH"
+
+# 영구 설정
+echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+
+# OpenClaw 재설치
+npm install -g openclaw@latest
+```
+
+## 인증 (OAuth) 오류
+
+### setup-token 생성 실패
+- Severity: 심각
+- Solve Time: 10min
+
+**증상:**
+- openclaw models auth setup-token 실행 시 에러
+- Claude 데스크탑 앱에서 토큰 복사가 안 됨
+- 'Unable to generate setup token' 메시지
+
+**원인:** setup-token은 Claude 데스크탑 앱(Claude for Desktop)의 인증 정보를 기반으로 생성됩니다. Claude 앱이 설치되어 있지 않거나 로그인되어 있지 않으면 토큰을 생성할 수 없습니다.
+
+**해결 방법:**
+
+#### 방법 A: Claude 데스크탑 앱 설치 및 로그인 (신뢰도: ★★★)
+```bash
+# 1. Claude 데스크탑 앱 다운로드 및 설치
+# https://claude.ai/download
+
+# 2. 앱을 열고 Anthropic 계정으로 로그인
+
+# 3. 로그인 완료 후 setup-token 생성
+openclaw models auth setup-token --provider anthropic
+
+# 4. 생성된 토큰을 게이트웨이 호스트에서 붙여넣기
+openclaw models auth paste-token --provider anthropic
+```
+
+#### 방법 B: API 키 직접 사용 (대안) (신뢰도: ★★★)
+```bash
+# Claude 앱 없이 API 키를 직접 사용할 수 있습니다
+# https://console.anthropic.com/settings/keys 에서 API 키 발급
+
+# 환경 변수로 설정
+export ANTHROPIC_API_KEY=sk-ant-...
+
+# 또는 openclaw.json에 직접 설정
+openclaw config set providers.anthropic.apiKey 'sk-ant-...'
+```
+
+### "No API key found for provider anthropic"
+- Severity: 심각
+- Solve Time: 5min
+
+**증상:**
+- 'No API key found for provider anthropic' 에러
+- openclaw models status에서 anthropic이 'unconfigured'
+- 채팅 시작 시 인증 관련 에러
+
+**원인:** 에이전트의 auth 저장소(auth-profiles.json)에 Anthropic 인증 정보가 없습니다. 인증은 에이전트별로 관리되므로, 새 에이전트는 main 에이전트의 키를 자동으로 상속받지 않습니다.
+
+**해결 방법:**
+
+#### 방법 A: setup-token으로 인증 (권장) (신뢰도: ★★★)
+```bash
+# 게이트웨이 호스트에서 실행
+openclaw models auth setup-token --provider anthropic
+
+# 또는 다른 곳에서 생성한 토큰 붙여넣기
+openclaw models auth paste-token --provider anthropic
+
+# 상태 확인
+openclaw models status
+```
+
+#### 방법 B: 환경 변수 설정 (신뢰도: ★★★)
+```bash
+# ANTHROPIC_API_KEY 환경 변수 설정
+export ANTHROPIC_API_KEY=sk-ant-api03-...
+
+# 영구 설정 (쉘 설정 파일에 추가)
+echo 'export ANTHROPIC_API_KEY=sk-ant-api03-...' >> ~/.zshrc
+
+# 게이트웨이 재시작
+openclaw gateway restart
+openclaw models status
+```
+
+#### 방법 C: 다른 에이전트에서 인증 복사 (신뢰도: ★★☆)
+```bash
+# main 에이전트의 auth를 다른 에이전트에 복사
+# auth-profiles.json 위치 확인
+ls ~/.openclaw/agents/main/
+
+# 대상 에이전트 디렉토리로 복사
+cp ~/.openclaw/agents/main/auth-profiles.json ~/.openclaw/agents/<target-agent>/
+
+# 게이트웨이 재시작
+openclaw gateway restart
+```
+
+### setup-token 만료됨
+- Severity: 보통
+- Solve Time: 3min
+
+**증상:**
+- 'Token expired' 또는 'Invalid token' 에러
+- setup-token 붙여넣기 시 인증 실패
+- 이전에 생성한 토큰이 더 이상 작동하지 않음
+
+**원인:** setup-token은 보안상 1시간의 유효 기간을 가집니다. 생성 후 1시간이 지나면 만료되어 사용할 수 없습니다.
+
+**해결 방법:**
+
+#### 방법 A: 새 토큰 생성 (신뢰도: ★★★)
+```bash
+# 새 setup-token 생성 (Claude 데스크탑 앱이 실행 중이어야 함)
+openclaw models auth setup-token --provider anthropic
+
+# 생성 후 바로 붙여넣기 (1시간 내)
+openclaw models auth paste-token --provider anthropic
+
+# 확인
+openclaw models status
+```
+
+### 다중 에이전트 인증 미상속
+- Severity: 보통
+- Solve Time: 5min
+
+**증상:**
+- 서브 에이전트에서 'No API key' 에러
+- main 에이전트는 작동하지만 다른 에이전트는 인증 실패
+- 새로 만든 에이전트가 모델에 접근 불가
+
+**원인:** OpenClaw에서 인증(auth)은 에이전트별로 독립적으로 관리됩니다. 새 에이전트를 만들면 main 에이전트의 인증 정보를 자동으로 상속받지 않으므로, 별도로 설정해야 합니다.
+
+**해결 방법:**
+
+#### 방법 A: 에이전트별 인증 설정 (신뢰도: ★★★)
+```bash
+# 방법 1: 대상 에이전트에서 직접 인증 실행
+openclaw models auth setup-token --provider anthropic --agent <agent-name>
+
+# 방법 2: main에서 auth-profiles.json 복사
+cp ~/.openclaw/agents/main/auth-profiles.json ~/.openclaw/agents/<agent-name>/
+
+# 방법 3: 환경 변수는 모든 에이전트에 공통 적용
+export ANTHROPIC_API_KEY=sk-ant-...
+openclaw gateway restart
+```
+
+### OAuth 콜백 실패 (원격 설정)
+- Severity: 보통
+- Solve Time: 10min
+
+**증상:**
+- OAuth 인증 시 브라우저 콜백이 실패
+- 'redirect_uri mismatch' 에러
+- 원격 서버에서 OAuth 로그인 후 에러 페이지 표시
+
+**원인:** OAuth 콜백 URL은 기본적으로 localhost를 가리킵니다. 원격 서버(VPS, 클라우드)에서 실행 중인 경우, 로컬 브라우저에서 열린 OAuth 페이지가 원격 서버의 콜백 URL에 도달할 수 없습니다.
+
+**해결 방법:**
+
+#### 방법 A: SSH 포트 포워딩 사용 (신뢰도: ★★★)
+```bash
+# 로컬 머신에서 원격 서버로 포트 포워딩
+ssh -L 18789:localhost:18789 user@remote-server
+
+# 이제 로컬 브라우저에서 http://localhost:18789 접속 가능
+# OAuth 콜백도 localhost로 돌아오므로 정상 작동
+```
+
+#### 방법 B: setup-token 방식 사용 (SSH 불필요) (신뢰도: ★★★)
+```bash
+# 로컬에서 setup-token 생성 후 원격 서버에 붙여넣기
+
+# 로컬에서:
+openclaw models auth setup-token --provider anthropic
+# 출력된 토큰을 복사
+
+# 원격 서버에서:
+openclaw models auth paste-token --provider anthropic
+# 토큰 붙여넣기
+```
+
+### Telegram 인증 실패 (401 Unauthorized)
+- Severity: 심각
+- Solve Time: 5min
+
+**증상:**
+- 게이트웨이 로그에 '401 Unauthorized' 에러
+- Telegram 봇이 시작되지 않음
+- 'Not Found: method not available' 에러
+
+**원인:** Telegram 봇 토큰이 잘못되었거나, BotFather에서 토큰이 재생성(revoke)되어 기존 토큰이 무효화되었습니다.
+
+**해결 방법:**
+
+#### 방법 A: 봇 토큰 확인 및 재설정 (신뢰도: ★★★)
+```bash
+# 1. Telegram에서 @BotFather 에게 메시지
+# /mybots -> 봇 선택 -> API Token
+# 토큰 형식: 123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ
+
+# 2. openclaw.json에서 토큰 업데이트
+openclaw config set channels.telegram.botToken '<new_token>'
+
+# 또는 환경 변수로:
+export TELEGRAM_BOT_TOKEN='123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ'
+
+# 3. 게이트웨이 재시작
+openclaw gateway restart
+
+# 4. 채널 상태 확인
+openclaw channels status --probe
+```
+
+#### 방법 B: 봇 토큰 재생성 (신뢰도: ★★☆)
+```bash
+# BotFather에서 새 토큰 발급:
+# 1. @BotFather에게 /revoke 전송
+# 2. 해당 봇 선택
+# 3. 새 토큰 복사
+
+# 주의: 기존 토큰은 즉시 무효화됩니다
+
+# 새 토큰으로 설정 업데이트
+openclaw config set channels.telegram.botToken '<new_token>'
+openclaw gateway restart
+```
+
+## 게이트웨이 접속 오류
+
+### 게이트웨이 접근 거부 (403 / Unauthorized)
+- Severity: 심각
+- Solve Time: 5min
+
+**증상:**
+- Control UI 접속 시 403 Forbidden
+- 'Unauthorized' 에러 메시지
+- API 호출 시 인증 실패
+- 'device identity required' 에러
+
+**원인:** 게이트웨이 토큰이 없거나 잘못되었습니다. 또는 HTTP(비보안)로 접속 시 WebCrypto가 차단되어 device identity를 생성할 수 없습니다.
+
+**해결 방법:**
+
+#### 방법 A: HTTPS 또는 localhost 사용 (신뢰도: ★★★)
+```bash
+# HTTP로 접속 시 device identity 생성 불가
+# 해결 방법 1: localhost로 접속 (같은 머신에서)
+# http://127.0.0.1:18789/
+
+# 해결 방법 2: Tailscale Serve로 HTTPS 설정
+tailscale serve --bg 18789
+# 이후 https://<machine>.ts.net/ 으로 접속
+```
+
+#### 방법 B: 게이트웨이 토큰 확인 (신뢰도: ★★★)
+```bash
+# 게이트웨이 상태 및 토큰 확인
+openclaw status
+
+# 토큰이 표시되면 클라이언트에서 해당 토큰 사용
+# Control UI URL 예: http://127.0.0.1:18789/
+```
+
+#### 방법 C: 비보안 HTTP 허용 (개발 환경만) (신뢰도: ★☆☆)
+```bash
+# 주의: 프로덕션에서는 사용하지 마세요
+# openclaw.json에 추가:
+{
+  "gateway": {
+    "controlUi": {
+      "allowInsecureAuth": true
+    }
+  }
+}
+
+openclaw gateway restart
+```
+
+### 포트 바인딩 실패 (localhost만 허용)
+- Severity: 보통
+- Solve Time: 5min
+
+**증상:**
+- LAN의 다른 기기에서 게이트웨이에 접속 불가
+- 외부에서 http://<ip>:18789 접속 시 연결 거부
+- localhost에서는 작동하지만 다른 IP에서는 안 됨
+
+**원인:** OpenClaw 게이트웨이는 보안상 기본적으로 127.0.0.1(localhost)에만 바인딩됩니다. 외부 접속을 허용하려면 명시적으로 설정을 변경해야 합니다.
+
+**해결 방법:**
+
+#### 방법 A: Tailscale 사용 (권장, 가장 안전) (신뢰도: ★★★)
+```bash
+# Tailscale VPN을 통한 안전한 원격 접속
+# 1. Tailscale 설치: https://tailscale.com/download
+tailscale up
+
+# 2. Tailscale Serve로 HTTPS 프록시
+tailscale serve --bg 18789
+
+# 3. 다른 Tailscale 기기에서 접속
+# https://<machine-name>.ts.net/
+```
+
+#### 방법 B: 바인딩 주소 변경 (주의 필요) (신뢰도: ★☆☆)
+```bash
+# 주의: 0.0.0.0 바인딩은 모든 네트워크 인터페이스에 노출됩니다
+# 반드시 방화벽과 함께 사용하세요
+
+# openclaw.json 설정:
+{
+  "gateway": {
+    "host": "0.0.0.0"
+  }
+}
+
+openclaw gateway restart
+```
+
+### WebSocket 연결 실패
+- Severity: 보통
+- Solve Time: 10min
+
+**증상:**
+- 클라이언트에서 'WebSocket connection failed' 에러
+- Nginx/Caddy 리버스 프록시 뒤에서 연결 끊김
+- Connection: Upgrade 헤더 관련 에러
+
+**원인:** Nginx, Caddy, Cloudflare 등의 리버스 프록시가 WebSocket 업그레이드를 제대로 전달하지 않습니다. WebSocket은 HTTP 업그레이드가 필요한데, 기본 프록시 설정에서는 이를 지원하지 않을 수 있습니다.
+
+**해결 방법:**
+
+#### 방법 A: Nginx WebSocket 프록시 설정 (신뢰도: ★★★)
+```bash
+# /etc/nginx/sites-available/openclaw 파일:
+server {
+    listen 443 ssl;
+    server_name openclaw.example.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:18789;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_read_timeout 86400s;
+        proxy_send_timeout 86400s;
+    }
+}
+
+# 설정 테스트 및 적용
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+#### 방법 B: Caddy WebSocket 프록시 설정 (신뢰도: ★★★)
+```bash
+# Caddyfile:
+openclaw.example.com {
+    reverse_proxy localhost:18789
+}
+
+# Caddy는 WebSocket을 자동으로 프록시합니다
+# 별도 설정 불필요
+sudo systemctl reload caddy
+```
+
+### 다른 포트 바인딩
+- Severity: 보통
+- Solve Time: 3min
+
+**증상:**
+- 기본 포트(18789)가 이미 사용 중
+- 여러 OpenClaw 인스턴스 실행 필요
+- 다른 서비스와 포트 충돌
+
+**원인:** 기본 포트 18789가 다른 서비스에 의해 사용되고 있거나, 여러 OpenClaw 인스턴스를 동시에 실행해야 하는 상황입니다.
+
+**해결 방법:**
+
+#### 방법 A: 설정 파일에서 포트 변경 (신뢰도: ★★★)
+```bash
+# ~/.openclaw/openclaw.json 에 포트 설정 추가:
+{
+  "gateway": {
+    "port": 28789
+  }
+}
+
+# 게이트웨이 재시작
+openclaw gateway restart
+
+# 새 포트로 접속 확인
+curl http://localhost:28789/health
+```
+
+### 방화벽 차단
+- Severity: 보통
+- Solve Time: 5min
+
+**증상:**
+- 로컬에서는 접속되지만 원격에서 연결 거부
+- curl로 테스트 시 connection refused
+- 텔레그램 봇은 작동하지만 Control UI 접근 불가
+
+**원인:** 운영체제 방화벽(ufw, firewalld, Windows Defender Firewall) 또는 클라우드 보안 그룹이 OpenClaw 포트(18789)를 차단하고 있습니다.
+
+**해결 방법:**
+
+#### 방법 A: UFW 방화벽 설정 (Ubuntu) (신뢰도: ★★★)
+```bash
+# UFW에서 포트 허용
+sudo ufw allow 18789/tcp
+sudo ufw reload
+
+# 상태 확인
+sudo ufw status
+```
+
+#### 방법 B: firewalld 설정 (RHEL/CentOS) (신뢰도: ★★★)
+```bash
+# firewalld에서 포트 허용
+sudo firewall-cmd --permanent --add-port=18789/tcp
+sudo firewall-cmd --reload
+
+# 확인
+sudo firewall-cmd --list-ports
+```
+
+#### 방법 C: 클라우드 보안 그룹 확인 (신뢰도: ★★☆)
+```bash
+# AWS, GCP, Azure 등 클라우드 사용 시:
+# 1. 해당 클라우드 콘솔에서 Security Group / Firewall Rules 확인
+# 2. 인바운드 규칙에 TCP 18789 허용 추가
+# 3. 소스 IP를 필요한 범위로 제한 (0.0.0.0/0 대신 특정 IP 권장)
+
+# 또는 Tailscale 사용으로 방화벽 설정 불필요하게 만들기
+tailscale up
+tailscale serve --bg 18789
+```
+
+## 채널 통합 오류
+
+### Discord 권한 부족 (Missing Access 50001)
+- Severity: 심각
+- Solve Time: 10min
+
+**증상:**
+- Discord 봇이 메시지를 읽거나 보내지 못함
+- 'Missing Access' (에러 코드 50001) 에러
+- 봇이 서버에 초대되었는데 특정 채널에서 작동 안 함
+
+**원인:** Discord 봇에 필요한 권한(Intent)이 부여되지 않았거나, 특정 채널/카테고리에서 봇의 역할 권한이 제한되어 있습니다. Discord의 Privileged Gateway Intents(Message Content Intent 등)가 활성화되지 않으면 메시지 내용을 읽을 수 없습니다.
+
+**해결 방법:**
+
+#### 방법 A: Discord Developer Portal에서 Intents 활성화 (신뢰도: ★★★)
+```bash
+# 1. https://discord.com/developers/applications 접속
+# 2. 봇 애플리케이션 선택
+# 3. 왼쪽 메뉴에서 'Bot' 클릭
+# 4. 'Privileged Gateway Intents' 섹션에서 활성화:
+#    - MESSAGE CONTENT INTENT (필수)
+#    - SERVER MEMBERS INTENT (그룹 기능 필요 시)
+#    - PRESENCE INTENT (선택)
+
+# 5. 변경 저장 후 게이트웨이 재시작
+openclaw gateway restart
+```
+
+#### 방법 B: 봇 초대 URL 권한 확인 (신뢰도: ★★★)
+```bash
+# 봇 초대 시 필요한 권한 포함된 URL 생성:
+# Discord Developer Portal -> OAuth2 -> URL Generator
+# 필요한 Scopes: bot, applications.commands
+# 필요한 Bot Permissions:
+#   - Send Messages
+#   - Read Message History
+#   - Embed Links
+#   - Attach Files
+#   - Add Reactions
+
+# 생성된 URL로 봇 재초대 (기존 봇은 자동 업데이트)
+```
+
+#### 방법 C: 채널별 권한 확인 (신뢰도: ★★☆)
+```bash
+# Discord 서버에서:
+# 1. 문제 채널 우클릭 -> 채널 편집 -> 권한
+# 2. 봇의 역할이 메시지 읽기/보내기 권한이 있는지 확인
+# 3. '봇' 역할에 필요한 권한이 없다면 추가
+
+# OpenClaw 채널 상태 확인:
+openclaw channels status --probe
+```
+
+### 플러그인 설정 검증 오류
+- Severity: 보통
+- Solve Time: 5min
+
+**증상:**
+- 게이트웨이 시작 시 config validation 에러
+- 'Unknown key' 또는 'Invalid type' 에러 메시지
+- openclaw doctor에서 설정 문제 보고
+- 게이트웨이가 시작을 거부함
+
+**원인:** openclaw.json 설정 파일에 문법 오류, 알 수 없는 키, 또는 잘못된 값이 포함되어 있습니다. OpenClaw은 안전을 위해 유효하지 않은 설정이 있으면 게이트웨이 시작을 거부합니다.
+
+**해결 방법:**
+
+#### 방법 A: openclaw doctor로 진단 (신뢰도: ★★★)
+```bash
+# 설정 문제 진단
+openclaw doctor
+
+# 자동 수정 시도
+openclaw doctor --fix
+
+# 또는 모든 수정을 자동 승인
+openclaw doctor --yes
+```
+
+#### 방법 B: 설정 파일 직접 검증 (신뢰도: ★★☆)
+```bash
+# 설정 파일 내용 확인
+cat ~/.openclaw/openclaw.json
+
+# JSON5 문법 확인 포인트:
+# - 마지막 항목 뒤 콤마(trailing comma) OK (JSON5)
+# - 주석 OK (// 또는 /* */)
+# - 키 이름에 따옴표 생략 OK
+# - 단, 유효한 키 이름만 사용 (오타 주의!)
+
+# 설정 초기화 (최후의 수단)
+mv ~/.openclaw/openclaw.json ~/.openclaw/openclaw.json.backup
+openclaw onboard
+```
+
+### Telegram Privacy Mode로 그룹 메시지 수신 불가
+- Severity: 심각
+- Solve Time: 5min
+
+**증상:**
+- Telegram 그룹에서 봇이 메시지에 반응하지 않음
+- 멘션 없는 메시지를 봇이 전혀 못 봄
+- requireMention: false로 설정했는데도 그룹 메시지 무시
+- 로그에 'skipping group message' 표시
+
+**원인:** Telegram 봇은 기본적으로 Privacy Mode가 활성화되어 있어, 그룹에서 봇에게 직접 보낸 명령이나 @멘션만 수신합니다. 모든 그룹 메시지를 수신하려면 Privacy Mode를 비활성화하거나 봇에 관리자 권한을 부여해야 합니다. Privacy Mode 변경 후에는 봇을 그룹에서 제거했다가 다시 추가해야 적용됩니다. (출처: telegram.md - 'Group message visibility (Privacy Mode)')
+
+**해결 방법:**
+
+#### 방법 A: /setprivacy 비활성화 (BotFather) (신뢰도: ★★★)
+```bash
+# 1. Telegram에서 @BotFather에게 메시지 전송
+# 2. /setprivacy 명령 전송
+# 3. 봇 선택
+# 4. 'Disable' 선택 (Privacy Mode 비활성화)
+
+# 중요: 변경 후 봇을 그룹에서 제거했다가 다시 추가해야 적용됨
+# 그룹 설정 -> 봇 제거 -> 봇 재추가
+
+# OpenClaw 설정 확인
+openclaw channels status --probe
+```
+
+#### 방법 B: 봇에 관리자 권한 부여 (Privacy Mode 유지) (신뢰도: ★★★)
+```bash
+# 관리자 봇은 Privacy Mode와 관계없이 모든 그룹 메시지를 수신합니다
+
+# 1. Telegram 그룹 설정 열기
+# 2. 관리자 -> 관리자 추가 -> 봇 선택
+# 3. 필요한 권한 부여
+
+# OpenClaw 채널 상태 확인
+openclaw channels status --probe
+```
+
+### Telegram Long-polling vs Webhook 설정
+- Severity: 보통
+- Solve Time: 10min
+
+**증상:**
+- 원격 서버에서 Telegram 봇 연결이 불안정
+- 메시지 수신이 간헐적으로 실패
+- 높은 레이턴시 또는 메시지 누락
+- IPv6 관련 네트워크 에러
+
+**원인:** OpenClaw은 기본적으로 Long-polling 방식으로 Telegram 메시지를 수신합니다. 원격 서버에서 네트워크가 불안정하거나 IPv6 문제가 있는 경우, Webhook 모드로 전환하면 안정성이 향상됩니다. Webhook 모드에는 공개 URL과 secret 설정이 필요합니다. (출처: telegram.md - 'Long-polling vs webhook')
+
+**해결 방법:**
+
+#### 방법 A: Webhook 모드로 전환 (신뢰도: ★★★)
+```bash
+# openclaw.json에서 webhook 설정 추가
+# {
+#   "channels": {
+#     "telegram": {
+#       "webhookUrl": "https://your-domain.com/telegram-webhook",
+#       "webhookSecret": "your-secret-here",
+#       "webhookPath": "/telegram-webhook"
+#     }
+#   }
+# }
+
+# 또는 CLI로 설정
+openclaw config set channels.telegram.webhookUrl 'https://your-domain.com/telegram-webhook'
+openclaw config set channels.telegram.webhookSecret 'your-secret-here'
+
+# 게이트웨이 재시작
+openclaw gateway restart
+```
+
+#### 방법 B: IPv4 강제 사용 (Long-polling 유지) (신뢰도: ★★☆)
+```bash
+# api.telegram.org가 IPv6로 먼저 해석되어 문제가 발생하는 경우
+# IPv4 강제 해석:
+
+# DNS 확인
+dig +short api.telegram.org A
+dig +short api.telegram.org AAAA
+
+# /etc/hosts에 IPv4 주소 추가 (IPv6 문제 우회)
+# sudo echo '149.154.167.220 api.telegram.org' >> /etc/hosts
+
+# 또는 OpenClaw 설정에서 네트워크 설정
+# channels.telegram.network.autoSelectFamily: false
+```
+
+### JSON5 설정 파일 파싱 오류
+- Severity: 보통
+- Solve Time: 5min
+
+**증상:**
+- 게이트웨이 시작 시 설정 파일 파싱 에러
+- openclaw.json 구문 오류
+- 'config validation failed' 메시지
+- 게이트웨이가 시작을 거부하며 diagnostic 명령만 허용
+
+**원인:** openclaw.json은 JSON5 형식을 사용합니다(주석, trailing comma 허용). 하지만 잘못된 구문이 있으면 파싱에 실패합니다. OpenClaw은 유효하지 않은 설정이 있으면 안전을 위해 게이트웨이 시작을 거부합니다. openclaw doctor로 진단 및 수정이 가능합니다. (출처: configuration.md - 'Strict config validation')
+
+**해결 방법:**
+
+#### 방법 A: openclaw doctor로 진단 및 수정 (권장) (신뢰도: ★★★)
+```bash
+# 설정 문제 진단
+openclaw doctor
+
+# 자동 수정 적용
+openclaw doctor --fix
+
+# 모든 수정을 자동 승인 (비대화형)
+openclaw doctor --yes
+
+# 게이트웨이 재시작
+openclaw gateway restart
+```
+
+#### 방법 B: 설정 파일 수동 확인 (신뢰도: ★★☆)
+```bash
+# 설정 파일 내용 확인
+cat ~/.openclaw/openclaw.json
+
+# JSON5 문법 체크 포인트:
+# - trailing comma (마지막 항목 뒤 콤마) 허용
+# - 주석 허용 (// 또는 /* */)
+# - 키 이름에 따옴표 생략 가능
+# - 단, 유효한 키 이름만 사용 (오타 주의)
+
+# 설정 파일이 심하게 손상된 경우 백업 후 초기화
+mv ~/.openclaw/openclaw.json ~/.openclaw/openclaw.json.backup
+openclaw onboard
+```
+
+### 게이트웨이 시작 차단: 설정 검증 실패
+- Severity: 심각
+- Solve Time: 5min
+
+**증상:**
+- 'Gateway won't start - configuration invalid' 메시지
+- 게이트웨이 시작 시 'Unknown key' 에러
+- diagnostic 명령(doctor, logs, status)만 실행 가능
+- 업그레이드 후 기존 설정이 새 스키마와 불일치
+
+**원인:** OpenClaw은 설정 파일의 모든 키를 스키마와 대조하여 검증합니다. 알 수 없는 키, 잘못된 타입, 유효하지 않은 값이 있으면 게이트웨이 시작을 거부합니다. 업그레이드 후 더 이상 지원되지 않는 레거시 키가 남아 있는 경우에도 발생합니다. (출처: configuration.md - 'Strict config validation', troubleshooting.md - 'Gateway won't start - configuration invalid')
+
+**해결 방법:**
+
+#### 방법 A: doctor로 마이그레이션 (권장) (신뢰도: ★★★)
+```bash
+# 문제 진단 (설정 검증 실패해도 실행 가능)
+openclaw doctor
+
+# 자동 수정 및 레거시 키 마이그레이션
+openclaw doctor --fix
+
+# 심층 진단 (레거시 서비스 스캔 포함)
+openclaw doctor --deep
+
+# 게이트웨이 재시작
+openclaw gateway restart
+```
+
+#### 방법 B: 로그 및 상태로 원인 파악 (신뢰도: ★★☆)
+```bash
+# 설정 검증이 실패해도 진단 명령은 실행 가능:
+openclaw logs --follow
+openclaw status
+openclaw gateway status
+
+# 설정 파일에서 문제 키 수동 확인
+cat ~/.openclaw/openclaw.json
+```
+
+## 클라이언트 연결 오류
+
+### Claude Code/Cursor 응답 없음
+- Severity: 보통
+- Solve Time: 10min
+
+**증상:**
+- 메시지를 보내도 응답이 오지 않음
+- 채팅창에서 로딩만 계속됨
+- WebSocket 연결은 되었지만 응답 타임아웃
+- 30분 이상 대기 후 연결 끊김
+
+**원인:** 게이트웨이의 기본 타임아웃(30분)이 초과되었거나, 네트워크 불안정으로 WebSocket 연결이 중간에 끊어졌지만 클라이언트가 이를 감지하지 못한 상태입니다. 또는 AI 모델 제공자(Anthropic) 측의 일시적 장애일 수 있습니다.
+
+**해결 방법:**
+
+#### 방법 A: 기본 진단 (신뢰도: ★★★)
+```bash
+# 1. 게이트웨이 상태 확인
+openclaw status
+
+# 2. 실시간 로그 확인
+openclaw logs --follow
+
+# 3. 모델 제공자 상태 확인
+openclaw models status
+openclaw status --deep
+
+# 4. 게이트웨이 재시작
+openclaw gateway restart
+```
+
+#### 방법 B: 타임아웃 설정 조정 (신뢰도: ★★☆)
+```bash
+# 게이트웨이 heartbeat/timeout 설정 확인
+# openclaw.json에서 조정 가능:
+{
+  "gateway": {
+    "heartbeat": {
+      "intervalMs": 30000,
+      "timeoutMs": 60000
+    }
+  }
+}
+
+openclaw gateway restart
+```
+
+#### 방법 C: 네트워크 문제 확인 (신뢰도: ★★☆)
+```bash
+# Anthropic API 연결 확인
+curl -s https://api.anthropic.com/v1/messages -o /dev/null -w '%{http_code}'
+
+# 게이트웨이 health check
+curl http://localhost:18789/health
+
+# DNS 확인
+nslookup api.anthropic.com
+
+# VPN/프록시가 WebSocket을 차단하는지 확인
+# VPN을 일시적으로 비활성화 후 테스트
+```
+
+## 런타임 오류
+
+### openclaw doctor 진단 도구 사용법 및 일반 오류
+- Severity: 보통
+- Solve Time: 5min
+
+**증상:**
+- openclaw doctor 실행 시 'config validation failed' 메시지
+- doctor가 레거시 키 마이그레이션을 요구함
+- 게이트웨이가 시작을 거부하며 'run openclaw doctor' 안내
+- doctor --fix 실행 후에도 문제가 반복됨
+
+**원인:** openclaw doctor는 설정 정규화, 레거시 키 마이그레이션, OAuth 토큰 갱신, 서비스 상태 점검 등을 수행하는 종합 진단 도구입니다. 설정 파일에 더 이상 지원되지 않는 키(routing.allowFrom, agent.model 등)가 남아 있거나, 서비스 설정이 최신 스키마와 맞지 않으면 doctor가 마이그레이션을 요구합니다.
+
+**해결 방법:**
+
+#### 방법 A: doctor 자동 수정 (권장) (신뢰도: ★★★)
+```bash
+# 진단 실행
+openclaw doctor
+
+# 자동 수정 적용
+openclaw doctor --fix
+
+# 모든 수정을 자동 승인 (비대화형)
+openclaw doctor --yes
+
+# 공격적 수정 (커스텀 서비스 설정도 덮어쓰기)
+openclaw doctor --repair --force
+```
+
+#### 방법 B: 심층 진단 (시스템 서비스 스캔 포함) (신뢰도: ★★☆)
+```bash
+# 레거시/추가 게이트웨이 서비스까지 스캔
+openclaw doctor --deep
+
+# 비대화형 모드 (안전한 마이그레이션만 적용)
+openclaw doctor --non-interactive
+
+# 게이트웨이 토큰 자동 생성
+openclaw doctor --generate-gateway-token
+```
+
+### 대시보드/Control UI 연결 실패
+- Severity: 심각
+- Solve Time: 5min
+
+**증상:**
+- Control UI 접속 시 'device identity required' 에러
+- HTTP로 대시보드 접속 시 연결 실패
+- WebSocket 1008 코드로 반복 재연결 (reconnect loop)
+- 'Unauthorized' 에러와 함께 대시보드 로딩 실패
+
+**원인:** HTTP(비보안 컨텍스트)로 대시보드에 접속하면 브라우저가 WebCrypto를 차단하여 device identity를 생성할 수 없습니다. 또한 게이트웨이 토큰이 없거나, 페어링이 승인되지 않은 클라이언트가 반복 연결을 시도하면 1008 코드로 끊기고 재연결 루프에 빠집니다.
+
+**해결 방법:**
+
+#### 방법 A: HTTPS 또는 localhost 사용 (권장) (신뢰도: ★★★)
+```bash
+# localhost로 접속 (같은 머신에서)
+# http://127.0.0.1:18789/
+
+# Tailscale Serve로 HTTPS 설정
+tailscale serve --bg 18789
+# 이후 https://<machine>.ts.net/ 으로 접속
+```
+
+#### 방법 B: 비보안 HTTP 허용 (개발 환경만) (신뢰도: ★☆☆)
+```bash
+# 주의: 프로덕션에서는 사용하지 마세요
+# openclaw.json에 추가:
+{
+  "gateway": {
+    "controlUi": {
+      "allowInsecureAuth": true
+    }
+  }
+}
+
+openclaw gateway restart
+```
+
+#### 방법 C: 페어링 승인으로 1008 루프 해결 (신뢰도: ★★★)
+```bash
+# 대기 중인 페어링 요청 확인
+openclaw nodes pending
+
+# 요청 승인
+openclaw nodes approve <requestId>
+
+# 게이트웨이 상태 확인
+openclaw status
+openclaw gateway probe
+```
+
+### 채널 연결됐는데 메시지가 안 옴
+- Severity: 심각
+- Solve Time: 10min
+
+**증상:**
+- 채널 상태는 정상이지만 메시지가 에이전트에 도달하지 않음
+- 로그에 'blocked', 'skip', 'unauthorized' 표시
+- 그룹 채팅에서 멘션해도 반응 없음
+- 새 발신자의 메시지가 무시됨
+
+**원인:** 발신자가 allowFrom 목록에 없거나(allowlist 정책), dmPolicy가 pairing인데 페어링이 미승인 상태이거나, 그룹 채팅에서 mentionPatterns/requireMention 설정이 맞지 않아 메시지가 필터링됩니다. Discord의 경우 groupPolicy가 allowlist인데 guild/channel이 등록되지 않았을 수 있습니다.
+
+**해결 방법:**
+
+#### 방법 A: 발신자 허용 목록 확인 (신뢰도: ★★★)
+```bash
+# 전체 상태에서 AllowFrom 확인
+openclaw status
+
+# 채널별 상태 프로브
+openclaw channels status --probe
+
+# allowFrom에 발신자 추가
+openclaw config set channels.whatsapp.allowFrom '["+821012345678"]'
+
+# 또는 dmPolicy를 open으로 변경 (주의: 보안 위험)
+openclaw config set channels.telegram.dmPolicy open
+openclaw gateway restart
+```
+
+#### 방법 B: 페어링 요청 승인 (신뢰도: ★★★)
+```bash
+# dmPolicy가 pairing인 경우, 미승인 요청 확인
+openclaw pairing list <channel>
+
+# 승인 (채널당 최대 3개 pending 요청)
+openclaw pairing approve <requestId>
+
+# 로그에서 차단 원인 확인
+openclaw logs --follow | grep 'blocked\|skip\|unauthorized'
+```
+
+#### 방법 C: 그룹 채팅 멘션 설정 확인 (신뢰도: ★★☆)
+```bash
+# 그룹에서 멘션 필수 여부 확인
+grep -n 'mentionPatterns\|requireMention\|groupPolicy' ~/.openclaw/openclaw.json
+
+# Discord: guild/channel allowlist 확인
+# channels.discord.groupPolicy가 allowlist면 guild 등록 필요
+# channels.discord.guilds.<guildId>.channels에 채널 ID 추가
+
+# Telegram/WhatsApp 그룹: requireMention 비활성화
+# channels.telegram.groups."*".requireMention: false
+```
+
+### 크론/하트비트 미작동
+- Severity: 보통
+- Solve Time: 5min
+
+**증상:**
+- 예약된 하트비트가 실행되지 않음
+- 크론 작업이 예상 시간에 트리거되지 않음
+- quiet-hours 동안 하트비트가 건너뛰어짐
+- 스케줄러 비활성화 경고
+
+**원인:** 게이트웨이의 스케줄러가 비활성화되어 있거나, quiet-hours 설정으로 인해 특정 시간대에 하트비트가 자동으로 건너뛰어집니다. 또한 게이트웨이가 재시작된 후 크론 상태가 초기화될 수 있습니다.
+
+**해결 방법:**
+
+#### 방법 A: 스케줄러 및 quiet-hours 설정 확인 (신뢰도: ★★★)
+```bash
+# 게이트웨이 상태 확인
+openclaw status
+
+# 설정 파일에서 스케줄러 관련 확인
+cat ~/.openclaw/openclaw.json | grep -A5 'heartbeat\|cron\|quiet'
+
+# quiet-hours가 현재 시간을 포함하는지 확인
+# 예: 23:00-08:00이면 해당 시간대에 하트비트 스킵됨
+
+# 로그에서 스케줄러 동작 확인
+openclaw logs --follow | grep 'heartbeat\|cron\|schedule\|quiet'
+```
+
+#### 방법 B: 하트비트 수동 트리거 (신뢰도: ★★☆)
+```bash
+# 게이트웨이 재시작으로 스케줄러 초기화
+openclaw gateway restart
+
+# 실시간 로그로 하트비트 동작 확인
+openclaw logs --follow
+```
+
+### 브라우저 도구 실패 (Chrome CDP / Extension Relay)
+- Severity: 심각
+- Solve Time: 15min
+
+**증상:**
+- 'Failed to start Chrome CDP on port 18800' 에러
+- 'Playwright is not available in this gateway build' 메시지
+- Chrome extension relay 연결 안 됨 (badge가 ON이 아님)
+- 스냅샷/스크린샷 501 에러
+- Linux에서 'Cannot open display' 에러
+
+**원인:** 브라우저 도구는 Chrome/Brave/Edge의 CDP(Chrome DevTools Protocol)를 통해 작동합니다. Snap 패키지 Chromium(Ubuntu), Playwright 미설치, 또는 Chrome extension이 탭에 attach되지 않은 경우 실패합니다. 원격 서버에서는 가상 디스플레이(Xvfb)가 필요할 수 있습니다.
+
+**해결 방법:**
+
+#### 방법 A: 브라우저 실행 경로 설정 (Linux) (신뢰도: ★★★)
+```bash
+# Snap Chromium 대신 Google Chrome 설치
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo dpkg -i google-chrome-stable_current_amd64.deb
+
+# 설정에 실행 경로 지정
+openclaw config set browser.executablePath '/usr/bin/google-chrome-stable'
+
+# 게이트웨이 재시작
+openclaw gateway restart
+```
+
+#### 방법 B: Playwright 설치 (신뢰도: ★★★)
+```bash
+# Playwright 설치 (playwright-core가 아닌 전체 패키지)
+npm install -g playwright
+npx playwright install chromium
+
+# Docker 환경에서는:
+# npx playwright 대신 번들된 CLI 사용
+node /app/node_modules/playwright-core/cli.js install chromium
+
+# 게이트웨이 재시작
+openclaw gateway restart
+```
+
+#### 방법 C: Chrome Extension Relay 설정 (신뢰도: ★★☆)
+```bash
+# 확장 프로그램 설치
+openclaw browser extension install
+
+# Chrome에서 chrome://extensions -> Developer mode 활성화
+# 'Load unpacked' -> openclaw browser extension path 경로 선택
+# 확장 프로그램을 핀 고정하고 제어할 탭에서 아이콘 클릭 (badge ON)
+
+# 상태 확인
+openclaw browser --browser-profile chrome status
+openclaw browser --browser-profile chrome tabs
+```
+
+### 업그레이드 후 고장 (config drift / auth mode 변경)
+- Severity: 심각
+- Solve Time: 10min
+
+**증상:**
+- 업그레이드 후 게이트웨이가 시작되지 않음
+- 'Unknown key' 또는 설정 검증 에러
+- 이전에 작동하던 기능이 갑자기 안 됨
+- 'Agent failed: Unknown model' 에러
+- 여러 워크스페이스 디렉토리 감지 경고
+
+**원인:** OpenClaw 업그레이드 시 설정 스키마가 변경되거나, 더 이상 지원하지 않는 모델명/키가 거부됩니다. 또한 이전 설치의 ~/openclaw 디렉토리가 남아 있으면 상태가 분산되어 충돌이 발생합니다. auth mode가 변경된 경우 기존 인증이 무효화될 수 있습니다.
+
+**해결 방법:**
+
+#### 방법 A: doctor로 마이그레이션 (권장) (신뢰도: ★★★)
+```bash
+# doctor가 레거시 키 마이그레이션 자동 수행
+openclaw doctor --fix
+
+# 모델 확인 및 변경
+openclaw models list
+openclaw models scan
+
+# 게이트웨이 재시작
+openclaw gateway restart
+```
+
+#### 방법 B: 추가 워크스페이스 정리 (신뢰도: ★★☆)
+```bash
+# 레거시 워크스페이스 디렉토리 확인
+ls -la ~/openclaw 2>/dev/null
+ls -la ~/.openclaw
+
+# 하나의 활성 워크스페이스만 유지
+# 레거시 디렉토리 백업 후 제거
+mv ~/openclaw ~/openclaw-backup-$(date +%Y%m%d)
+
+# 인증 재설정이 필요한 경우
+openclaw models auth setup-token --provider anthropic
+openclaw models status
+```
+
+### gateway already running (PID lock 충돌)
+- Severity: 보통
+- Solve Time: 3min
+
+**증상:**
+- 'Address already in use' (port 18789) 에러
+- 게이트웨이 시작 시 이미 실행 중이라는 메시지
+- 이전 프로세스가 비정상 종료 후 포트를 점유
+- SSH 터널이 포트를 점유하고 있음
+
+**원인:** 이전 게이트웨이 프로세스가 비정상 종료되어 PID 파일이나 포트가 남아 있거나, launchd/systemd 서비스가 프로세스를 자동 재시작하여 수동 시작과 충돌합니다. SSH 포트 포워딩이 포트를 점유하는 경우도 있습니다.
+
+**해결 방법:**
+
+#### 방법 A: 기존 프로세스 확인 및 정리 (신뢰도: ★★★)
+```bash
+# 게이트웨이 상태 확인 (리스너 및 원인 표시)
+openclaw gateway status
+
+# 포트 사용 프로세스 확인
+lsof -nP -iTCP:18789 -sTCP:LISTEN
+
+# 서비스로 관리되는 경우 서비스 중지 먼저
+openclaw gateway stop
+
+# 그래도 안 되면 프로세스 직접 종료
+kill -TERM <PID>
+sleep 1
+kill -9 <PID>  # 최후의 수단
+
+# 재시작
+openclaw gateway start
+```
+
+#### 방법 B: 다른 포트 사용 (신뢰도: ★★☆)
+```bash
+# openclaw.json에서 포트 변경
+openclaw config set gateway.port 28789
+
+# 서비스 재설치 (새 포트 적용)
+openclaw gateway install --force
+openclaw gateway start
+```
+
+### RPC probe failed (서비스 실행 중이지만 응답 없음)
+- Severity: 심각
+- Solve Time: 10min
+
+**증상:**
+- 서비스 상태는 'running'이지만 RPC probe 실패
+- openclaw status에서 게이트웨이 도달 불가
+- 'Service Running but Port Not Listening' 상태
+- gateway.mode 설정 불일치
+
+**원인:** 서비스 슈퍼바이저(launchd/systemd)가 프로세스가 살아있다고 보고하지만, 게이트웨이가 실제로 포트에 바인딩하지 못했습니다. gateway.mode가 local이 아니거나, 비-loopback 바인딩에 auth 토큰이 없거나, CLI와 서비스의 설정 파일이 다를 수 있습니다.
+
+**해결 방법:**
+
+#### 방법 A: 설정 일치 확인 (신뢰도: ★★★)
+```bash
+# 서비스 상태 + probe 대상 확인
+openclaw gateway status
+
+# gateway.mode가 local인지 확인
+openclaw config get gateway.mode
+
+# local이 아니면 설정
+openclaw config set gateway.mode local
+
+# CLI와 서비스 설정이 다르면 서비스 재설치
+openclaw gateway install --force
+openclaw gateway restart
+```
+
+#### 방법 B: auth 토큰 설정 (비-loopback 바인딩) (신뢰도: ★★★)
+```bash
+# 비-loopback 바인딩(lan/tailnet/custom)에는 auth 필수
+# gateway.auth.token 설정
+openclaw doctor --generate-gateway-token
+
+# 또는 수동으로:
+openclaw config set gateway.auth.mode token
+# OPENCLAW_GATEWAY_TOKEN 환경 변수 설정
+
+# 로그에서 바인딩 실패 원인 확인
+openclaw logs --follow | grep 'bind\|auth\|refusing'
+```
+
+## 채널 확장 오류
+
+### WhatsApp 연동 오류 (QR 스캔 / 세션 만료)
+- Severity: 심각
+- Solve Time: 10min
+
+**증상:**
+- WhatsApp QR 코드가 표시되지 않거나 스캔 실패
+- 연결 후 'logged out' 또는 'unlinked' 상태
+- 로그에 'disconnect', 'logout' 이벤트 반복
+- selfChatMode에서 자기 메시지 처리 이상
+
+**원인:** WhatsApp Web(Baileys)은 QR 코드를 통해 Linked Device로 등록됩니다. 세션이 만료되거나 WhatsApp 앱에서 연결 해제하면 재인증이 필요합니다. 또한 Node.js가 아닌 Bun으로 실행하면 WhatsApp 채널이 작동하지 않습니다.
+
+**해결 방법:**
+
+#### 방법 A: QR 재스캔으로 재인증 (신뢰도: ★★★)
+```bash
+# 기존 세션 로그아웃
+openclaw channels logout
+
+# 인증 정보 정리 (logout이 완전하지 않을 때)
+trash "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}/credentials"
+
+# QR 코드로 재로그인
+openclaw channels login --verbose
+
+# 게이트웨이 재시작
+openclaw gateway restart
+```
+
+#### 방법 B: 상태 확인 및 self-chat 설정 (신뢰도: ★★☆)
+```bash
+# 연결 상태 심층 확인
+openclaw status --deep
+
+# 최근 연결 이벤트 확인
+openclaw logs --limit 200 | grep 'connection\|disconnect\|logout'
+
+# self-chat 모드 (자기 번호로 사용 시):
+# openclaw.json에 추가
+{
+  "channels": {
+    "whatsapp": {
+      "selfChatMode": true,
+      "dmPolicy": "allowlist",
+      "allowFrom": ["+821012345678"]
+    }
+  }
+}
+```
+
+### Slack 연동 오류
+- Severity: 보통
+- Solve Time: 15min
+
+**증상:**
+- Slack 봇이 메시지에 반응하지 않음
+- Socket Mode 연결 실패
+- 'xapp-' 또는 'xoxb-' 토큰 관련 에러
+- 봇이 채널에 초대되지 않아 메시지 수신 불가
+- Message Content Intent 누락
+
+**원인:** Slack은 Socket Mode(실시간) 또는 HTTP Webhook 모드로 작동합니다. App Token(xapp-...)과 Bot Token(xoxb-...)이 모두 필요하며, Event Subscriptions에서 message.* 이벤트 구독과 봇의 채널 초대가 필수입니다.
+
+**해결 방법:**
+
+#### 방법 A: Slack 앱 설정 확인 (신뢰도: ★★★)
+```bash
+# 1. https://api.slack.com/apps 에서 앱 설정 확인
+# 2. Socket Mode가 활성화되어 있는지 확인
+# 3. App-Level Token (xapp-...) 확인/재생성
+# 4. Bot User OAuth Token (xoxb-...) 확인
+
+# 토큰 설정 (환경 변수 권장)
+export SLACK_APP_TOKEN=xapp-...
+export SLACK_BOT_TOKEN=xoxb-...
+
+# 또는 설정 파일:
+openclaw config set channels.slack.enabled true
+openclaw config set channels.slack.appToken 'xapp-...'
+openclaw config set channels.slack.botToken 'xoxb-...'
+
+openclaw gateway restart
+openclaw channels status --probe
+```
+
+#### 방법 B: 이벤트 및 권한 점검 (신뢰도: ★★☆)
+```bash
+# Slack 앱 설정에서 확인할 항목:
+# Event Subscriptions -> 활성화
+#   - message.channels, message.groups, message.im, message.mpim
+#   - app_mention
+#   - reaction_added, reaction_removed
+# OAuth Scopes -> Bot Token Scopes:
+#   - chat:write, channels:history, groups:history
+#   - im:history, mpim:history, reactions:read, reactions:write
+# App Home -> Messages Tab 활성화 (DM 허용)
+
+# 봇을 채널에 초대
+# Slack에서: /invite @봇이름
+```
+
+### Signal 연동 오류
+- Severity: 보통
+- Solve Time: 20min
+
+**증상:**
+- Signal 메시지 송수신 불가
+- signal-cli 데몬 연결 실패
+- 'signal-cli: command not found' 에러
+- Signal 번호 등록/링크 실패
+
+**원인:** Signal 채널은 외부 CLI인 signal-cli(Java 필요)를 통해 JSON-RPC + SSE로 통신합니다. signal-cli가 설치되지 않았거나, 디바이스 링크가 해제되었거나, Java 런타임이 없으면 작동하지 않습니다.
+
+**해결 방법:**
+
+#### 방법 A: signal-cli 설치 및 디바이스 링크 (신뢰도: ★★★)
+```bash
+# Java 설치 (필수)
+# macOS: brew install openjdk
+# Ubuntu: sudo apt install default-jre
+
+# signal-cli 설치
+# https://github.com/AsamK/signal-cli/releases 에서 다운로드
+
+# 디바이스 링크
+signal-cli link -n 'OpenClaw'
+# QR 코드가 표시되면 Signal 앱에서 스캔
+
+# OpenClaw 설정
+openclaw config set channels.signal.enabled true
+openclaw config set channels.signal.account '+821012345678'
+openclaw config set channels.signal.cliPath 'signal-cli'
+
+openclaw gateway restart
+```
+
+#### 방법 B: signal-cli 데몬 수동 시작 (신뢰도: ★★☆)
+```bash
+# signal-cli 데몬이 실행 중인지 확인
+# signal-cli는 HTTP JSON-RPC 모드로 실행되어야 함
+signal-cli -a '+821012345678' daemon --http localhost:7583
+
+# 별도 번호 사용 권장 (자기 메시지 루프 방지)
+# 개인 Signal 계정으로 실행하면 자기 메시지가 무시됨
+```
+
+### iMessage 연동 오류
+- Severity: 보통
+- Solve Time: 15min
+
+**증상:**
+- iMessage 메시지가 OpenClaw에 도달하지 않음
+- 'imsg: command not found' 에러
+- macOS 권한 프롬프트 (Full Disk Access) 거부
+- chat.db 접근 권한 없음
+
+**원인:** iMessage는 macOS 전용이며 imsg CLI(레거시) 또는 BlueBubbles를 통해 작동합니다. Messages 앱이 로그인되어 있어야 하고, Full Disk Access 권한이 필요합니다. 새 설치는 BlueBubbles를 권장합니다.
+
+**해결 방법:**
+
+#### 방법 A: BlueBubbles 사용 (권장, 신규 설치) (신뢰도: ★★★)
+```bash
+# BlueBubbles는 iMessage의 권장 백엔드입니다
+# https://bluebubbles.app 에서 설치
+
+# OpenClaw 설정에서 BlueBubbles 채널 활성화
+# 상세: openclaw 공식 문서의 /channels/bluebubbles 참조
+```
+
+#### 방법 B: 레거시 imsg 설정 (기존 사용자) (신뢰도: ★★☆)
+```bash
+# imsg CLI 설치
+brew install steipete/tap/imsg
+
+# macOS 권한 설정:
+# 시스템 설정 -> 개인 정보 보호 -> Full Disk Access
+# 터미널 앱 또는 OpenClaw 프로세스 추가
+
+# OpenClaw 설정
+openclaw config set channels.imessage.enabled true
+openclaw config set channels.imessage.cliPath '/usr/local/bin/imsg'
+openclaw config set channels.imessage.dbPath '/Users/$USER/Library/Messages/chat.db'
+
+openclaw gateway restart
+```
+
+## 스킬 & 모델 오류
+
+### ClawHub 스킬 설치 실패
+- Severity: 보통
+- Solve Time: 5min
+
+**증상:**
+- clawhub install 실행 시 에러
+- 스킬 폴더가 생성되지 않음
+- 설치된 스킬이 에이전트에 로드되지 않음
+- clawhub login 인증 실패
+
+**원인:** ClawHub CLI가 설치되지 않았거나, 인증이 만료되었거나, 스킬 slug가 잘못되었습니다. 설치된 스킬은 <workspace>/skills에 저장되며, 다음 세션부터 로드됩니다. 또한 같은 이름의 스킬이 여러 위치에 있으면 우선순위에 따라 충돌할 수 있습니다.
+
+**해결 방법:**
+
+#### 방법 A: ClawHub CLI 설치 및 인증 (신뢰도: ★★★)
+```bash
+# ClawHub CLI 설치
+npm install -g clawhub
+
+# 로그인 (브라우저 인증)
+clawhub login
+
+# 또는 토큰으로 로그인
+clawhub login --token <your-token>
+
+# 스킬 검색 및 설치
+clawhub search 'calendar'
+clawhub install <skill-slug>
+
+# 설치된 스킬 확인
+clawhub list
+```
+
+#### 방법 B: 스킬 로드 확인 및 업데이트 (신뢰도: ★★☆)
+```bash
+# 스킬 로드 위치 우선순위:
+# 1. <workspace>/skills (최고 우선)
+# 2. ~/.openclaw/skills (공유)
+# 3. 번들 스킬 (최저 우선)
+
+# 스킬 상태 확인
+openclaw doctor  # Skills status 섹션 확인
+
+# 모든 스킬 업데이트
+clawhub update --all
+
+# 새 세션 시작 (스킬 리로드)
+# 채팅에서 /new 전송
+```
+
+### 모델 변경 오류 (잘못된 모델명 / API 키 누락)
+- Severity: 심각
+- Solve Time: 5min
+
+**증상:**
+- 'Unknown model: anthropic/claude-haiku-3-5' 에러
+- 'model not allowed' 에러
+- 'All models failed' 에러
+- 모델 변경 후 응답이 오지 않음
+
+**원인:** OpenClaw은 보안상 오래된/취약한 모델을 의도적으로 거부합니다. agents.defaults.models가 allowlist로 설정되어 있으면 목록에 없는 모델은 사용할 수 없습니다. 또한 해당 프로바이더의 API 키가 없거나 만료된 경우 모든 모델이 실패합니다.
+
+**해결 방법:**
+
+#### 방법 A: 사용 가능한 모델 확인 및 변경 (신뢰도: ★★★)
+```bash
+# 사용 가능한 모델 목록 확인
+openclaw models list
+openclaw models scan
+
+# 모델 상태 확인
+openclaw models status
+
+# 모델 allowlist 확인
+openclaw config get agents.defaults.models
+
+# 채팅에서 모델 변경
+# /model <provider/model-name>
+# /models  # 사용 가능한 모델 브라우징
+```
+
+#### 방법 B: 프로바이더 인증 확인 (신뢰도: ★★★)
+```bash
+# 프로바이더별 인증 상태 확인
+openclaw models status
+openclaw status --deep
+
+# Anthropic API 키 재설정
+openclaw models auth setup-token --provider anthropic
+
+# 또는 환경 변수로:
+export ANTHROPIC_API_KEY=sk-ant-...
+
+# 게이트웨이 재시작
+openclaw gateway restart
+```
+
+### MCP 도구 연결 실패
+- Severity: 보통
+- Solve Time: 10min
+
+**증상:**
+- MCP 서버에 연결할 수 없음
+- 도구 호출 시 타임아웃
+- MCP 도구가 도구 목록에 표시되지 않음
+- JSON-RPC 통신 에러
+
+**원인:** MCP(Model Context Protocol) 도구는 외부 서버와 JSON-RPC로 통신합니다. MCP 서버가 실행되지 않았거나, 연결 URL이 잘못되었거나, 도구 스키마가 호환되지 않으면 연결이 실패합니다.
+
+**해결 방법:**
+
+#### 방법 A: MCP 서버 상태 확인 (신뢰도: ★★★)
+```bash
+# MCP 서버가 실행 중인지 확인
+# 설정 파일에서 MCP 설정 확인
+cat ~/.openclaw/openclaw.json | grep -A10 'mcp'
+
+# 게이트웨이 로그에서 MCP 관련 에러 확인
+openclaw logs --follow | grep -i 'mcp\|tool\|rpc'
+
+# 도구 상태 확인
+openclaw status --deep
+```
+
+#### 방법 B: MCP 도구 스키마 호환성 (신뢰도: ★★☆)
+```bash
+# Cloud Code Assist API의 경우 엄격한 JSON Schema 필요
+# 지원되지 않는 키워드 피하기:
+#   anyOf, oneOf, allOf, patternProperties
+#   additionalProperties, minLength, maxLength, format
+
+# 최상위 스키마는 type: 'object' + properties + 간단한 enum만 사용
+
+# OpenClaw을 최신 버전으로 업데이트 (스키마 정규화 포함)
+npm install -g openclaw@latest
+openclaw gateway restart
+```
+

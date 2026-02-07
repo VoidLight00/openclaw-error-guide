@@ -4,10 +4,8 @@
   "description": "OpenClaw 종합 오류 해결 가이드 웹사이트",
   "main": "index.js",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "build": "node build.js && node generate-llms.js",
+    "dev": "node build.js && node generate-llms.js && npx serve public"
   },
   "keywords": [
     "openclaw",
