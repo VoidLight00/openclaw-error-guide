@@ -1,0 +1,854 @@
+{
+  "metadata": {
+    "title": "OpenClaw 종합 설치 오류 & 해결방안 가이드",
+    "lastUpdated": "2026-02-07",
+    "version": "1.0",
+    "totalErrors": 39,
+    "totalSolutions": 39
+  },
+  "categories": [
+    {
+      "id": "windows",
+      "name": "Windows 전용 오류",
+      "icon": "🪟",
+      "errors": [
+        {
+          "id": "error-1",
+          "title": "PowerShell 실행 정책 (Execution Policy) 차단",
+          "severity": "high",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "Windows PowerShell 기본 설정이 스크립트 실행을 차단함",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-2",
+          "title": "winget 소스 손상 (WinGet Error)",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "WinGet 패키지 매니저 내부 오류 (Microsoft 문제)",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-3",
+          "title": "Node.js 설치되었는데 \"command not found\"",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "Node.js 설치는 되었지만 PATH 환경 변수에 없음",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-5",
+          "title": "WSL (Windows Subsystem for Linux) 관련",
+          "severity": "low",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "WSL2 미설치 또는 활성화 안 됨",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-1",
+          "title": "Node.js sharp 모듈 빌드 실패",
+          "severity": "high",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "Node v22.22.0+ 에서 Xcode 빌드 도구 호환성 문제",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-1",
+          "title": "apt/yum 패키지 관리자로 Node.js 설치 문제",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "기본 저장소에 없음 (너무 오래된 버전만)",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-1",
+          "title": "WSL2 커널 업데이트 필요",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "WSL2 커널이 너무 오래됨",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-2",
+          "title": "WSL2 Ubuntu 설치 후 Node 못 찾음",
+          "severity": "high",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "WSL Ubuntu에 Node.js 미설치",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-3",
+          "title": "WSL과 Windows 간 Path 혼동",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "Windows 경로 vs Linux 경로 혼동",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-8",
+          "title": "WSL에서 시간대(Timezone) 불일치",
+          "severity": "low",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "WSL과 Windows의 타임존 불일치",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "macos",
+      "name": "macOS 전용 오류",
+      "icon": "🍎",
+      "errors": [
+        {
+          "id": "error-3",
+          "title": "npm 권한 문제 (sudo 요청)",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "/usr/local 폴더 소유권 문제",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-3",
+          "title": "npm 전역 설치 권한 문제",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "/usr/local에 쓰기 권한 없음",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-1",
+          "title": "npm 캐시 손상",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "npm 캐시 손상",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-4",
+          "title": "npm install 타임아웃",
+          "severity": "low",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "네트워크 느림 또는 npm 서버 문제",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "linux",
+      "name": "Linux 전용 오류",
+      "icon": "🐧",
+      "errors": [
+        {
+          "id": "error-2",
+          "title": "빌드 도구 누락 (build-essential)",
+          "severity": "high",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "C++ 컴파일러 없음 (sharp, node-gyp 필요)",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-7",
+          "title": "원격 Linux 서버에서 가상 디스플레이 문제",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "원격 서버에 X11/GUI 환경 없음",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "virtualenv",
+      "name": "가상환경 설정 오류",
+      "icon": "⚙️",
+      "errors": [
+        {
+          "id": "error-4",
+          "title": "Docker에서 포트 바인딩 실패",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "Docker 컨테이너의 포트 맵핑 오류",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-5",
+          "title": "Docker에서 환경 변수 미설정",
+          "severity": "high",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "Docker 컨테이너에 환경 변수 전달 안 됨",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-6",
+          "title": "Docker에서 데이터 유지 (Volumes)",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "Docker 컨테이너의 데이터가 영구 저장되지 않음",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "common",
+      "name": "공통 오류",
+      "icon": "⚠️",
+      "errors": [
+        {
+          "id": "error-4",
+          "title": "권한 부족 (EACCES / Permission Denied)",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "npm 글로벌 폴더 권한 문제",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-2",
+          "title": "\"openclaw: command not found\"",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "npm 경로가 $PATH에 없음",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-4",
+          "title": "시스템 패키지 충돌",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "기존 system Node.js와 충돌",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-2",
+          "title": "Port 18789 충돌",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "다른 프로세스가 포트 18789 사용 중",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-3",
+          "title": "Node 버전 호환성",
+          "severity": "high",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "OpenClaw와 호환되지 않는 Node 버전",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-1",
+          "title": "\"Pairing Required\" (1008)",
+          "severity": "high",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "Claude Code/Cursor와 OpenClaw 게이트웨이 간 초기 페어링 미완료",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "oauth",
+      "name": "인증 (OAuth) 오류",
+      "icon": "🔐",
+      "errors": [
+        {
+          "id": "error-1",
+          "title": "setup-token 생성 실패",
+          "severity": "high",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "Claude 데스크탑 앱 미설치 또는 로그인 안 됨",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-2",
+          "title": "\"No API key found for provider anthropic\"",
+          "severity": "high",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "auth-profiles.json에 토큰 없음",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-3",
+          "title": "setup-token 만료됨",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "setup-token은 1시간만 유효",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-4",
+          "title": "다중 에이전트 인증 미상속",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "새 에이전트가 main 에이전트의 인증을 상속받지 않음",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-6",
+          "title": "OAuth 콜백 실패 (원격 설정)",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "원격 서버에서 OAuth 콜백 URL이 맞지 않음",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-1",
+          "title": "Telegram 인증 실패 (401 Unauthorized)",
+          "severity": "high",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "Telegram 봇 토큰이 잘못되었거나 유효하지 않음",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gateway",
+      "name": "게이트웨이 접속 오류",
+      "icon": "🚪",
+      "errors": [
+        {
+          "id": "error-1",
+          "title": "게이트웨이 접근 거부 (403 / Unauthorized)",
+          "severity": "high",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "게이트웨이 토큰이 없거나 인증 실패",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-2",
+          "title": "포트 바인딩 실패 (localhost만 허용)",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "OpenClaw는 기본적으로 127.0.0.1 (localhost)에만 바인딩",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-3",
+          "title": "WebSocket 연결 실패",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "Nginx/Caddy 등 리버스 프록시가 WebSocket 미지원",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-4",
+          "title": "다른 포트 바인딩",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "다른 서비스가 OpenClaw 포트 사용",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-5",
+          "title": "방화벽 차단",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "방화벽이 18789 포트 차단",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "channels",
+      "name": "채널 통합 오류",
+      "icon": "📱",
+      "errors": [
+        {
+          "id": "error-2",
+          "title": "Discord 권한 부족 (Missing Access 50001)",
+          "severity": "high",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "봇이 서버에 없거나 채널 접근 권한 부족",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "error-3",
+          "title": "플러그인 설정 검증 오류",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "채널 플러그인 설정 문법 오류",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "client",
+      "name": "클라이언트 연결 오류",
+      "icon": "💻",
+      "errors": [
+        {
+          "id": "error-2",
+          "title": "Claude Code/Cursor 응답 없음",
+          "severity": "medium",
+          "symptoms": [
+            "설정 오류 발생"
+          ],
+          "cause": "게이트웨이 타임아웃 (기본 30분) 또는 네트워크 불안정",
+          "solveTime": 30,
+          "solutions": [
+            {
+              "method": "1",
+              "title": "다시 시도",
+              "trustLevel": 1,
+              "steps": [
+                "# 설정 확인 후 다시 시도"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

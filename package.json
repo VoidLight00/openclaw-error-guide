@@ -1,0 +1,31 @@
+{
+  "name": "openclaw-error-guide",
+  "version": "1.0.0",
+  "description": "OpenClaw 종합 오류 해결 가이드 웹사이트",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "keywords": [
+    "openclaw",
+    "troubleshooting",
+    "guide"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "lucide-react": "^latest",
+    "clsx": "^latest"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18"
+  }
+}
