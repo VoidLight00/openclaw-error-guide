@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Windows 전용 오류 - OpenClaw Guide</title>
+  <title>런타임 오류 - OpenClaw Guide</title>
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -35,7 +35,7 @@
         
         <div class="sidebar-section">카테고리</div>
         <ul class="sidebar-nav">
-          <li><a href="windows.html" class="active">1. Windows 전용 오류</a></li>
+          <li><a href="windows.html">1. Windows 전용 오류</a></li>
           <li><a href="macos.html">2. macOS 전용 오류</a></li>
           <li><a href="linux.html">3. Linux 전용 오류</a></li>
           <li><a href="virtualenv.html">4. 가상환경 설정 오류</a></li>
@@ -44,7 +44,7 @@
           <li><a href="gateway.html">7. 게이트웨이 접속 오류</a></li>
           <li><a href="channels.html">8. 채널 통합 오류</a></li>
           <li><a href="client.html">9. 클라이언트 연결 오류</a></li>
-          <li><a href="runtime.html">10. 런타임 오류</a></li>
+          <li><a href="runtime.html" class="active">10. 런타임 오류</a></li>
           <li><a href="channels-ext.html">11. 채널 확장 오류</a></li>
           <li><a href="skills.html">12. 스킬 &amp; 모델 오류</a></li>
         </ul>
@@ -59,8 +59,8 @@
       </nav>
     </aside>
     <main class="main">
-      <h1>Windows 전용 오류</h1>
-      <p class="page-subtitle">10개의 오류 유형 | 총 20개의 해결 방법</p>
+      <h1>런타임 오류</h1>
+      <p class="page-subtitle">8개의 오류 유형 | 총 19개의 해결 방법</p>
       
       <div class="search-bar">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -71,113 +71,100 @@
         <div class="accordion-item">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
+              <span class="badge badge-medium">보통</span>
+              <h2>openclaw doctor 진단 도구 사용법 및 일반 오류</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">5분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>openclaw doctor 실행 시 'config validation failed' 메시지</li>
+                <li>doctor가 레거시 키 마이그레이션을 요구함</li>
+                <li>게이트웨이가 시작을 거부하며 'run openclaw doctor' 안내</li>
+                <li>doctor --fix 실행 후에도 문제가 반복됨</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>openclaw doctor는 설정 정규화, 레거시 키 마이그레이션, OAuth 토큰 갱신, 서비스 상태 점검 등을 수행하는 종합 진단 도구입니다. 설정 파일에 더 이상 지원되지 않는 키(routing.allowFrom, agent.model 등)가 남아 있거나, 서비스 설정이 최신 스키마와 맞지 않으면 doctor가 마이그레이션을 요구합니다.</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: doctor 자동 수정 (권장)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 진단 실행
+openclaw doctor
+
+# 자동 수정 적용
+openclaw doctor --fix
+
+# 모든 수정을 자동 승인 (비대화형)
+openclaw doctor --yes
+
+# 공격적 수정 (커스텀 서비스 설정도 덮어쓰기)
+openclaw doctor --repair --force</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: 심층 진단 (시스템 서비스 스캔 포함)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 레거시/추가 게이트웨이 서비스까지 스캔
+openclaw doctor --deep
+
+# 비대화형 모드 (안전한 마이그레이션만 적용)
+openclaw doctor --non-interactive
+
+# 게이트웨이 토큰 자동 생성
+openclaw doctor --generate-gateway-token</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
               <span class="badge badge-high">심각</span>
-              <h2>PowerShell 실행 정책 (Execution Policy) 차단</h2>
-            </div>
-            <div class="accordion-meta">
-              <span class="solve-time">3분</span>
-              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-            </div>
-          </div>
-          <div class="accordion-body">
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                증상
-              </h3>
-              <ul class="symptom-list">
-                <li>PowerShell에서 openclaw 명령어 실행 시 빨간색 오류 메시지 출력</li>
-                <li>'File cannot be loaded because running scripts is disabled on this system' 메시지</li>
-                <li>install.ps1 스크립트 실행 불가</li>
-              </ul>
-            </div>
-
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                원인
-              </h3>
-              <div class="cause-block">
-                <p>Windows PowerShell의 기본 실행 정책이 'Restricted'로 설정되어 외부 스크립트 실행을 차단합니다. 보안 목적으로 기본 설정이 이렇게 되어 있으며, npm 전역 설치 후 openclaw CLI를 실행할 때 .ps1 파일 실행이 필요합니다.</p>
-              </div>
-            </div>
-
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-                해결 방법
-              </h3>
-              <div class="solution-card">
-                <div class="solution-header">
-                  <h4>방법 A: 현재 사용자만 정책 변경 (권장)</h4>
-                  <div class="trust-level">
-                    <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-                  </div>
-                </div>
-                <div class="code-block">
-                  <div class="code-header">
-                    <span>Terminal</span>
-                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-                  </div>
-                  <pre><code># PowerShell을 관리자 권한으로 실행한 뒤:
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-
-# 변경 확인
-Get-ExecutionPolicy -List
-
-# 이후 openclaw 다시 실행
-openclaw --version</code></pre>
-                </div>
-              </div>
-              <div class="solution-card">
-                <div class="solution-header">
-                  <h4>방법 B: 현재 세션에서만 임시 허용</h4>
-                  <div class="trust-level">
-                    <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-                  </div>
-                </div>
-                <div class="code-block">
-                  <div class="code-header">
-                    <span>Terminal</span>
-                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-                  </div>
-                  <pre><code># 현재 PowerShell 세션에서만 스크립트 실행 허용 (재시작 시 원래대로)
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
-
-# 바로 설치 스크립트 실행
-iwr -useb https://openclaw.ai/install.ps1 | iex</code></pre>
-                </div>
-              </div>
-              <div class="solution-card">
-                <div class="solution-header">
-                  <h4>방법 C: WSL2 사용 (근본적 해결)</h4>
-                  <div class="trust-level">
-                    <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-                  </div>
-                </div>
-                <div class="code-block">
-                  <div class="code-header">
-                    <span>Terminal</span>
-                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-                  </div>
-                  <pre><code># Windows에서 PowerShell 문제를 피하려면 WSL2 사용을 권장합니다
-wsl --install
-
-# WSL 재부팅 후 Ubuntu에서:
-curl -fsSL https://openclaw.ai/install.sh | bash</code></pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <div class="accordion-header" onclick="toggleAccordion(this)">
-            <div class="accordion-title-row">
-              <span class="badge badge-medium">보통</span>
-              <h2>winget 소스 손상 (WinGet Error)</h2>
+              <h2>대시보드/Control UI 연결 실패</h2>
             </div>
             <div class="accordion-meta">
               <span class="solve-time">5분</span>
@@ -191,9 +178,10 @@ curl -fsSL https://openclaw.ai/install.sh | bash</code></pre>
                 증상
               </h3>
               <ul class="symptom-list">
-                <li>winget install 명령어 실행 시 'Failed to update source' 오류</li>
-                <li>'An unexpected error occurred while executing the command' 메시지</li>
-                <li>winget search 결과가 비정상적으로 적거나 없음</li>
+                <li>Control UI 접속 시 'device identity required' 에러</li>
+                <li>HTTP로 대시보드 접속 시 연결 실패</li>
+                <li>WebSocket 1008 코드로 반복 재연결 (reconnect loop)</li>
+                <li>'Unauthorized' 에러와 함께 대시보드 로딩 실패</li>
               </ul>
             </div>
 
@@ -203,7 +191,7 @@ curl -fsSL https://openclaw.ai/install.sh | bash</code></pre>
                 원인
               </h3>
               <div class="cause-block">
-                <p>WinGet의 내부 SQLite 데이터베이스가 손상되었거나, Microsoft Store 앱 패키지 캐시에 문제가 있습니다. Windows 업데이트 후 또는 네트워크 문제로 인해 발생할 수 있습니다.</p>
+                <p>HTTP(비보안 컨텍스트)로 대시보드에 접속하면 브라우저가 WebCrypto를 차단하여 device identity를 생성할 수 없습니다. 또한 게이트웨이 토큰이 없거나, 페어링이 승인되지 않은 클라이언트가 반복 연결을 시도하면 1008 코드로 끊기고 재연결 루프에 빠집니다.</p>
               </div>
             </div>
 
@@ -214,7 +202,7 @@ curl -fsSL https://openclaw.ai/install.sh | bash</code></pre>
               </h3>
               <div class="solution-card">
                 <div class="solution-header">
-                  <h4>방법 A: winget 소스 초기화</h4>
+                  <h4>방법 A: HTTPS 또는 localhost 사용 (권장)</h4>
                   <div class="trust-level">
                     <span class="trust-label">신뢰도</span>
                     <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
@@ -225,19 +213,160 @@ curl -fsSL https://openclaw.ai/install.sh | bash</code></pre>
                     <span>Terminal</span>
                     <button class="copy-btn" onclick="copyCode(this)">복사</button>
                   </div>
-                  <pre><code># winget 소스를 완전히 초기화합니다
-winget source reset --force
+                  <pre><code># localhost로 접속 (같은 머신에서)
+# http://127.0.0.1:18789/
 
-# 소스 업데이트 확인
-winget source update
-
-# Node.js 설치 재시도
-winget install OpenJS.NodeJS.LTS</code></pre>
+# Tailscale Serve로 HTTPS 설정
+tailscale serve --bg 18789
+# 이후 https://&lt;machine&gt;.ts.net/ 으로 접속</code></pre>
                 </div>
               </div>
               <div class="solution-card">
                 <div class="solution-header">
-                  <h4>방법 B: Microsoft Store에서 App Installer 업데이트</h4>
+                  <h4>방법 B: 비보안 HTTP 허용 (개발 환경만)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 주의: 프로덕션에서는 사용하지 마세요
+# openclaw.json에 추가:
+{
+  &quot;gateway&quot;: {
+    &quot;controlUi&quot;: {
+      &quot;allowInsecureAuth&quot;: true
+    }
+  }
+}
+
+openclaw gateway restart</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 C: 페어링 승인으로 1008 루프 해결</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 대기 중인 페어링 요청 확인
+openclaw nodes pending
+
+# 요청 승인
+openclaw nodes approve &lt;requestId&gt;
+
+# 게이트웨이 상태 확인
+openclaw status
+openclaw gateway probe</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="accordion-title-row">
+              <span class="badge badge-high">심각</span>
+              <h2>채널 연결됐는데 메시지가 안 옴</h2>
+            </div>
+            <div class="accordion-meta">
+              <span class="solve-time">10분</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="accordion-body">
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                증상
+              </h3>
+              <ul class="symptom-list">
+                <li>채널 상태는 정상이지만 메시지가 에이전트에 도달하지 않음</li>
+                <li>로그에 'blocked', 'skip', 'unauthorized' 표시</li>
+                <li>그룹 채팅에서 멘션해도 반응 없음</li>
+                <li>새 발신자의 메시지가 무시됨</li>
+              </ul>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                원인
+              </h3>
+              <div class="cause-block">
+                <p>발신자가 allowFrom 목록에 없거나(allowlist 정책), dmPolicy가 pairing인데 페어링이 미승인 상태이거나, 그룹 채팅에서 mentionPatterns/requireMention 설정이 맞지 않아 메시지가 필터링됩니다. Discord의 경우 groupPolicy가 allowlist인데 guild/channel이 등록되지 않았을 수 있습니다.</p>
+              </div>
+            </div>
+
+            <div class="error-section">
+              <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                해결 방법
+              </h3>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 A: 발신자 허용 목록 확인</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 전체 상태에서 AllowFrom 확인
+openclaw status
+
+# 채널별 상태 프로브
+openclaw channels status --probe
+
+# allowFrom에 발신자 추가
+openclaw config set channels.whatsapp.allowFrom '[&quot;+821012345678&quot;]'
+
+# 또는 dmPolicy를 open으로 변경 (주의: 보안 위험)
+openclaw config set channels.telegram.dmPolicy open
+openclaw gateway restart</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: 페어링 요청 승인</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># dmPolicy가 pairing인 경우, 미승인 요청 확인
+openclaw pairing list &lt;channel&gt;
+
+# 승인 (채널당 최대 3개 pending 요청)
+openclaw pairing approve &lt;requestId&gt;
+
+# 로그에서 차단 원인 확인
+openclaw logs --follow | grep 'blocked\|skip\|unauthorized'</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 C: 그룹 채팅 멘션 설정 확인</h4>
                   <div class="trust-level">
                     <span class="trust-label">신뢰도</span>
                     <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
@@ -248,33 +377,15 @@ winget install OpenJS.NodeJS.LTS</code></pre>
                     <span>Terminal</span>
                     <button class="copy-btn" onclick="copyCode(this)">복사</button>
                   </div>
-                  <pre><code># Microsoft Store를 열어 'App Installer'를 검색하여 업데이트합니다
-# 또는 PowerShell에서:
-Add-AppxPackage -RegisterByFamilyName -MainPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe
+                  <pre><code># 그룹에서 멘션 필수 여부 확인
+grep -n 'mentionPatterns\|requireMention\|groupPolicy' ~/.openclaw/openclaw.json
 
-# 이후 winget 다시 시도
-winget install OpenJS.NodeJS.LTS</code></pre>
-                </div>
-              </div>
-              <div class="solution-card">
-                <div class="solution-header">
-                  <h4>방법 C: Node.js 공식 인스톨러 사용 (대안)</h4>
-                  <div class="trust-level">
-                    <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-                  </div>
-                </div>
-                <div class="code-block">
-                  <div class="code-header">
-                    <span>Terminal</span>
-                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-                  </div>
-                  <pre><code># winget이 계속 문제라면, Node.js 공식 사이트에서 직접 다운로드:
-# https://nodejs.org/en/download 에서 Windows Installer (.msi) 다운로드
+# Discord: guild/channel allowlist 확인
+# channels.discord.groupPolicy가 allowlist면 guild 등록 필요
+# channels.discord.guilds.&lt;guildId&gt;.channels에 채널 ID 추가
 
-# 설치 후 새 터미널을 열고 확인
-node --version
-npm --version</code></pre>
+# Telegram/WhatsApp 그룹: requireMention 비활성화
+# channels.telegram.groups.&quot;*&quot;.requireMention: false</code></pre>
                 </div>
               </div>
             </div>
@@ -284,7 +395,7 @@ npm --version</code></pre>
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
-              <h2>Node.js 설치되었는데 &quot;command not found&quot;</h2>
+              <h2>크론/하트비트 미작동</h2>
             </div>
             <div class="accordion-meta">
               <span class="solve-time">5분</span>
@@ -298,9 +409,10 @@ npm --version</code></pre>
                 증상
               </h3>
               <ul class="symptom-list">
-                <li>'node' is not recognized as an internal or external command</li>
-                <li>PowerShell에서 node --version 실행 시 오류</li>
-                <li>설치 직후에는 작동하지만, 새 터미널에서 안 됨</li>
+                <li>예약된 하트비트가 실행되지 않음</li>
+                <li>크론 작업이 예상 시간에 트리거되지 않음</li>
+                <li>quiet-hours 동안 하트비트가 건너뛰어짐</li>
+                <li>스케줄러 비활성화 경고</li>
               </ul>
             </div>
 
@@ -310,7 +422,7 @@ npm --version</code></pre>
                 원인
               </h3>
               <div class="cause-block">
-                <p>Node.js가 설치되었지만, 설치 경로가 시스템 PATH 환경 변수에 추가되지 않았습니다. nvm-windows를 사용한 경우 터미널을 재시작해야 PATH가 갱신됩니다.</p>
+                <p>게이트웨이의 스케줄러가 비활성화되어 있거나, quiet-hours 설정으로 인해 특정 시간대에 하트비트가 자동으로 건너뛰어집니다. 또한 게이트웨이가 재시작된 후 크론 상태가 초기화될 수 있습니다.</p>
               </div>
             </div>
 
@@ -321,7 +433,7 @@ npm --version</code></pre>
               </h3>
               <div class="solution-card">
                 <div class="solution-header">
-                  <h4>방법 A: 터미널 재시작 및 PATH 확인</h4>
+                  <h4>방법 A: 스케줄러 및 quiet-hours 설정 확인</h4>
                   <div class="trust-level">
                     <span class="trust-label">신뢰도</span>
                     <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
@@ -332,21 +444,22 @@ npm --version</code></pre>
                     <span>Terminal</span>
                     <button class="copy-btn" onclick="copyCode(this)">복사</button>
                   </div>
-                  <pre><code># 1. 모든 터미널 창을 닫고 새로 엽니다
+                  <pre><code># 게이트웨이 상태 확인
+openclaw status
 
-# 2. PATH에서 Node.js 경로 확인
-$env:PATH -split ';' | Select-String 'node'
+# 설정 파일에서 스케줄러 관련 확인
+cat ~/.openclaw/openclaw.json | grep -A5 'heartbeat\|cron\|quiet'
 
-# 3. 일반적으로 Node.js는 아래 경로에 설치됩니다
-# C:\Program Files\nodejs\
+# quiet-hours가 현재 시간을 포함하는지 확인
+# 예: 23:00-08:00이면 해당 시간대에 하트비트 스킵됨
 
-# 4. 수동으로 PATH에 추가 (영구)
-[Environment]::SetEnvironmentVariable('PATH', $env:PATH + ';C:\Program Files\nodejs\', 'User')</code></pre>
+# 로그에서 스케줄러 동작 확인
+openclaw logs --follow | grep 'heartbeat\|cron\|schedule\|quiet'</code></pre>
                 </div>
               </div>
               <div class="solution-card">
                 <div class="solution-header">
-                  <h4>방법 B: nvm-windows 사용 시 버전 선택</h4>
+                  <h4>방법 B: 하트비트 수동 트리거</h4>
                   <div class="trust-level">
                     <span class="trust-label">신뢰도</span>
                     <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
@@ -357,12 +470,11 @@ $env:PATH -split ';' | Select-String 'node'
                     <span>Terminal</span>
                     <button class="copy-btn" onclick="copyCode(this)">복사</button>
                   </div>
-                  <pre><code># nvm-windows를 사용 중이라면 사용할 버전을 지정해야 합니다
-nvm list
-nvm use 22
+                  <pre><code># 게이트웨이 재시작으로 스케줄러 초기화
+openclaw gateway restart
 
-# 확인
-node --version</code></pre>
+# 실시간 로그로 하트비트 동작 확인
+openclaw logs --follow</code></pre>
                 </div>
               </div>
             </div>
@@ -371,8 +483,8 @@ node --version</code></pre>
         <div class="accordion-item">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
-              <span class="badge badge-low">낮음</span>
-              <h2>WSL (Windows Subsystem for Linux) 관련</h2>
+              <span class="badge badge-high">심각</span>
+              <h2>브라우저 도구 실패 (Chrome CDP / Extension Relay)</h2>
             </div>
             <div class="accordion-meta">
               <span class="solve-time">15분</span>
@@ -386,9 +498,11 @@ node --version</code></pre>
                 증상
               </h3>
               <ul class="symptom-list">
-                <li>'wsl' is not recognized 오류</li>
-                <li>wsl --install 실행 시 'Virtual Machine Platform' 관련 오류</li>
-                <li>WSL2 배포판이 시작되지 않음</li>
+                <li>'Failed to start Chrome CDP on port 18800' 에러</li>
+                <li>'Playwright is not available in this gateway build' 메시지</li>
+                <li>Chrome extension relay 연결 안 됨 (badge가 ON이 아님)</li>
+                <li>스냅샷/스크린샷 501 에러</li>
+                <li>Linux에서 'Cannot open display' 에러</li>
               </ul>
             </div>
 
@@ -398,7 +512,7 @@ node --version</code></pre>
                 원인
               </h3>
               <div class="cause-block">
-                <p>WSL2가 설치되지 않았거나, 가상화 기능이 BIOS/UEFI에서 비활성화되어 있습니다. OpenClaw 공식 문서에서도 Windows에서는 WSL2를 강력히 권장합니다.</p>
+                <p>브라우저 도구는 Chrome/Brave/Edge의 CDP(Chrome DevTools Protocol)를 통해 작동합니다. Snap 패키지 Chromium(Ubuntu), Playwright 미설치, 또는 Chrome extension이 탭에 attach되지 않은 경우 실패합니다. 원격 서버에서는 가상 디스플레이(Xvfb)가 필요할 수 있습니다.</p>
               </div>
             </div>
 
@@ -409,7 +523,7 @@ node --version</code></pre>
               </h3>
               <div class="solution-card">
                 <div class="solution-header">
-                  <h4>방법 A: WSL2 설치 (Windows 10 v2004+)</h4>
+                  <h4>방법 A: 브라우저 실행 경로 설정 (Linux)</h4>
                   <div class="trust-level">
                     <span class="trust-label">신뢰도</span>
                     <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
@@ -420,19 +534,45 @@ node --version</code></pre>
                     <span>Terminal</span>
                     <button class="copy-btn" onclick="copyCode(this)">복사</button>
                   </div>
-                  <pre><code># 관리자 권한 PowerShell에서 WSL 설치
-wsl --install
+                  <pre><code># Snap Chromium 대신 Google Chrome 설치
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo dpkg -i google-chrome-stable_current_amd64.deb
 
-# 재부팅 필요합니다
-# 재부팅 후 Ubuntu가 자동으로 설정됩니다
+# 설정에 실행 경로 지정
+openclaw config set browser.executablePath '/usr/bin/google-chrome-stable'
 
-# WSL 버전 확인
-wsl --list --verbose</code></pre>
+# 게이트웨이 재시작
+openclaw gateway restart</code></pre>
                 </div>
               </div>
               <div class="solution-card">
                 <div class="solution-header">
-                  <h4>방법 B: 가상화 확인 및 활성화</h4>
+                  <h4>방법 B: Playwright 설치</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># Playwright 설치 (playwright-core가 아닌 전체 패키지)
+npm install -g playwright
+npx playwright install chromium
+
+# Docker 환경에서는:
+# npx playwright 대신 번들된 CLI 사용
+node /app/node_modules/playwright-core/cli.js install chromium
+
+# 게이트웨이 재시작
+openclaw gateway restart</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 C: Chrome Extension Relay 설정</h4>
                   <div class="trust-level">
                     <span class="trust-label">신뢰도</span>
                     <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
@@ -443,20 +583,16 @@ wsl --list --verbose</code></pre>
                     <span>Terminal</span>
                     <button class="copy-btn" onclick="copyCode(this)">복사</button>
                   </div>
-                  <pre><code># 가상화가 활성화되어 있는지 확인
-systeminfo | findstr /i &quot;Hyper-V&quot;
+                  <pre><code># 확장 프로그램 설치
+openclaw browser extension install
 
-# 비활성화된 경우:
-# 1. BIOS/UEFI 진입 (재부팅 시 F2/DEL 키)
-# 2. Intel VT-x 또는 AMD-V 활성화
-# 3. 저장 후 재부팅
+# Chrome에서 chrome://extensions -&gt; Developer mode 활성화
+# 'Load unpacked' -&gt; openclaw browser extension path 경로 선택
+# 확장 프로그램을 핀 고정하고 제어할 탭에서 아이콘 클릭 (badge ON)
 
-# Windows 기능 수동 활성화
-dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
-dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
-
-# 재부팅 후 기본 버전을 WSL2로 설정
-wsl --set-default-version 2</code></pre>
+# 상태 확인
+openclaw browser --browser-profile chrome status
+openclaw browser --browser-profile chrome tabs</code></pre>
                 </div>
               </div>
             </div>
@@ -466,7 +602,7 @@ wsl --set-default-version 2</code></pre>
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-high">심각</span>
-              <h2>Node.js sharp 모듈 빌드 실패</h2>
+              <h2>업그레이드 후 고장 (config drift / auth mode 변경)</h2>
             </div>
             <div class="accordion-meta">
               <span class="solve-time">10분</span>
@@ -480,10 +616,11 @@ wsl --set-default-version 2</code></pre>
                 증상
               </h3>
               <ul class="symptom-list">
-                <li>npm install -g openclaw 시 sharp 관련 빌드 에러</li>
-                <li>'sharp: Installation error: Could not install from prebuilt binaries'</li>
-                <li>node-gyp rebuild 실패 메시지</li>
-                <li>'Please add node-gyp to your dependencies' 경고</li>
+                <li>업그레이드 후 게이트웨이가 시작되지 않음</li>
+                <li>'Unknown key' 또는 설정 검증 에러</li>
+                <li>이전에 작동하던 기능이 갑자기 안 됨</li>
+                <li>'Agent failed: Unknown model' 에러</li>
+                <li>여러 워크스페이스 디렉토리 감지 경고</li>
               </ul>
             </div>
 
@@ -493,7 +630,7 @@ wsl --set-default-version 2</code></pre>
                 원인
               </h3>
               <div class="cause-block">
-                <p>sharp 모듈은 네이티브 이미지 처리 라이브러리(libvips)를 사용합니다. 시스템에 맞는 prebuilt 바이너리를 찾지 못하면 소스에서 빌드를 시도하는데, C++ 빌드 도구가 없으면 실패합니다.</p>
+                <p>OpenClaw 업그레이드 시 설정 스키마가 변경되거나, 더 이상 지원하지 않는 모델명/키가 거부됩니다. 또한 이전 설치의 ~/openclaw 디렉토리가 남아 있으면 상태가 분산되어 충돌이 발생합니다. auth mode가 변경된 경우 기존 인증이 무효화될 수 있습니다.</p>
               </div>
             </div>
 
@@ -504,7 +641,7 @@ wsl --set-default-version 2</code></pre>
               </h3>
               <div class="solution-card">
                 <div class="solution-header">
-                  <h4>방법 A: prebuilt 바이너리 강제 사용 (권장)</h4>
+                  <h4>방법 A: doctor로 마이그레이션 (권장)</h4>
                   <div class="trust-level">
                     <span class="trust-label">신뢰도</span>
                     <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
@@ -515,18 +652,20 @@ wsl --set-default-version 2</code></pre>
                     <span>Terminal</span>
                     <button class="copy-btn" onclick="copyCode(this)">복사</button>
                   </div>
-                  <pre><code># 글로벌 libvips를 무시하고 prebuilt 바이너리 강제 사용
-set SHARP_IGNORE_GLOBAL_LIBVIPS=1
-npm install -g openclaw@latest
+                  <pre><code># doctor가 레거시 키 마이그레이션 자동 수행
+openclaw doctor --fix
 
-# PowerShell의 경우:
-$env:SHARP_IGNORE_GLOBAL_LIBVIPS=1
-npm install -g openclaw@latest</code></pre>
+# 모델 확인 및 변경
+openclaw models list
+openclaw models scan
+
+# 게이트웨이 재시작
+openclaw gateway restart</code></pre>
                 </div>
               </div>
               <div class="solution-card">
                 <div class="solution-header">
-                  <h4>방법 B: Windows 빌드 도구 설치</h4>
+                  <h4>방법 B: 추가 워크스페이스 정리</h4>
                   <div class="trust-level">
                     <span class="trust-label">신뢰도</span>
                     <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
@@ -537,16 +676,17 @@ npm install -g openclaw@latest</code></pre>
                     <span>Terminal</span>
                     <button class="copy-btn" onclick="copyCode(this)">복사</button>
                   </div>
-                  <pre><code># Visual Studio Build Tools 설치 (C++ 컴파일러 포함)
-npm install -g windows-build-tools
+                  <pre><code># 레거시 워크스페이스 디렉토리 확인
+ls -la ~/openclaw 2&gt;/dev/null
+ls -la ~/.openclaw
 
-# 또는 Visual Studio Installer에서 'C++ 빌드 도구' 선택 설치
+# 하나의 활성 워크스페이스만 유지
+# 레거시 디렉토리 백업 후 제거
+mv ~/openclaw ~/openclaw-backup-$(date +%Y%m%d)
 
-# node-gyp 전역 설치
-npm install -g node-gyp
-
-# 재시도
-npm install -g openclaw@latest</code></pre>
+# 인증 재설정이 필요한 경우
+openclaw models auth setup-token --provider anthropic
+openclaw models status</code></pre>
                 </div>
               </div>
             </div>
@@ -556,250 +696,7 @@ npm install -g openclaw@latest</code></pre>
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
-              <h2>apt/yum 패키지 관리자로 Node.js 설치 문제</h2>
-            </div>
-            <div class="accordion-meta">
-              <span class="solve-time">10분</span>
-              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-            </div>
-          </div>
-          <div class="accordion-body">
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                증상
-              </h3>
-              <ul class="symptom-list">
-                <li>apt install nodejs 후 node --version이 v12 등 매우 낮은 버전</li>
-                <li>OpenClaw 실행 시 'Unsupported Node version' 에러</li>
-                <li>WSL Ubuntu에서 기본 apt로 설치한 Node가 너무 오래됨</li>
-              </ul>
-            </div>
-
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                원인
-              </h3>
-              <div class="cause-block">
-                <p>Ubuntu/Debian 기본 저장소의 Node.js는 매우 오래된 버전(v12~v18)입니다. OpenClaw은 Node 22 이상을 요구하므로, NodeSource 또는 nvm을 통해 최신 버전을 설치해야 합니다.</p>
-              </div>
-            </div>
-
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-                해결 방법
-              </h3>
-              <div class="solution-card">
-                <div class="solution-header">
-                  <h4>방법 A: nvm으로 최신 Node 설치 (권장)</h4>
-                  <div class="trust-level">
-                    <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-                  </div>
-                </div>
-                <div class="code-block">
-                  <div class="code-header">
-                    <span>Terminal</span>
-                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-                  </div>
-                  <pre><code># 기존 Node 제거
-sudo apt remove nodejs npm -y
-
-# nvm 설치
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-source ~/.bashrc
-
-# Node 22 LTS 설치
-nvm install 22
-nvm use 22
-nvm alias default 22
-
-# 확인
-node --version  # v22.x.x 이상</code></pre>
-                </div>
-              </div>
-              <div class="solution-card">
-                <div class="solution-header">
-                  <h4>방법 B: NodeSource 저장소 사용</h4>
-                  <div class="trust-level">
-                    <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-                  </div>
-                </div>
-                <div class="code-block">
-                  <div class="code-header">
-                    <span>Terminal</span>
-                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-                  </div>
-                  <pre><code># NodeSource에서 Node 22.x 저장소 추가
-curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-sudo apt install -y nodejs
-
-# 확인
-node --version
-npm --version</code></pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <div class="accordion-header" onclick="toggleAccordion(this)">
-            <div class="accordion-title-row">
-              <span class="badge badge-medium">보통</span>
-              <h2>WSL2 커널 업데이트 필요</h2>
-            </div>
-            <div class="accordion-meta">
-              <span class="solve-time">5분</span>
-              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-            </div>
-          </div>
-          <div class="accordion-body">
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                증상
-              </h3>
-              <ul class="symptom-list">
-                <li>'WSL 2 requires an update to its kernel component' 메시지</li>
-                <li>WSL 배포판 실행 시 에러 코드 표시</li>
-                <li>wsl --update 실행 시 실패</li>
-              </ul>
-            </div>
-
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                원인
-              </h3>
-              <div class="cause-block">
-                <p>WSL2 Linux 커널이 최신 버전으로 업데이트되지 않았습니다. Windows 업데이트와 별도로 WSL 커널 업데이트가 필요할 수 있습니다.</p>
-              </div>
-            </div>
-
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-                해결 방법
-              </h3>
-              <div class="solution-card">
-                <div class="solution-header">
-                  <h4>방법 A: WSL 커널 업데이트</h4>
-                  <div class="trust-level">
-                    <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-                  </div>
-                </div>
-                <div class="code-block">
-                  <div class="code-header">
-                    <span>Terminal</span>
-                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-                  </div>
-                  <pre><code># 관리자 권한 PowerShell에서:
-wsl --update
-
-# 업데이트 후 WSL 재시작
-wsl --shutdown
-wsl
-
-# 그래도 안 되면 수동 커널 패키지 설치:
-# https://aka.ms/wsl2kernel 에서 다운로드 후 실행</code></pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <div class="accordion-header" onclick="toggleAccordion(this)">
-            <div class="accordion-title-row">
-              <span class="badge badge-high">심각</span>
-              <h2>WSL2 Ubuntu 설치 후 Node 못 찾음</h2>
-            </div>
-            <div class="accordion-meta">
-              <span class="solve-time">10분</span>
-              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-            </div>
-          </div>
-          <div class="accordion-body">
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                증상
-              </h3>
-              <ul class="symptom-list">
-                <li>WSL Ubuntu에서 'node: command not found'</li>
-                <li>Windows에서는 Node가 되지만 WSL에서는 안 됨</li>
-                <li>which node 결과 없음</li>
-              </ul>
-            </div>
-
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                원인
-              </h3>
-              <div class="cause-block">
-                <p>Windows에 설치된 Node.js와 WSL의 Linux 환경은 별개입니다. WSL 내부에서 별도로 Node.js를 설치해야 합니다. Windows PATH가 WSL로 전달되더라도, Windows용 .exe를 Linux에서 실행하면 호환성 문제가 발생합니다.</p>
-              </div>
-            </div>
-
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-                해결 방법
-              </h3>
-              <div class="solution-card">
-                <div class="solution-header">
-                  <h4>방법 A: WSL 내부에 Node.js 설치 (nvm 권장)</h4>
-                  <div class="trust-level">
-                    <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-                  </div>
-                </div>
-                <div class="code-block">
-                  <div class="code-header">
-                    <span>Terminal</span>
-                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-                  </div>
-                  <pre><code># WSL Ubuntu 내부에서 실행
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-source ~/.bashrc
-
-nvm install 22
-nvm alias default 22
-
-# OpenClaw 설치
-npm install -g openclaw@latest
-openclaw onboard --install-daemon</code></pre>
-                </div>
-              </div>
-              <div class="solution-card">
-                <div class="solution-header">
-                  <h4>방법 B: OpenClaw 인스톨러 스크립트 사용</h4>
-                  <div class="trust-level">
-                    <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-                  </div>
-                </div>
-                <div class="code-block">
-                  <div class="code-header">
-                    <span>Terminal</span>
-                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-                  </div>
-                  <pre><code># WSL 내부에서 인스톨러가 Node 설치까지 자동 처리
-curl -fsSL https://openclaw.ai/install.sh | bash</code></pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <div class="accordion-header" onclick="toggleAccordion(this)">
-            <div class="accordion-title-row">
-              <span class="badge badge-medium">보통</span>
-              <h2>WSL과 Windows 간 Path 혼동</h2>
+              <h2>gateway already running (PID lock 충돌)</h2>
             </div>
             <div class="accordion-meta">
               <span class="solve-time">3분</span>
@@ -813,9 +710,10 @@ curl -fsSL https://openclaw.ai/install.sh | bash</code></pre>
                 증상
               </h3>
               <ul class="symptom-list">
-                <li>WSL에서 Windows 경로(C:\Users\...)를 사용하면 에러</li>
-                <li>파일 경로에 백슬래시(\) 포함 시 오류</li>
-                <li>openclaw config에서 Windows 경로 사용 시 동작 안 함</li>
+                <li>'Address already in use' (port 18789) 에러</li>
+                <li>게이트웨이 시작 시 이미 실행 중이라는 메시지</li>
+                <li>이전 프로세스가 비정상 종료 후 포트를 점유</li>
+                <li>SSH 터널이 포트를 점유하고 있음</li>
               </ul>
             </div>
 
@@ -825,7 +723,7 @@ curl -fsSL https://openclaw.ai/install.sh | bash</code></pre>
                 원인
               </h3>
               <div class="cause-block">
-                <p>WSL에서 Windows 파일 시스템은 /mnt/c/ 아래에 마운트됩니다. Windows 스타일 경로(C:\Users\...)는 WSL Linux 환경에서 인식되지 않으며, 항상 Linux 스타일 경로를 사용해야 합니다.</p>
+                <p>이전 게이트웨이 프로세스가 비정상 종료되어 PID 파일이나 포트가 남아 있거나, launchd/systemd 서비스가 프로세스를 자동 재시작하여 수동 시작과 충돌합니다. SSH 포트 포워딩이 포트를 점유하는 경우도 있습니다.</p>
               </div>
             </div>
 
@@ -836,7 +734,7 @@ curl -fsSL https://openclaw.ai/install.sh | bash</code></pre>
               </h3>
               <div class="solution-card">
                 <div class="solution-header">
-                  <h4>방법 A: 경로 변환 사용</h4>
+                  <h4>방법 A: 기존 프로세스 확인 및 정리</h4>
                   <div class="trust-level">
                     <span class="trust-label">신뢰도</span>
                     <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
@@ -847,21 +745,30 @@ curl -fsSL https://openclaw.ai/install.sh | bash</code></pre>
                     <span>Terminal</span>
                     <button class="copy-btn" onclick="copyCode(this)">복사</button>
                   </div>
-                  <pre><code># Windows 경로를 WSL 경로로 변환하는 도구:
-wslpath 'C:\Users\username\Documents'
-# 결과: /mnt/c/Users/username/Documents
+                  <pre><code># 게이트웨이 상태 확인 (리스너 및 원인 표시)
+openclaw gateway status
 
-# 반대 방향 변환:
-wslpath -w /home/user/project
-# 결과: \\wsl$\Ubuntu\home\user\project</code></pre>
+# 포트 사용 프로세스 확인
+lsof -nP -iTCP:18789 -sTCP:LISTEN
+
+# 서비스로 관리되는 경우 서비스 중지 먼저
+openclaw gateway stop
+
+# 그래도 안 되면 프로세스 직접 종료
+kill -TERM &lt;PID&gt;
+sleep 1
+kill -9 &lt;PID&gt;  # 최후의 수단
+
+# 재시작
+openclaw gateway start</code></pre>
                 </div>
               </div>
               <div class="solution-card">
                 <div class="solution-header">
-                  <h4>방법 B: WSL 홈 디렉토리에서 작업 (권장)</h4>
+                  <h4>방법 B: 다른 포트 사용</h4>
                   <div class="trust-level">
                     <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
                   </div>
                 </div>
                 <div class="code-block">
@@ -869,13 +776,12 @@ wslpath -w /home/user/project
                     <span>Terminal</span>
                     <button class="copy-btn" onclick="copyCode(this)">복사</button>
                   </div>
-                  <pre><code># 성능과 호환성을 위해 WSL 네이티브 파일 시스템 사용을 권장
-# /mnt/c/ 접근은 느리고 권한 문제 발생 가능
+                  <pre><code># openclaw.json에서 포트 변경
+openclaw config set gateway.port 28789
 
-cd ~
-mkdir -p projects
-# OpenClaw workspace도 WSL 내부에 설정
-# ~/.openclaw/ 디렉토리가 자동으로 사용됩니다</code></pre>
+# 서비스 재설치 (새 포트 적용)
+openclaw gateway install --force
+openclaw gateway start</code></pre>
                 </div>
               </div>
             </div>
@@ -884,11 +790,11 @@ mkdir -p projects
         <div class="accordion-item">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
-              <span class="badge badge-low">낮음</span>
-              <h2>WSL에서 시간대(Timezone) 불일치</h2>
+              <span class="badge badge-high">심각</span>
+              <h2>RPC probe failed (서비스 실행 중이지만 응답 없음)</h2>
             </div>
             <div class="accordion-meta">
-              <span class="solve-time">2분</span>
+              <span class="solve-time">10분</span>
               <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
           </div>
@@ -899,9 +805,10 @@ mkdir -p projects
                 증상
               </h3>
               <ul class="symptom-list">
-                <li>WSL에서 date 명령어 결과가 실제 시간과 다름</li>
-                <li>로그 타임스탬프가 일치하지 않음</li>
-                <li>OpenClaw 스케줄 관련 기능이 시간이 맞지 않음</li>
+                <li>서비스 상태는 'running'이지만 RPC probe 실패</li>
+                <li>openclaw status에서 게이트웨이 도달 불가</li>
+                <li>'Service Running but Port Not Listening' 상태</li>
+                <li>gateway.mode 설정 불일치</li>
               </ul>
             </div>
 
@@ -911,7 +818,7 @@ mkdir -p projects
                 원인
               </h3>
               <div class="cause-block">
-                <p>WSL은 기본적으로 UTC를 사용하며, Windows의 로컬 타임존을 자동으로 따르지 않을 수 있습니다.</p>
+                <p>서비스 슈퍼바이저(launchd/systemd)가 프로세스가 살아있다고 보고하지만, 게이트웨이가 실제로 포트에 바인딩하지 못했습니다. gateway.mode가 local이 아니거나, 비-loopback 바인딩에 auth 토큰이 없거나, CLI와 서비스의 설정 파일이 다를 수 있습니다.</p>
               </div>
             </div>
 
@@ -922,7 +829,7 @@ mkdir -p projects
               </h3>
               <div class="solution-card">
                 <div class="solution-header">
-                  <h4>방법 A: WSL 타임존 동기화 설정</h4>
+                  <h4>방법 A: 설정 일치 확인</h4>
                   <div class="trust-level">
                     <span class="trust-label">신뢰도</span>
                     <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
@@ -933,22 +840,43 @@ mkdir -p projects
                     <span>Terminal</span>
                     <button class="copy-btn" onclick="copyCode(this)">복사</button>
                   </div>
-                  <pre><code># /etc/wsl.conf 파일을 편집하여 자동 시간 동기화 활성화
-sudo tee /etc/wsl.conf &lt;&lt; 'EOF'
-[automount]
-enabled = true
-[interop]
-enabled = true
-[boot]
-systemd = true
-EOF
+                  <pre><code># 서비스 상태 + probe 대상 확인
+openclaw gateway status
 
-# 타임존 수동 설정 (예: 한국)
-sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+# gateway.mode가 local인지 확인
+openclaw config get gateway.mode
 
-# WSL 재시작 (PowerShell에서)
-# wsl --shutdown
-# wsl</code></pre>
+# local이 아니면 설정
+openclaw config set gateway.mode local
+
+# CLI와 서비스 설정이 다르면 서비스 재설치
+openclaw gateway install --force
+openclaw gateway restart</code></pre>
+                </div>
+              </div>
+              <div class="solution-card">
+                <div class="solution-header">
+                  <h4>방법 B: auth 토큰 설정 (비-loopback 바인딩)</h4>
+                  <div class="trust-level">
+                    <span class="trust-label">신뢰도</span>
+                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+                  </div>
+                </div>
+                <div class="code-block">
+                  <div class="code-header">
+                    <span>Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
+                  </div>
+                  <pre><code># 비-loopback 바인딩(lan/tailnet/custom)에는 auth 필수
+# gateway.auth.token 설정
+openclaw doctor --generate-gateway-token
+
+# 또는 수동으로:
+openclaw config set gateway.auth.mode token
+# OPENCLAW_GATEWAY_TOKEN 환경 변수 설정
+
+# 로그에서 바인딩 실패 원인 확인
+openclaw logs --follow | grep 'bind\|auth\|refusing'</code></pre>
                 </div>
               </div>
             </div>
