@@ -3,8 +3,8 @@
     "title": "OpenClaw 종합 설치 오류 & 해결방안 가이드",
     "lastUpdated": "2026-02-08",
     "version": "2.1",
-    "totalErrors": 75,
-    "totalSolutions": 148
+    "totalErrors": 83,
+    "totalSolutions": 156
   },
   "categories": [
     {
@@ -1682,6 +1682,76 @@
               ]
             }
           ]
+        },
+        {
+          "id": "common-13",
+          "title": "업데이트 후 고장 시 이전 버전 복원",
+          "severity": "medium",
+          "symptoms": [
+            "openclaw 업데이트 후 작동하지 않음",
+            "업데이트 후 설정이 깨짐",
+            "이전 버전으로 돌아가고 싶음"
+          ],
+          "cause": "OpenClaw은 빠르게 업데이트되며 (pre 1.0), 업데이트 시 config 스키마 변경이나 breaking change가 있을 수 있음 (출처: install/updating.md)",
+          "solveTime": 10,
+          "solutions": [
+            {
+              "method": "A",
+              "title": "특정 버전으로 다운그레이드",
+              "trustLevel": 3,
+              "steps": [
+                "# 업데이트 전 백업 확인",
+                "# config: ~/.openclaw/openclaw.json",
+                "# credentials: ~/.openclaw/credentials/",
+                "# workspace: ~/.openclaw/workspace",
+                "",
+                "# 이전 버전으로 다운그레이드 (npm)",
+                "npm i -g openclaw@<이전버전>",
+                "",
+                "# 또는 특정 태그로 설치",
+                "openclaw update --tag <dist-tag|version>",
+                "",
+                "# 채널 변경 (stable/beta/dev)",
+                "openclaw update --channel stable",
+                "",
+                "# 다운그레이드 후 doctor 실행",
+                "openclaw doctor",
+                "openclaw gateway restart"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "common-14",
+          "title": "Bun으로 게이트웨이 실행 시 채널 오류",
+          "severity": "medium",
+          "symptoms": [
+            "WhatsApp/Telegram 채널이 Bun에서 비정상 동작",
+            "메시지 전송/수신 불안정",
+            "openclaw doctor에서 Bun 경고 출력"
+          ],
+          "cause": "WhatsApp과 Telegram 채널은 Node.js 런타임이 필요하며, Bun에서는 알려진 버그가 있음. doctor가 Bun 사용 시 경고를 표시함 (출처: gateway/doctor.md, install/updating.md)",
+          "solveTime": 10,
+          "solutions": [
+            {
+              "method": "A",
+              "title": "Node.js로 전환",
+              "trustLevel": 3,
+              "steps": [
+                "# 현재 런타임 확인",
+                "openclaw status --all",
+                "",
+                "# Node.js가 설치되어 있는지 확인",
+                "node -v  # v22 이상 필요",
+                "",
+                "# Node.js로 게이트웨이 서비스 재설치",
+                "openclaw gateway install",
+                "",
+                "# 또는 doctor로 자동 마이그레이션",
+                "openclaw doctor --repair"
+              ]
+            }
+          ]
         }
       ]
     },
@@ -1947,6 +2017,35 @@
                 "# 새 토큰으로 설정 업데이트",
                 "openclaw config set channels.telegram.botToken '<new_token>'",
                 "openclaw gateway restart"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "oauth-7",
+          "title": "Anthropic 'Claude Code 전용 credential' 에러",
+          "severity": "high",
+          "symptoms": [
+            "'This credential is only authorized for use with Claude Code' 에러",
+            "setup-token으로 인증했는데 API 호출 실패",
+            "Anthropic API 사용 시 권한 에러"
+          ],
+          "cause": "Claude Code의 setup-token은 Claude Code 전용이며, OpenClaw Gateway API 호출에는 사용 불가. 별도 Anthropic API 키가 필요함 (출처: gateway/authentication.md)",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "A",
+              "title": "Anthropic API 키로 전환",
+              "trustLevel": 3,
+              "steps": [
+                "# setup-token 대신 API 키 사용",
+                "openclaw models auth paste-token --provider anthropic",
+                "",
+                "# API 키 발급: https://console.anthropic.com/settings/keys",
+                "# 발급받은 키를 프롬프트에 붙여넣기",
+                "",
+                "# 또는 환경변수로 설정",
+                "export ANTHROPIC_API_KEY=sk-ant-..."
               ]
             }
           ]
@@ -3116,6 +3215,97 @@
               ]
             }
           ]
+        },
+        {
+          "id": "runtime-9",
+          "title": "Linux 로그아웃 시 게이트웨이 자동 종료 (systemd linger)",
+          "severity": "high",
+          "symptoms": [
+            "SSH 세션 종료 후 게이트웨이가 꺼짐",
+            "로그아웃하면 봇이 응답하지 않음",
+            "서비스가 설치됐는데 세션 끊으면 죽음"
+          ],
+          "cause": "systemd 사용자 서비스는 기본적으로 사용자 로그아웃 시 종료됨. loginctl enable-linger로 linger를 활성화해야 로그아웃 후에도 서비스 유지 (출처: gateway/doctor.md)",
+          "solveTime": 3,
+          "solutions": [
+            {
+              "method": "A",
+              "title": "linger 활성화",
+              "trustLevel": 3,
+              "steps": [
+                "# linger 활성화 (현재 사용자)",
+                "loginctl enable-linger",
+                "",
+                "# 또는 특정 사용자 지정",
+                "sudo loginctl enable-linger username",
+                "",
+                "# 확인",
+                "loginctl show-user $(whoami) | grep Linger",
+                "",
+                "# 게이트웨이 재시작",
+                "openclaw gateway restart"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "runtime-10",
+          "title": "설정 파일 권한 보안 경고 (chmod 600)",
+          "severity": "low",
+          "symptoms": [
+            "openclaw doctor에서 config 파일 권한 경고",
+            "'openclaw.json is group/world readable' 메시지",
+            "보안 경고 출력"
+          ],
+          "cause": "~/.openclaw/openclaw.json에 API 키 등 민감 정보가 포함될 수 있어, 다른 사용자가 읽을 수 없도록 600 권한이 필요 (출처: gateway/doctor.md)",
+          "solveTime": 1,
+          "solutions": [
+            {
+              "method": "A",
+              "title": "권한 수정",
+              "trustLevel": 3,
+              "steps": [
+                "# 설정 파일 권한을 600으로 변경 (소유자만 읽기/쓰기)",
+                "chmod 600 ~/.openclaw/openclaw.json",
+                "",
+                "# 확인",
+                "ls -la ~/.openclaw/openclaw.json",
+                "# 결과: -rw------- 이면 정상"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "runtime-11",
+          "title": "여러 ~/.openclaw 폴더로 히스토리 분산",
+          "severity": "medium",
+          "symptoms": [
+            "대화 히스토리가 사라짐",
+            "다른 사용자 계정에서 실행 시 설정이 다름",
+            "openclaw doctor에서 'multiple state dirs' 경고"
+          ],
+          "cause": "여러 홈 디렉토리에 ~/.openclaw 폴더가 존재하거나, OPENCLAW_STATE_DIR 환경변수가 다른 경로를 가리키면 히스토리와 설정이 분산됨 (출처: gateway/doctor.md)",
+          "solveTime": 10,
+          "solutions": [
+            {
+              "method": "A",
+              "title": "중복 폴더 확인 및 통합",
+              "trustLevel": 2,
+              "steps": [
+                "# 모든 ~/.openclaw 폴더 찾기",
+                "find / -name '.openclaw' -type d 2>/dev/null",
+                "",
+                "# OPENCLAW_STATE_DIR 환경변수 확인",
+                "echo $OPENCLAW_STATE_DIR",
+                "",
+                "# doctor로 진단",
+                "openclaw doctor",
+                "",
+                "# 필요 시 사용하지 않는 폴더 백업 후 삭제",
+                "# 주의: 삭제 전 반드시 백업!"
+              ]
+            }
+          ]
         }
       ]
     },
@@ -3425,6 +3615,67 @@
                 "openclaw config set channels.imessage.dbPath '/Users/$USER/Library/Messages/chat.db'",
                 "",
                 "openclaw gateway restart"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "channels-ext-5",
+          "title": "WhatsApp 가상번호 사용 시 차단",
+          "severity": "high",
+          "symptoms": [
+            "WhatsApp 인증 시 번호가 차단됨",
+            "TextNow/Google Voice 번호로 가입 불가",
+            "WhatsApp에서 계정이 정지됨"
+          ],
+          "cause": "WhatsApp은 TextNow, Google Voice 등 가상번호를 적극적으로 차단함. 실제 통신사 SIM 카드 번호가 필요 (출처: channels/whatsapp.md)",
+          "solveTime": 30,
+          "solutions": [
+            {
+              "method": "A",
+              "title": "실제 SIM 카드 사용",
+              "trustLevel": 3,
+              "steps": [
+                "# WhatsApp은 실제 통신사 번호만 안정적으로 지원",
+                "# 권장:",
+                "# - 로컬 통신사 eSIM 또는 선불 SIM",
+                "# - 번호는 최초 SMS 인증 1회만 필요",
+                "# - 이후 creds.json으로 세션 유지",
+                "",
+                "# 피해야 할 번호:",
+                "# - TextNow, Google Voice, 무료 SMS 서비스",
+                "# - WhatsApp이 적극 차단함"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "channels-ext-6",
+          "title": "WhatsApp 세션 만료 (creds.json 갱신 필요)",
+          "severity": "medium",
+          "symptoms": [
+            "WhatsApp 봇이 갑자기 응답하지 않음",
+            "로그에 'logged out' 또는 소켓 에러",
+            "QR 코드 재스캔 요구"
+          ],
+          "cause": "WhatsApp Web 세션(creds.json)이 만료되면 재인증이 필요. 장기간 미사용 또는 WhatsApp 모바일에서 연결 해제 시 발생 (출처: channels/whatsapp.md)",
+          "solveTime": 5,
+          "solutions": [
+            {
+              "method": "A",
+              "title": "QR 코드 재스캔으로 재연결",
+              "trustLevel": 3,
+              "steps": [
+                "# 1. 게이트웨이 재시작하여 QR 코드 생성",
+                "openclaw gateway restart",
+                "",
+                "# 2. 로그에서 QR 코드 확인",
+                "openclaw logs --follow",
+                "",
+                "# 3. WhatsApp 모바일 앱에서:",
+                "#    설정 → 연결된 기기 → 기기 연결 → QR 코드 스캔",
+                "",
+                "# 세션은 ~/.openclaw/credentials/whatsapp/ 에 저장됨"
               ]
             }
           ]
