@@ -171,23 +171,32 @@ function scriptHtml() {
       });
     }
 
-    // Search
+    // Fuzzy Search (Fuse.js)
     const searchInput = document.getElementById('searchInput');
-    if (searchInput) {
+    if (searchInput && typeof Fuse !== 'undefined') {
+      const items = Array.from(document.querySelectorAll('.accordion-item, .search-target'));
+      const fuseList = items.map((el, i) => ({ idx: i, text: el.textContent }));
+      const fuse = new Fuse(fuseList, {
+        keys: ['text'],
+        threshold: 0.4,
+        distance: 200,
+        minMatchCharLength: 2,
+        ignoreLocation: true
+      });
       searchInput.addEventListener('input', (e) => {
-        const query = e.target.value.toLowerCase().trim();
-        document.querySelectorAll('.accordion-item, .search-target').forEach(item => {
-          if (!query) {
-            item.style.display = '';
-            return;
-          }
-          const text = item.textContent.toLowerCase();
-          item.style.display = text.includes(query) ? '' : 'none';
-        });
-        // Also filter category headings on index
+        const query = e.target.value.trim();
+        if (!query) {
+          items.forEach(el => el.style.display = '');
+          document.querySelectorAll('.category-section').forEach(s => s.style.display = '');
+          return;
+        }
+        const results = fuse.search(query);
+        const matchedIdx = new Set(results.map(r => r.item.idx));
+        items.forEach((el, i) => el.style.display = matchedIdx.has(i) ? '' : 'none');
+        // Show/hide category sections based on visible cards
         document.querySelectorAll('.category-section').forEach(sec => {
-          const visible = sec.querySelectorAll('.card:not([style*="display: none"])').length;
-          // keep sections visible if they have matching cards or no filtering applied
+          const hasVisible = sec.querySelectorAll('.card:not([style*="display: none"])').length > 0;
+          sec.style.display = hasVisible ? '' : 'none';
         });
       });
     }
@@ -202,6 +211,7 @@ function headHtml(title, cssPath) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escapeHtml(title)} - OpenClaw Guide</title>
   <link rel="stylesheet" href="${cssPath}">
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
 </head>
 <body>`;
 }
