@@ -437,7 +437,8 @@ function scriptHtml() {
     var badge = document.getElementById('usage-badge');
     if (!badge) return;
     if (_isPro) {
-      badge.textContent = 'PRO';
+      var proRemaining = Math.max(0, 300 - u.count);
+      badge.textContent = 'PRO ' + proRemaining + '/300';
       badge.style.background = '#000'; badge.style.color = '#fff';
     } else {
       badge.textContent = remaining + '/10 무료';
@@ -448,7 +449,7 @@ function scriptHtml() {
   function showPaywall() {
     var box = document.getElementById('chat-messages');
     var loginHint = !_currentUser ? '<div style="color:#888;font-size:11px;margin-bottom:8px">구독하려면 먼저 Google로 로그인하세요</div>' : '';
-    box.innerHTML += '<div style="background:#fff;padding:16px;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.08);text-align:center"><div style="margin-bottom:8px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div style="font-weight:700;color:#000;font-size:14px;margin-bottom:4px">무료 체험이 끝났습니다</div><div style="color:#666;font-size:12px;margin-bottom:12px">월 $3로 무제한 AI 오류 진단을 이용하세요</div>' + loginHint + '<button onclick="subscribe()" style="width:100%;padding:12px;border-radius:12px;border:none;background:#000;color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:opacity 0.2s;margin-bottom:8px" onmouseover="this.style.opacity=\\'0.8\\'" onmouseout="this.style.opacity=\\'1\\'">구독하기 -- $3/월</button><div style="color:#999;font-size:11px">언제든 해지 가능 -- 안전한 결제</div></div>';
+    box.innerHTML += '<div style="background:#fff;padding:16px;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.08);text-align:center"><div style="margin-bottom:8px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div style="font-weight:700;color:#000;font-size:14px;margin-bottom:4px">무료 체험이 끝났습니다</div><div style="color:#666;font-size:12px;margin-bottom:12px">월 $3로 하루 300회 AI 오류 진단을 이용하세요</div>' + loginHint + '<button onclick="subscribe()" style="width:100%;padding:12px;border-radius:12px;border:none;background:#000;color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:opacity 0.2s;margin-bottom:8px" onmouseover="this.style.opacity=\\'0.8\\'" onmouseout="this.style.opacity=\\'1\\'">구독하기 -- $3/월</button><div style="color:#999;font-size:11px">언제든 해지 가능 -- 안전한 결제</div></div>';
     box.scrollTop = box.scrollHeight;
   }
   function subscribe() {
@@ -482,6 +483,7 @@ function scriptHtml() {
     if (!msg) return;
 
     var u = getUsage();
+    if (_isPro && u.count >= 300) { showPaywall(); input.value = ''; return; }
     if (!_isPro && u.count >= 10) { showPaywall(); input.value = ''; return; }
 
     var box = document.getElementById('chat-messages');
@@ -501,7 +503,7 @@ function scriptHtml() {
       if (d.error) throw new Error(d.error);
       var html = d.answer.replace(/</g,'&lt;').replace(/\\[([^\\]]+)\\]\\(([^)]+)\\)/g,'<a href="$2" style="color:#000;font-weight:600;text-decoration:underline;text-underline-offset:2px" target="_blank">$1</a>').replace(/\\*\\*(.+?)\\*\\*/g,'<b>$1</b>').replace(/\`([^\`]+)\`/g,'<code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;font-size:12px;color:#333">$1</code>').replace(/\\n/g,'<br>');
       box.innerHTML += '<div style="background:#fff;padding:12px 16px;border-radius:14px;color:#333;font-size:13px;max-width:85%;line-height:1.6;box-shadow:0 1px 3px rgba(0,0,0,0.08)">'+html+'</div>';
-      if (!_isPro) { u.count++; setUsage(u); } checkUsage();
+      u.count++; setUsage(u); checkUsage();
       saveChatHistory();
     } catch(e) {
       document.getElementById('typing')?.remove();
