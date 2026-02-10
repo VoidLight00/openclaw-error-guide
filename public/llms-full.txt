@@ -1712,6 +1712,146 @@ openclaw models auth paste-token --provider anthropic
 export ANTHROPIC_API_KEY=sk-ant-...
 ```
 
+### OAuth token refresh failed (Anthropic Claude subscription)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- OAuth token refresh failed
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: Claude Code setup-token으로 전환 (신뢰도: ★★★)
+```bash
+Claude Code setup-token으로 전환: openclaw models auth setup-token --provider anthropic
+```
+
+#### 방법 B: 다른 머신에서 토큰 생성한 경우 (신뢰도: ★★★)
+```bash
+다른 머신에서 토큰 생성한 경우: openclaw models auth paste-token --provider anthropic
+```
+
+#### 방법 C: openclaw models status로 인증 상태 확인 (신뢰도: ★★★)
+```bash
+openclaw models status로 인증 상태 확인
+```
+
+### No API key found for provider after adding a new agent
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- No API key found for provider (새 에이전트 추가 후)
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: 새 에이전트의 auth store가 비어있음 (신뢰도: ★★★)
+```bash
+새 에이전트의 auth store가 비어있음
+```
+
+#### 방법 B: openclaw agents add <id>로 인증 설정 (신뢰도: ★★★)
+```bash
+openclaw agents add <id>로 인증 설정
+```
+
+#### 방법 C: 또는 메인 에이전트의 auth-profiles.json을 새 에이전트의 agentDir로 복사 (신뢰도: ★★★)
+```bash
+또는 메인 에이전트의 auth-profiles.json을 새 에이전트의 agentDir로 복사
+```
+
+#### 방법 D: agentDir를 에이전트 간 공유하지 말 것 (인증/세션 충돌) (신뢰도: ★★★)
+```bash
+agentDir를 에이전트 간 공유하지 말 것 (인증/세션 충돌)
+```
+
+### LLM request rejected: thinking signature required (Google Antigravity)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- LLM request rejected: thinking blocks without signatures (Google Antigravity)
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: 새 세션 시작 (/new) (신뢰도: ★★★)
+```bash
+새 세션 시작 (/new)
+```
+
+#### 방법 B: 해당 에이전트에서 /thinking off 설정 (신뢰도: ★★★)
+```bash
+해당 에이전트에서 /thinking off 설정
+```
+
+#### 방법 C: 최신 버전에서는 서명 없는 thinking 블록 자동 제거 (신뢰도: ★★★)
+```bash
+최신 버전에서는 서명 없는 thinking 블록 자동 제거
+```
+
+### Semantic memory search에 OpenAI API key 필요
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- 시맨틱 메모리 검색이 비활성 상태 (임베딩 프로바이더 미설정)
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: Codex OAuth는 embeddings 미지원 - 별도 OPENAI_API_KEY 필요 (신뢰도: ★★★)
+```bash
+Codex OAuth는 embeddings 미지원 - 별도 OPENAI_API_KEY 필요
+```
+
+#### 방법 B: 로컬 사용 (신뢰도: ★★★)
+```bash
+로컬 사용: memorySearch.provider = 'local' 설정
+```
+
+#### 방법 C: Gemini 사용 (신뢰도: ★★★)
+```bash
+Gemini 사용: memorySearch.provider = 'gemini' + GEMINI_API_KEY 제공
+```
+
+#### 방법 D: OpenAI/Gemini/local 중 선택 가능 (신뢰도: ★★★)
+```bash
+OpenAI/Gemini/local 중 선택 가능
+```
+
+### env vars disappeared in service (서비스에서 환경변수 누락)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- 서비스로 게이트웨이 시작 시 환경변수 사라짐 (Shell env: off)
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: ~/.openclaw/.env에 누락된 키 추가 (신뢰도: ★★★)
+```bash
+~/.openclaw/.env에 누락된 키 추가
+```
+
+#### 방법 B: env.shellEnv.enabled (신뢰도: ★★★)
+```bash
+env.shellEnv.enabled: true로 로그인 셸 import 활성화
+```
+
+#### 방법 C: 또는 config의 env 블록에 인라인 정의 (신뢰도: ★★★)
+```bash
+또는 config의 env 블록에 인라인 정의
+```
+
 ## 게이트웨이 접속 오류
 
 ### 게이트웨이 접근 거부 (403 / Unauthorized)
@@ -1925,6 +2065,244 @@ sudo firewall-cmd --list-ports
 # 또는 Tailscale 사용으로 방화벽 설정 불필요하게 만들기
 tailscale up
 tailscale serve --bg 18789
+```
+
+### Gateway start blocked: set gateway.mode=local
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- Gateway start blocked: set gateway.mode=local
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: openclaw configure 실행 후 Gateway run mode를 Local로 설정 (신뢰도: ★★★)
+```bash
+openclaw configure 실행 후 Gateway run mode를 Local로 설정
+```
+
+#### 방법 B: openclaw config set gateway.mode local (신뢰도: ★★★)
+```bash
+openclaw config set gateway.mode local
+```
+
+#### 방법 C: 원격 게이트웨이 사용 시 (신뢰도: ★★★)
+```bash
+원격 게이트웨이 사용 시: openclaw config set gateway.mode remote && openclaw config set gateway.remote.url 'wss://gateway.example.com'
+```
+
+#### 방법 D: Ad-hoc/dev 전용 (신뢰도: ★★★)
+```bash
+Ad-hoc/dev 전용: --allow-unconfigured 플래그로 시작
+```
+
+#### 방법 E: 설정 파일 없을 경우 (신뢰도: ★★★)
+```bash
+설정 파일 없을 경우: openclaw setup 실행 후 재시작
+```
+
+### Control UI fails on HTTP (device identity required)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- device identity required / connect failed
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: HTTPS 사용 (신뢰도: ★★★)
+```bash
+HTTPS 사용: Tailscale Serve로 전환 (openclaw gateway --tailscale serve)
+```
+
+#### 방법 B: 로컬 접속 (신뢰도: ★★★)
+```bash
+로컬 접속: http://127.0.0.1:18789/ 사용
+```
+
+#### 방법 C: HTTP 유지 필요 시 (신뢰도: ★★★)
+```bash
+HTTP 유지 필요 시: gateway.controlUi.allowInsecureAuth: true 설정 후 gateway token 사용
+```
+
+### invalid handshake / code 1008 (WebSocket 정책 위반)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- invalid handshake / code 1008
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: WS URL 사용 (신뢰도: ★★★)
+```bash
+WS URL 사용: ws://<host>:18789 (HTTP가 아닌 WS)
+```
+
+#### 방법 B: 일반 브라우저 탭에서 WS 포트 열지 않기 (신뢰도: ★★★)
+```bash
+일반 브라우저 탭에서 WS 포트 열지 않기
+```
+
+#### 방법 C: 인증 활성화 시 connect 프레임에 token/password 포함 (신뢰도: ★★★)
+```bash
+인증 활성화 시 connect 프레임에 token/password 포함
+```
+
+#### 방법 D: CLI/TUI (신뢰도: ★★★)
+```bash
+CLI/TUI: openclaw tui --url ws://<host>:18789 --token <token>
+```
+
+### Config (cli)와 Config (service) 불일치
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- openclaw gateway status에서 Config (cli)와 Config (service)가 다름
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: openclaw gateway install --force 실행 (동일한 --profile/환경에서) (신뢰도: ★★★)
+```bash
+openclaw gateway install --force 실행 (동일한 --profile/환경에서)
+```
+
+#### 방법 B: 프로파일/OPENCLAW_STATE_DIR 불일치 확인 (신뢰도: ★★★)
+```bash
+프로파일/OPENCLAW_STATE_DIR 불일치 확인
+```
+
+### gateway.bind: tailnet 설정 시 바인딩 불가
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- bind=tailnet but no tailnet interface was found
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: 해당 호스트에서 Tailscale 시작 (100.x 주소 필요) (신뢰도: ★★★)
+```bash
+해당 호스트에서 Tailscale 시작 (100.x 주소 필요)
+```
+
+#### 방법 B: 또는 gateway.bind를 loopback/lan으로 변경 (신뢰도: ★★★)
+```bash
+또는 gateway.bind를 loopback/lan으로 변경
+```
+
+### Service environment PATH 문제 (도구를 찾을 수 없음)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- 게이트웨이 서비스에서 도구/바이너리를 찾을 수 없음 (PATH 문제)
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: macOS 서비스 PATH (신뢰도: ★★★)
+```bash
+macOS 서비스 PATH: /opt/homebrew/bin, /usr/local/bin, /usr/bin, /bin만 포함
+```
+
+#### 방법 B: Linux 서비스 PATH (신뢰도: ★★★)
+```bash
+Linux 서비스 PATH: /usr/local/bin, /usr/bin, /bin만 포함
+```
+
+#### 방법 C: nvm/fnm/volta/asdf 등 버전 관리자 제외됨 (신뢰도: ★★★)
+```bash
+nvm/fnm/volta/asdf 등 버전 관리자 제외됨
+```
+
+#### 방법 D: 필요한 환경변수를 ~/.openclaw/.env에 설정 (신뢰도: ★★★)
+```bash
+필요한 환경변수를 ~/.openclaw/.env에 설정
+```
+
+#### 방법 E: tools.exec.pathPrepend로 PATH 추가 가능 (신뢰도: ★★★)
+```bash
+tools.exec.pathPrepend로 PATH 추가 가능
+```
+
+### Disconnected from gateway: no reason
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- Disconnected from gateway: no reason
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: 게이트웨이 실행 확인 (신뢰도: ★★★)
+```bash
+게이트웨이 실행 확인: openclaw gateway status
+```
+
+#### 방법 B: 게이트웨이 건강 확인 (신뢰도: ★★★)
+```bash
+게이트웨이 건강 확인: openclaw status
+```
+
+#### 방법 C: UI에 올바른 토큰 확인 (신뢰도: ★★★)
+```bash
+UI에 올바른 토큰 확인: openclaw dashboard
+```
+
+#### 방법 D: 원격의 경우 터널/Tailscale 링크 확인 (신뢰도: ★★★)
+```bash
+원격의 경우 터널/Tailscale 링크 확인
+```
+
+#### 방법 E: openclaw logs --follow로 로그 확인 (신뢰도: ★★★)
+```bash
+openclaw logs --follow로 로그 확인
+```
+
+### Gateway won't start — configuration invalid (엄격한 설정 검증)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- Gateway won't start — configuration invalid
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: openclaw doctor로 정확한 문제 확인 (신뢰도: ★★★)
+```bash
+openclaw doctor로 정확한 문제 확인
+```
+
+#### 방법 B: openclaw doctor --fix로 마이그레이션/수리 적용 (신뢰도: ★★★)
+```bash
+openclaw doctor --fix로 마이그레이션/수리 적용
+```
+
+#### 방법 C: 진단 명령어(logs, health, status, gateway status)는 설정 무효 시에도 실행 가 (신뢰도: ★★★)
+```bash
+진단 명령어(logs, health, status, gateway status)는 설정 무효 시에도 실행 가능
+```
+
+#### 방법 D: 미지원 키, 잘못된 타입, 유효하지 않은 값 제거 (신뢰도: ★★★)
+```bash
+미지원 키, 잘못된 타입, 유효하지 않은 값 제거
 ```
 
 ## 채널 통합 오류
@@ -2252,6 +2630,94 @@ sudo ufw allow out 443/tcp
 
 # DNS 서버 변경 (Google DNS)
 echo 'nameserver 8.8.8.8' | sudo tee /etc/resolv.conf
+```
+
+### Discord groupPolicy allowlist로 서버 응답 안 됨
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- Discord doesn't reply even with requireMention: false
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: channels.discord.groupPolicy를 open으로 설정하거나 guild allowlist 항 (신뢰도: ★★★)
+```bash
+channels.discord.groupPolicy를 open으로 설정하거나 guild allowlist 항목 추가
+```
+
+#### 방법 B: channels.discord.guilds.<guildId>.channels에 숫자 채널 ID 사용 (신뢰도: ★★★)
+```bash
+channels.discord.guilds.<guildId>.channels에 숫자 채널 ID 사용
+```
+
+#### 방법 C: requireMention (신뢰도: ★★★)
+```bash
+requireMention: false를 channels.discord.guilds 하위에 배치
+```
+
+#### 방법 D: 봇에 Message Content Intent 및 채널 권한 확인 (신뢰도: ★★★)
+```bash
+봇에 Message Content Intent 및 채널 권한 확인
+```
+
+#### 방법 E: openclaw channels status --probe로 감사 힌트 확인 (신뢰도: ★★★)
+```bash
+openclaw channels status --probe로 감사 힌트 확인
+```
+
+### Telegram block streaming이 텍스트를 분할하지 않음
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- Telegram block streaming이 tool call 사이 텍스트를 분리하지 않음
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: agents.defaults.blockStreamingDefault가 off가 아닌지 확인 (신뢰도: ★★★)
+```bash
+agents.defaults.blockStreamingDefault가 off가 아닌지 확인
+```
+
+#### 방법 B: channels.telegram.blockStreaming이 false가 아닌지 확인 (신뢰도: ★★★)
+```bash
+channels.telegram.blockStreaming이 false가 아닌지 확인
+```
+
+#### 방법 C: channels.telegram.streamMode를 off로 설정 (멀티 메시지 블록 응답) (신뢰도: ★★★)
+```bash
+channels.telegram.streamMode를 off로 설정 (멀티 메시지 블록 응답)
+```
+
+#### 방법 D: block streaming 설정을 agents.defaults 하위에 배치 (루트 아님) (신뢰도: ★★★)
+```bash
+block streaming 설정을 agents.defaults 하위에 배치 (루트 아님)
+```
+
+### Telegram IPv6 DNS 연결 실패 (sendMessage/sendChatAction)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- HttpError: Network request for 'sendMessage' failed
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: api.telegram.org의 IPv6 DNS 확인 (신뢰도: ★★★)
+```bash
+api.telegram.org의 IPv6 DNS 확인
+```
+
+#### 방법 B: 호스트에 IPv6 egress 없으면 IPv4 강제 또는 IPv6 활성화 (신뢰도: ★★★)
+```bash
+호스트에 IPv6 egress 없으면 IPv4 강제 또는 IPv6 활성화
 ```
 
 ## 클라이언트 연결 오류
@@ -2771,6 +3237,460 @@ openclaw doctor
 # 주의: 삭제 전 반드시 백업!
 ```
 
+### Skill missing API key in sandbox
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- 스킬이 호스트에서는 작동하지만 샌드박스에서 API 키 누락으로 실패
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: agents.defaults.sandbox.docker.env에 API 키 설정 (신뢰도: ★★★)
+```bash
+agents.defaults.sandbox.docker.env에 API 키 설정
+```
+
+#### 방법 B: 또는 커스텀 샌드박스 이미지에 키 포함 (신뢰도: ★★★)
+```bash
+또는 커스텀 샌드박스 이미지에 키 포함
+```
+
+#### 방법 C: openclaw sandbox recreate --agent <id> (또는 --all) 실행 (신뢰도: ★★★)
+```bash
+openclaw sandbox recreate --agent <id> (또는 --all) 실행
+```
+
+### Agent was aborted (에이전트 중단됨)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- Agent was aborted
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: 사용자가 stop/abort/esc/wait/exit를 보낸 경우 발생 (신뢰도: ★★★)
+```bash
+사용자가 stop/abort/esc/wait/exit를 보낸 경우 발생
+```
+
+#### 방법 B: 타임아웃 초과 또는 프로세스 크래시 가능 (신뢰도: ★★★)
+```bash
+타임아웃 초과 또는 프로세스 크래시 가능
+```
+
+#### 방법 C: 다른 메시지를 보내면 세션이 계속됨 (신뢰도: ★★★)
+```bash
+다른 메시지를 보내면 세션이 계속됨
+```
+
+### Pairing Code Not Arriving (페어링 코드 미수신)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- dmPolicy가 pairing인데 페어링 코드가 도착하지 않음
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: openclaw pairing list <channel>로 대기 요청 확인 (신뢰도: ★★★)
+```bash
+openclaw pairing list <channel>로 대기 요청 확인
+```
+
+#### 방법 B: 채널당 대기 요청 최대 3개 제한 - 기존 요청 승인/만료 필요 (신뢰도: ★★★)
+```bash
+채널당 대기 요청 최대 3개 제한 - 기존 요청 승인/만료 필요
+```
+
+#### 방법 C: openclaw logs --follow | grep 'pairing request'로 요청 생성 확인 (신뢰도: ★★★)
+```bash
+openclaw logs --follow | grep 'pairing request'로 요청 생성 확인
+```
+
+#### 방법 D: dmPolicy가 open/allowlist가 아닌지 확인 (신뢰도: ★★★)
+```bash
+dmPolicy가 open/allowlist가 아닌지 확인
+```
+
+### Image + Mention Not Working (WhatsApp 이미지+멘션 문제)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- WhatsApp에서 이미지와 멘션만 보내면 멘션 메타데이터 누락
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: 멘션과 함께 텍스트 추가 (신뢰도: ★★★)
+```bash
+멘션과 함께 텍스트 추가: '@openclaw check this' + 이미지 (O)
+```
+
+#### 방법 B: '@openclaw' + 이미지만 보내기 (X) (신뢰도: ★★★)
+```bash
+'@openclaw' + 이미지만 보내기 (X)
+```
+
+### Session Not Resuming (세션 재개 실패)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- 이전 대화가 이어지지 않음
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: 세션 파일 확인 (신뢰도: ★★★)
+```bash
+세션 파일 확인: ls -la ~/.openclaw/agents/<agentId>/sessions/
+```
+
+#### 방법 B: session.reset.idleMinutes 설정 확인 (기본 60분) (신뢰도: ★★★)
+```bash
+session.reset.idleMinutes 설정 확인 (기본 60분)
+```
+
+#### 방법 C: /new, /reset 또는 리셋 트리거 전송 여부 확인 (신뢰도: ★★★)
+```bash
+/new, /reset 또는 리셋 트리거 전송 여부 확인
+```
+
+### Agent Timing Out (에이전트 타임아웃)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- 에이전트가 장시간 작업 중 타임아웃됨 (기본 30분)
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: reply.timeoutSeconds를 늘림 (예 (신뢰도: ★★★)
+```bash
+reply.timeoutSeconds를 늘림 (예: 3600 = 1시간)
+```
+
+#### 방법 B: process 도구로 장시간 명령어 백그라운드 실행 (신뢰도: ★★★)
+```bash
+process 도구로 장시간 명령어 백그라운드 실행
+```
+
+### High Memory Usage (높은 메모리 사용량)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- OpenClaw이 대화 히스토리를 메모리에 유지하여 메모리 증가
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: 주기적으로 재시작 (신뢰도: ★★★)
+```bash
+주기적으로 재시작
+```
+
+#### 방법 B: session.historyLimit 설정 (예 (신뢰도: ★★★)
+```bash
+session.historyLimit 설정 (예: 100)
+```
+
+### Media Send Failing (미디어 전송 실패)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- 이미지/오디오/비디오/문서 전송 실패
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: 파일 경로 유효성 확인 (신뢰도: ★★★)
+```bash
+파일 경로 유효성 확인
+```
+
+#### 방법 B: 파일 크기 제한 확인 (신뢰도: ★★★)
+```bash
+파일 크기 제한 확인: 이미지 6MB, 오디오/비디오 16MB, 문서 100MB
+```
+
+#### 방법 C: 미디어 로그 확인 (신뢰도: ★★★)
+```bash
+미디어 로그 확인: grep 'media|fetch|download' 로그파일
+```
+
+### LLM request rejected: tool_use.input Field required
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- LLM request rejected: messages.N.content.X.tool_use.input: Field required
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: /new 명령어로 새 세션 시작 (세션 히스토리 손상/오래됨) (신뢰도: ★★★)
+```bash
+/new 명령어로 새 세션 시작 (세션 히스토리 손상/오래됨)
+```
+
+### config.apply wiped my config (설정 전체 덮어쓰기)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- config.apply로 설정이 초기화됨
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: 백업에서 ~/.openclaw/openclaw.json 복원 (신뢰도: ★★★)
+```bash
+백업에서 ~/.openclaw/openclaw.json 복원
+```
+
+#### 방법 B: 백업 없으면 openclaw doctor로 재설정 (신뢰도: ★★★)
+```bash
+백업 없으면 openclaw doctor로 재설정
+```
+
+#### 방법 C: 향후 방지 (신뢰도: ★★★)
+```bash
+향후 방지: openclaw config set (부분 변경) 또는 openclaw configure (대화형) 사용
+```
+
+#### 방법 D: config.apply는 전체 설정을 교체하므로 부분 객체 전송 주의 (신뢰도: ★★★)
+```bash
+config.apply는 전체 설정을 교체하므로 부분 객체 전송 주의
+```
+
+### Cross-context messaging denied (크로스 프로바이더 메시징 차단)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- Cross-context messaging denied
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: agents.defaults.tools.message.crossContext.allowAcrossProviders (신뢰도: ★★★)
+```bash
+agents.defaults.tools.message.crossContext.allowAcrossProviders: true 설정
+```
+
+#### 방법 B: 게이트웨이 재시작 (신뢰도: ★★★)
+```bash
+게이트웨이 재시작
+```
+
+### Main chat running in sandbox workspace (예상치 못한 샌드박스)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- pwd가 ~/.openclaw/sandboxes/...를 표시 (호스트 워크스페이스 예상)
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: agents.list[].sandbox.mode (신뢰도: ★★★)
+```bash
+agents.list[].sandbox.mode: off로 호스트 워크스페이스 사용
+```
+
+#### 방법 B: workspaceAccess (신뢰도: ★★★)
+```bash
+workspaceAccess: rw로 샌드박스 내 호스트 워크스페이스 접근
+```
+
+#### 방법 C: sandbox.mode (신뢰도: ★★★)
+```bash
+sandbox.mode: non-main은 session.mainKey 기반이므로 그룹/채널 세션은 non-main으로 처리됨
+```
+
+### Extra Workspace Folders Detected (여러 워크스페이스 폴더 감지)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- 업그레이드 후 ~/openclaw 등 여러 워크스페이스 폴더 존재
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: 단일 활성 워크스페이스만 유지하고 나머지 아카이브/삭제 (신뢰도: ★★★)
+```bash
+단일 활성 워크스페이스만 유지하고 나머지 아카이브/삭제
+```
+
+### npm install fails (allow-build-scripts / missing tar or yargs)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- npm install 실패 (allow-build-scripts / tar 또는 yargs 누락)
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: 소스에서 실행 시 pnpm 사용 (레포의 패키지 매니저) (신뢰도: ★★★)
+```bash
+소스에서 실행 시 pnpm 사용 (레포의 패키지 매니저)
+```
+
+#### 방법 B: git status로 레포 루트 확인 (신뢰도: ★★★)
+```bash
+git status로 레포 루트 확인
+```
+
+#### 방법 C: pnpm install && pnpm build && openclaw doctor && openclaw ga (신뢰도: ★★★)
+```bash
+pnpm install && pnpm build && openclaw doctor && openclaw gateway restart
+```
+
+### Node + tsx __name is not a function 크래시
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- TypeError: __name is not a function (createSubsystemLogger에서)
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: dev 스크립트에 Bun 사용 (임시 우회) (신뢰도: ★★★)
+```bash
+dev 스크립트에 Bun 사용 (임시 우회)
+```
+
+#### 방법 B: Node + tsc watch 사용 (신뢰도: ★★★)
+```bash
+Node + tsc watch 사용: pnpm exec tsc --watch, node openclaw.mjs status
+```
+
+#### 방법 C: Node LTS (22/24)에서 테스트 (신뢰도: ★★★)
+```bash
+Node LTS (22/24)에서 테스트
+```
+
+#### 방법 D: tsx/esbuild의 keepNames 헬퍼 문제 - Node 25 관련 가능성 (신뢰도: ★★★)
+```bash
+tsx/esbuild의 keepNames 헬퍼 문제 - Node 25 관련 가능성
+```
+
+### macOS App Crashes when Granting Permissions (Speech/Mic)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- Abort trap 6 - 권한 프롬프트에서 Allow 클릭 시 앱 크래시
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: TCC 캐시 리셋 (신뢰도: ★★★)
+```bash
+TCC 캐시 리셋: tccutil reset All bot.molt.mac.debug
+```
+
+#### 방법 B: 번들 ID 변경 후 리빌드 (scripts/package-mac-app.sh에서 BUNDLE_ID에 .tes (신뢰도: ★★★)
+```bash
+번들 ID 변경 후 리빌드 (scripts/package-mac-app.sh에서 BUNDLE_ID에 .test 추가)
+```
+
+### WhatsApp logged me out (로그아웃됨)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- WhatsApp 세션이 로그아웃/언링크됨 (status 409-515 또는 loggedOut)
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: openclaw channels login으로 QR 코드 재스캔 (신뢰도: ★★★)
+```bash
+openclaw channels login으로 QR 코드 재스캔
+```
+
+#### 방법 B: 상태 409-515 또는 loggedOut 시 (신뢰도: ★★★)
+```bash
+상태 409-515 또는 loggedOut 시: openclaw channels logout 후 openclaw channels login --verbose
+```
+
+### CI Secrets Scan Failed (detect-secrets)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- CI Secrets Scan Failed - detect-secrets가 baseline에 없는 새 후보 발견
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: Secret scanning 가이드 따르기 (신뢰도: ★★★)
+```bash
+Secret scanning 가이드 따르기: gateway/security#secret-scanning-detect-secrets
+```
+
+### context too large 에러 (컨텍스트 초과)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- context too large 에러
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: /compact로 압축 (선택적 지시사항 추가 가능) (신뢰도: ★★★)
+```bash
+/compact로 압축 (선택적 지시사항 추가 가능)
+```
+
+#### 방법 B: /new 또는 /reset으로 새 세션 시작 (신뢰도: ★★★)
+```bash
+/new 또는 /reset으로 새 세션 시작
+```
+
+#### 방법 C: agents.defaults.contextPruning 설정으로 세션 프루닝 활성화 (신뢰도: ★★★)
+```bash
+agents.defaults.contextPruning 설정으로 세션 프루닝 활성화
+```
+
+#### 방법 D: 더 큰 컨텍스트 윈도우 모델 사용 (신뢰도: ★★★)
+```bash
+더 큰 컨텍스트 윈도우 모델 사용
+```
+
 ## 브라우저 도구 오류
 
 ### Linux에서 Chrome CDP 실행 실패 (snap Chromium)
@@ -3222,5 +4142,88 @@ openclaw status --deep
 # OpenClaw을 최신 버전으로 업데이트 (스키마 정규화 포함)
 npm install -g openclaw@latest
 openclaw gateway restart
+```
+
+### Agent failed: Unknown model (오래된/보안 취약 모델 거부)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- Agent failed before reply: Unknown model: anthropic/claude-haiku-3-5
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: 최신 모델로 변경 (신뢰도: ★★★)
+```bash
+최신 모델로 변경: openclaw models list로 사용 가능한 모델 확인
+```
+
+#### 방법 B: openclaw models scan으로 지원 모델 스캔 (신뢰도: ★★★)
+```bash
+openclaw models scan으로 지원 모델 스캔
+```
+
+#### 방법 C: 게이트웨이 로그에서 상세 실패 사유 확인 (신뢰도: ★★★)
+```bash
+게이트웨이 로그에서 상세 실패 사유 확인
+```
+
+### Unknown model: minimax/MiniMax-M2.1
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- Unknown model: minimax/MiniMax-M2.1
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: 2026.1.12 이상으로 업그레이드 후 게이트웨이 재시작 (신뢰도: ★★★)
+```bash
+2026.1.12 이상으로 업그레이드 후 게이트웨이 재시작
+```
+
+#### 방법 B: MiniMax 프로바이더 설정 또는 API 키 확인 (신뢰도: ★★★)
+```bash
+MiniMax 프로바이더 설정 또는 API 키 확인
+```
+
+#### 방법 C: 정확한 모델 ID 사용 (대소문자 구분) (신뢰도: ★★★)
+```bash
+정확한 모델 ID 사용 (대소문자 구분): minimax/MiniMax-M2.1
+```
+
+#### 방법 D: openclaw models list로 사용 가능한 모델 확인 (신뢰도: ★★★)
+```bash
+openclaw models list로 사용 가능한 모델 확인
+```
+
+### Cloud Code Assist API error: invalid tool schema (400)
+- Severity: 보통
+- Solve Time: 5분min
+
+**증상:**
+- Cloud Code Assist API error: invalid tool schema (400)
+
+**원인:** 확인 중
+
+**해결 방법:**
+
+#### 방법 A: OpenClaw 업데이트 (main에서 스키마 스크러버 포함) (신뢰도: ★★★)
+```bash
+OpenClaw 업데이트 (main에서 스키마 스크러버 포함)
+```
+
+#### 방법 B: anyOf/oneOf/allOf, patternProperties, additionalProperties 등 (신뢰도: ★★★)
+```bash
+anyOf/oneOf/allOf, patternProperties, additionalProperties 등 미지원 키워드 사용 금지
+```
+
+#### 방법 C: 커스텀 도구 정의 시 type (신뢰도: ★★★)
+```bash
+커스텀 도구 정의 시 type: object + properties + simple enums 유지
 ```
 

@@ -2049,6 +2049,207 @@
               ]
             }
           ]
+        },
+        {
+          "title": "OAuth token refresh failed (Anthropic Claude subscription)",
+          "error": "OAuth token refresh failed",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "Claude Code setup-token으로 전환",
+              "trustLevel": 3,
+              "steps": [
+                "Claude Code setup-token으로 전환: openclaw models auth setup-token --provider anthropic"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "다른 머신에서 토큰 생성한 경우",
+              "trustLevel": 3,
+              "steps": [
+                "다른 머신에서 토큰 생성한 경우: openclaw models auth paste-token --provider anthropic"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "openclaw models status로 인증 상태 확인",
+              "trustLevel": 3,
+              "steps": [
+                "openclaw models status로 인증 상태 확인"
+              ]
+            }
+          ],
+          "id": "oauth-token-refresh-failed-anthropic-claude-subscr",
+          "severity": "medium",
+          "symptoms": [
+            "OAuth token refresh failed"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "No API key found for provider after adding a new agent",
+          "error": "No API key found for provider (새 에이전트 추가 후)",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "새 에이전트의 auth store가 비어있음",
+              "trustLevel": 3,
+              "steps": [
+                "새 에이전트의 auth store가 비어있음"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "openclaw agents add <id>로 인증 설정",
+              "trustLevel": 3,
+              "steps": [
+                "openclaw agents add <id>로 인증 설정"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "또는 메인 에이전트의 auth-profiles.json을 새 에이전트의 agentDir로 복사",
+              "trustLevel": 3,
+              "steps": [
+                "또는 메인 에이전트의 auth-profiles.json을 새 에이전트의 agentDir로 복사"
+              ]
+            },
+            {
+              "method": "D",
+              "title": "agentDir를 에이전트 간 공유하지 말 것 (인증/세션 충돌)",
+              "trustLevel": 3,
+              "steps": [
+                "agentDir를 에이전트 간 공유하지 말 것 (인증/세션 충돌)"
+              ]
+            }
+          ],
+          "id": "no-api-key-found-for-provider-after-adding-a-new-a",
+          "severity": "medium",
+          "symptoms": [
+            "No API key found for provider (새 에이전트 추가 후)"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "LLM request rejected: thinking signature required (Google Antigravity)",
+          "error": "LLM request rejected: thinking blocks without signatures (Google Antigravity)",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "새 세션 시작 (/new)",
+              "trustLevel": 3,
+              "steps": [
+                "새 세션 시작 (/new)"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "해당 에이전트에서 /thinking off 설정",
+              "trustLevel": 3,
+              "steps": [
+                "해당 에이전트에서 /thinking off 설정"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "최신 버전에서는 서명 없는 thinking 블록 자동 제거",
+              "trustLevel": 3,
+              "steps": [
+                "최신 버전에서는 서명 없는 thinking 블록 자동 제거"
+              ]
+            }
+          ],
+          "id": "llm-request-rejected:-thinking-signature-required-",
+          "severity": "medium",
+          "symptoms": [
+            "LLM request rejected: thinking blocks without signatures (Google Antigravity)"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "Semantic memory search에 OpenAI API key 필요",
+          "error": "시맨틱 메모리 검색이 비활성 상태 (임베딩 프로바이더 미설정)",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "Codex OAuth는 embeddings 미지원 - 별도 OPENAI_API_KEY 필요",
+              "trustLevel": 3,
+              "steps": [
+                "Codex OAuth는 embeddings 미지원 - 별도 OPENAI_API_KEY 필요"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "로컬 사용",
+              "trustLevel": 3,
+              "steps": [
+                "로컬 사용: memorySearch.provider = 'local' 설정"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "Gemini 사용",
+              "trustLevel": 3,
+              "steps": [
+                "Gemini 사용: memorySearch.provider = 'gemini' + GEMINI_API_KEY 제공"
+              ]
+            },
+            {
+              "method": "D",
+              "title": "OpenAI/Gemini/local 중 선택 가능",
+              "trustLevel": 3,
+              "steps": [
+                "OpenAI/Gemini/local 중 선택 가능"
+              ]
+            }
+          ],
+          "id": "semantic-memory-search에-openai-api-key-필요",
+          "severity": "medium",
+          "symptoms": [
+            "시맨틱 메모리 검색이 비활성 상태 (임베딩 프로바이더 미설정)"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "env vars disappeared in service (서비스에서 환경변수 누락)",
+          "error": "서비스로 게이트웨이 시작 시 환경변수 사라짐 (Shell env: off)",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "~/.openclaw/.env에 누락된 키 추가",
+              "trustLevel": 3,
+              "steps": [
+                "~/.openclaw/.env에 누락된 키 추가"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "env.shellEnv.enabled",
+              "trustLevel": 3,
+              "steps": [
+                "env.shellEnv.enabled: true로 로그인 셸 import 활성화"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "또는 config의 env 블록에 인라인 정의",
+              "trustLevel": 3,
+              "steps": [
+                "또는 config의 env 블록에 인라인 정의"
+              ]
+            }
+          ],
+          "id": "env-vars-disappeared-in-service-서비스에서-환경변수-누락",
+          "severity": "medium",
+          "symptoms": [
+            "서비스로 게이트웨이 시작 시 환경변수 사라짐 (Shell env: off)"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
         }
       ]
     },
@@ -2307,6 +2508,350 @@
               ]
             }
           ]
+        },
+        {
+          "title": "Gateway start blocked: set gateway.mode=local",
+          "error": "Gateway start blocked: set gateway.mode=local",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "openclaw configure 실행 후 Gateway run mode를 Local로 설정",
+              "trustLevel": 3,
+              "steps": [
+                "openclaw configure 실행 후 Gateway run mode를 Local로 설정"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "openclaw config set gateway.mode local",
+              "trustLevel": 3,
+              "steps": [
+                "openclaw config set gateway.mode local"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "원격 게이트웨이 사용 시",
+              "trustLevel": 3,
+              "steps": [
+                "원격 게이트웨이 사용 시: openclaw config set gateway.mode remote && openclaw config set gateway.remote.url 'wss://gateway.example.com'"
+              ]
+            },
+            {
+              "method": "D",
+              "title": "Ad-hoc/dev 전용",
+              "trustLevel": 3,
+              "steps": [
+                "Ad-hoc/dev 전용: --allow-unconfigured 플래그로 시작"
+              ]
+            },
+            {
+              "method": "E",
+              "title": "설정 파일 없을 경우",
+              "trustLevel": 3,
+              "steps": [
+                "설정 파일 없을 경우: openclaw setup 실행 후 재시작"
+              ]
+            }
+          ],
+          "id": "gateway-start-blocked:-set-gateway.mode=local",
+          "severity": "medium",
+          "symptoms": [
+            "Gateway start blocked: set gateway.mode=local"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "Control UI fails on HTTP (device identity required)",
+          "error": "device identity required / connect failed",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "HTTPS 사용",
+              "trustLevel": 3,
+              "steps": [
+                "HTTPS 사용: Tailscale Serve로 전환 (openclaw gateway --tailscale serve)"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "로컬 접속",
+              "trustLevel": 3,
+              "steps": [
+                "로컬 접속: http://127.0.0.1:18789/ 사용"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "HTTP 유지 필요 시",
+              "trustLevel": 3,
+              "steps": [
+                "HTTP 유지 필요 시: gateway.controlUi.allowInsecureAuth: true 설정 후 gateway token 사용"
+              ]
+            }
+          ],
+          "id": "control-ui-fails-on-http-device-identity-required",
+          "severity": "medium",
+          "symptoms": [
+            "device identity required / connect failed"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "invalid handshake / code 1008 (WebSocket 정책 위반)",
+          "error": "invalid handshake / code 1008",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "WS URL 사용",
+              "trustLevel": 3,
+              "steps": [
+                "WS URL 사용: ws://<host>:18789 (HTTP가 아닌 WS)"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "일반 브라우저 탭에서 WS 포트 열지 않기",
+              "trustLevel": 3,
+              "steps": [
+                "일반 브라우저 탭에서 WS 포트 열지 않기"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "인증 활성화 시 connect 프레임에 token/password 포함",
+              "trustLevel": 3,
+              "steps": [
+                "인증 활성화 시 connect 프레임에 token/password 포함"
+              ]
+            },
+            {
+              "method": "D",
+              "title": "CLI/TUI",
+              "trustLevel": 3,
+              "steps": [
+                "CLI/TUI: openclaw tui --url ws://<host>:18789 --token <token>"
+              ]
+            }
+          ],
+          "id": "invalid-handshake-/-code-1008-websocket-정책-위반",
+          "severity": "medium",
+          "symptoms": [
+            "invalid handshake / code 1008"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "Config (cli)와 Config (service) 불일치",
+          "error": "openclaw gateway status에서 Config (cli)와 Config (service)가 다름",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "openclaw gateway install --force 실행 (동일한 --profile/환경에서)",
+              "trustLevel": 3,
+              "steps": [
+                "openclaw gateway install --force 실행 (동일한 --profile/환경에서)"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "프로파일/OPENCLAW_STATE_DIR 불일치 확인",
+              "trustLevel": 3,
+              "steps": [
+                "프로파일/OPENCLAW_STATE_DIR 불일치 확인"
+              ]
+            }
+          ],
+          "id": "config-cli와-config-service-불일치",
+          "severity": "medium",
+          "symptoms": [
+            "openclaw gateway status에서 Config (cli)와 Config (service)가 다름"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "gateway.bind: tailnet 설정 시 바인딩 불가",
+          "error": "bind=tailnet but no tailnet interface was found",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "해당 호스트에서 Tailscale 시작 (100.x 주소 필요)",
+              "trustLevel": 3,
+              "steps": [
+                "해당 호스트에서 Tailscale 시작 (100.x 주소 필요)"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "또는 gateway.bind를 loopback/lan으로 변경",
+              "trustLevel": 3,
+              "steps": [
+                "또는 gateway.bind를 loopback/lan으로 변경"
+              ]
+            }
+          ],
+          "id": "gateway.bind:-tailnet-설정-시-바인딩-불가",
+          "severity": "medium",
+          "symptoms": [
+            "bind=tailnet but no tailnet interface was found"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "Service environment PATH 문제 (도구를 찾을 수 없음)",
+          "error": "게이트웨이 서비스에서 도구/바이너리를 찾을 수 없음 (PATH 문제)",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "macOS 서비스 PATH",
+              "trustLevel": 3,
+              "steps": [
+                "macOS 서비스 PATH: /opt/homebrew/bin, /usr/local/bin, /usr/bin, /bin만 포함"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "Linux 서비스 PATH",
+              "trustLevel": 3,
+              "steps": [
+                "Linux 서비스 PATH: /usr/local/bin, /usr/bin, /bin만 포함"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "nvm/fnm/volta/asdf 등 버전 관리자 제외됨",
+              "trustLevel": 3,
+              "steps": [
+                "nvm/fnm/volta/asdf 등 버전 관리자 제외됨"
+              ]
+            },
+            {
+              "method": "D",
+              "title": "필요한 환경변수를 ~/.openclaw/.env에 설정",
+              "trustLevel": 3,
+              "steps": [
+                "필요한 환경변수를 ~/.openclaw/.env에 설정"
+              ]
+            },
+            {
+              "method": "E",
+              "title": "tools.exec.pathPrepend로 PATH 추가 가능",
+              "trustLevel": 3,
+              "steps": [
+                "tools.exec.pathPrepend로 PATH 추가 가능"
+              ]
+            }
+          ],
+          "id": "service-environment-path-문제-도구를-찾을-수-없음",
+          "severity": "medium",
+          "symptoms": [
+            "게이트웨이 서비스에서 도구/바이너리를 찾을 수 없음 (PATH 문제)"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "Disconnected from gateway: no reason",
+          "error": "Disconnected from gateway: no reason",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "게이트웨이 실행 확인",
+              "trustLevel": 3,
+              "steps": [
+                "게이트웨이 실행 확인: openclaw gateway status"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "게이트웨이 건강 확인",
+              "trustLevel": 3,
+              "steps": [
+                "게이트웨이 건강 확인: openclaw status"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "UI에 올바른 토큰 확인",
+              "trustLevel": 3,
+              "steps": [
+                "UI에 올바른 토큰 확인: openclaw dashboard"
+              ]
+            },
+            {
+              "method": "D",
+              "title": "원격의 경우 터널/Tailscale 링크 확인",
+              "trustLevel": 3,
+              "steps": [
+                "원격의 경우 터널/Tailscale 링크 확인"
+              ]
+            },
+            {
+              "method": "E",
+              "title": "openclaw logs --follow로 로그 확인",
+              "trustLevel": 3,
+              "steps": [
+                "openclaw logs --follow로 로그 확인"
+              ]
+            }
+          ],
+          "id": "disconnected-from-gateway:-no-reason",
+          "severity": "medium",
+          "symptoms": [
+            "Disconnected from gateway: no reason"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "Gateway won't start — configuration invalid (엄격한 설정 검증)",
+          "error": "Gateway won't start — configuration invalid",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "openclaw doctor로 정확한 문제 확인",
+              "trustLevel": 3,
+              "steps": [
+                "openclaw doctor로 정확한 문제 확인"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "openclaw doctor --fix로 마이그레이션/수리 적용",
+              "trustLevel": 3,
+              "steps": [
+                "openclaw doctor --fix로 마이그레이션/수리 적용"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "진단 명령어(logs, health, status, gateway status)는 설정 무효 시에도 실행 가",
+              "trustLevel": 3,
+              "steps": [
+                "진단 명령어(logs, health, status, gateway status)는 설정 무효 시에도 실행 가능"
+              ]
+            },
+            {
+              "method": "D",
+              "title": "미지원 키, 잘못된 타입, 유효하지 않은 값 제거",
+              "trustLevel": 3,
+              "steps": [
+                "미지원 키, 잘못된 타입, 유효하지 않은 값 제거"
+              ]
+            }
+          ],
+          "id": "gateway-won't-start-—-configuration-invalid-엄격한-설정",
+          "severity": "medium",
+          "symptoms": [
+            "Gateway won't start — configuration invalid"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
         }
       ]
     },
@@ -2692,6 +3237,133 @@
               ]
             }
           ]
+        },
+        {
+          "title": "Discord groupPolicy allowlist로 서버 응답 안 됨",
+          "error": "Discord doesn't reply even with requireMention: false",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "channels.discord.groupPolicy를 open으로 설정하거나 guild allowlist 항",
+              "trustLevel": 3,
+              "steps": [
+                "channels.discord.groupPolicy를 open으로 설정하거나 guild allowlist 항목 추가"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "channels.discord.guilds.<guildId>.channels에 숫자 채널 ID 사용",
+              "trustLevel": 3,
+              "steps": [
+                "channels.discord.guilds.<guildId>.channels에 숫자 채널 ID 사용"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "requireMention",
+              "trustLevel": 3,
+              "steps": [
+                "requireMention: false를 channels.discord.guilds 하위에 배치"
+              ]
+            },
+            {
+              "method": "D",
+              "title": "봇에 Message Content Intent 및 채널 권한 확인",
+              "trustLevel": 3,
+              "steps": [
+                "봇에 Message Content Intent 및 채널 권한 확인"
+              ]
+            },
+            {
+              "method": "E",
+              "title": "openclaw channels status --probe로 감사 힌트 확인",
+              "trustLevel": 3,
+              "steps": [
+                "openclaw channels status --probe로 감사 힌트 확인"
+              ]
+            }
+          ],
+          "id": "discord-grouppolicy-allowlist로-서버-응답-안-됨",
+          "severity": "medium",
+          "symptoms": [
+            "Discord doesn't reply even with requireMention: false"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "Telegram block streaming이 텍스트를 분할하지 않음",
+          "error": "Telegram block streaming이 tool call 사이 텍스트를 분리하지 않음",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "agents.defaults.blockStreamingDefault가 off가 아닌지 확인",
+              "trustLevel": 3,
+              "steps": [
+                "agents.defaults.blockStreamingDefault가 off가 아닌지 확인"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "channels.telegram.blockStreaming이 false가 아닌지 확인",
+              "trustLevel": 3,
+              "steps": [
+                "channels.telegram.blockStreaming이 false가 아닌지 확인"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "channels.telegram.streamMode를 off로 설정 (멀티 메시지 블록 응답)",
+              "trustLevel": 3,
+              "steps": [
+                "channels.telegram.streamMode를 off로 설정 (멀티 메시지 블록 응답)"
+              ]
+            },
+            {
+              "method": "D",
+              "title": "block streaming 설정을 agents.defaults 하위에 배치 (루트 아님)",
+              "trustLevel": 3,
+              "steps": [
+                "block streaming 설정을 agents.defaults 하위에 배치 (루트 아님)"
+              ]
+            }
+          ],
+          "id": "telegram-block-streaming이-텍스트를-분할하지-않음",
+          "severity": "medium",
+          "symptoms": [
+            "Telegram block streaming이 tool call 사이 텍스트를 분리하지 않음"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "Telegram IPv6 DNS 연결 실패 (sendMessage/sendChatAction)",
+          "error": "HttpError: Network request for 'sendMessage' failed",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "api.telegram.org의 IPv6 DNS 확인",
+              "trustLevel": 3,
+              "steps": [
+                "api.telegram.org의 IPv6 DNS 확인"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "호스트에 IPv6 egress 없으면 IPv4 강제 또는 IPv6 활성화",
+              "trustLevel": 3,
+              "steps": [
+                "호스트에 IPv6 egress 없으면 IPv4 강제 또는 IPv6 활성화"
+              ]
+            }
+          ],
+          "id": "telegram-ipv6-dns-연결-실패-sendmessage/sendchataction",
+          "severity": "medium",
+          "symptoms": [
+            "HttpError: Network request for 'sendMessage' failed"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
         }
       ]
     },
@@ -3306,6 +3978,645 @@
               ]
             }
           ]
+        },
+        {
+          "title": "Skill missing API key in sandbox",
+          "error": "스킬이 호스트에서는 작동하지만 샌드박스에서 API 키 누락으로 실패",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "agents.defaults.sandbox.docker.env에 API 키 설정",
+              "trustLevel": 3,
+              "steps": [
+                "agents.defaults.sandbox.docker.env에 API 키 설정"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "또는 커스텀 샌드박스 이미지에 키 포함",
+              "trustLevel": 3,
+              "steps": [
+                "또는 커스텀 샌드박스 이미지에 키 포함"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "openclaw sandbox recreate --agent <id> (또는 --all) 실행",
+              "trustLevel": 3,
+              "steps": [
+                "openclaw sandbox recreate --agent <id> (또는 --all) 실행"
+              ]
+            }
+          ],
+          "id": "skill-missing-api-key-in-sandbox",
+          "severity": "medium",
+          "symptoms": [
+            "스킬이 호스트에서는 작동하지만 샌드박스에서 API 키 누락으로 실패"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "Agent was aborted (에이전트 중단됨)",
+          "error": "Agent was aborted",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "사용자가 stop/abort/esc/wait/exit를 보낸 경우 발생",
+              "trustLevel": 3,
+              "steps": [
+                "사용자가 stop/abort/esc/wait/exit를 보낸 경우 발생"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "타임아웃 초과 또는 프로세스 크래시 가능",
+              "trustLevel": 3,
+              "steps": [
+                "타임아웃 초과 또는 프로세스 크래시 가능"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "다른 메시지를 보내면 세션이 계속됨",
+              "trustLevel": 3,
+              "steps": [
+                "다른 메시지를 보내면 세션이 계속됨"
+              ]
+            }
+          ],
+          "id": "agent-was-aborted-에이전트-중단됨",
+          "severity": "medium",
+          "symptoms": [
+            "Agent was aborted"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "Pairing Code Not Arriving (페어링 코드 미수신)",
+          "error": "dmPolicy가 pairing인데 페어링 코드가 도착하지 않음",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "openclaw pairing list <channel>로 대기 요청 확인",
+              "trustLevel": 3,
+              "steps": [
+                "openclaw pairing list <channel>로 대기 요청 확인"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "채널당 대기 요청 최대 3개 제한 - 기존 요청 승인/만료 필요",
+              "trustLevel": 3,
+              "steps": [
+                "채널당 대기 요청 최대 3개 제한 - 기존 요청 승인/만료 필요"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "openclaw logs --follow | grep 'pairing request'로 요청 생성 확인",
+              "trustLevel": 3,
+              "steps": [
+                "openclaw logs --follow | grep 'pairing request'로 요청 생성 확인"
+              ]
+            },
+            {
+              "method": "D",
+              "title": "dmPolicy가 open/allowlist가 아닌지 확인",
+              "trustLevel": 3,
+              "steps": [
+                "dmPolicy가 open/allowlist가 아닌지 확인"
+              ]
+            }
+          ],
+          "id": "pairing-code-not-arriving-페어링-코드-미수신",
+          "severity": "medium",
+          "symptoms": [
+            "dmPolicy가 pairing인데 페어링 코드가 도착하지 않음"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "Image + Mention Not Working (WhatsApp 이미지+멘션 문제)",
+          "error": "WhatsApp에서 이미지와 멘션만 보내면 멘션 메타데이터 누락",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "멘션과 함께 텍스트 추가",
+              "trustLevel": 3,
+              "steps": [
+                "멘션과 함께 텍스트 추가: '@openclaw check this' + 이미지 (O)"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "'@openclaw' + 이미지만 보내기 (X)",
+              "trustLevel": 3,
+              "steps": [
+                "'@openclaw' + 이미지만 보내기 (X)"
+              ]
+            }
+          ],
+          "id": "image-+-mention-not-working-whatsapp-이미지+멘션-문제",
+          "severity": "medium",
+          "symptoms": [
+            "WhatsApp에서 이미지와 멘션만 보내면 멘션 메타데이터 누락"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "Session Not Resuming (세션 재개 실패)",
+          "error": "이전 대화가 이어지지 않음",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "세션 파일 확인",
+              "trustLevel": 3,
+              "steps": [
+                "세션 파일 확인: ls -la ~/.openclaw/agents/<agentId>/sessions/"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "session.reset.idleMinutes 설정 확인 (기본 60분)",
+              "trustLevel": 3,
+              "steps": [
+                "session.reset.idleMinutes 설정 확인 (기본 60분)"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "/new, /reset 또는 리셋 트리거 전송 여부 확인",
+              "trustLevel": 3,
+              "steps": [
+                "/new, /reset 또는 리셋 트리거 전송 여부 확인"
+              ]
+            }
+          ],
+          "id": "session-not-resuming-세션-재개-실패",
+          "severity": "medium",
+          "symptoms": [
+            "이전 대화가 이어지지 않음"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "Agent Timing Out (에이전트 타임아웃)",
+          "error": "에이전트가 장시간 작업 중 타임아웃됨 (기본 30분)",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "reply.timeoutSeconds를 늘림 (예",
+              "trustLevel": 3,
+              "steps": [
+                "reply.timeoutSeconds를 늘림 (예: 3600 = 1시간)"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "process 도구로 장시간 명령어 백그라운드 실행",
+              "trustLevel": 3,
+              "steps": [
+                "process 도구로 장시간 명령어 백그라운드 실행"
+              ]
+            }
+          ],
+          "id": "agent-timing-out-에이전트-타임아웃",
+          "severity": "medium",
+          "symptoms": [
+            "에이전트가 장시간 작업 중 타임아웃됨 (기본 30분)"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "High Memory Usage (높은 메모리 사용량)",
+          "error": "OpenClaw이 대화 히스토리를 메모리에 유지하여 메모리 증가",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "주기적으로 재시작",
+              "trustLevel": 3,
+              "steps": [
+                "주기적으로 재시작"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "session.historyLimit 설정 (예",
+              "trustLevel": 3,
+              "steps": [
+                "session.historyLimit 설정 (예: 100)"
+              ]
+            }
+          ],
+          "id": "high-memory-usage-높은-메모리-사용량",
+          "severity": "medium",
+          "symptoms": [
+            "OpenClaw이 대화 히스토리를 메모리에 유지하여 메모리 증가"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "Media Send Failing (미디어 전송 실패)",
+          "error": "이미지/오디오/비디오/문서 전송 실패",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "파일 경로 유효성 확인",
+              "trustLevel": 3,
+              "steps": [
+                "파일 경로 유효성 확인"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "파일 크기 제한 확인",
+              "trustLevel": 3,
+              "steps": [
+                "파일 크기 제한 확인: 이미지 6MB, 오디오/비디오 16MB, 문서 100MB"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "미디어 로그 확인",
+              "trustLevel": 3,
+              "steps": [
+                "미디어 로그 확인: grep 'media|fetch|download' 로그파일"
+              ]
+            }
+          ],
+          "id": "media-send-failing-미디어-전송-실패",
+          "severity": "medium",
+          "symptoms": [
+            "이미지/오디오/비디오/문서 전송 실패"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "LLM request rejected: tool_use.input Field required",
+          "error": "LLM request rejected: messages.N.content.X.tool_use.input: Field required",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "/new 명령어로 새 세션 시작 (세션 히스토리 손상/오래됨)",
+              "trustLevel": 3,
+              "steps": [
+                "/new 명령어로 새 세션 시작 (세션 히스토리 손상/오래됨)"
+              ]
+            }
+          ],
+          "id": "llm-request-rejected:-tool_use.input-field-require",
+          "severity": "medium",
+          "symptoms": [
+            "LLM request rejected: messages.N.content.X.tool_use.input: Field required"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "config.apply wiped my config (설정 전체 덮어쓰기)",
+          "error": "config.apply로 설정이 초기화됨",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "백업에서 ~/.openclaw/openclaw.json 복원",
+              "trustLevel": 3,
+              "steps": [
+                "백업에서 ~/.openclaw/openclaw.json 복원"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "백업 없으면 openclaw doctor로 재설정",
+              "trustLevel": 3,
+              "steps": [
+                "백업 없으면 openclaw doctor로 재설정"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "향후 방지",
+              "trustLevel": 3,
+              "steps": [
+                "향후 방지: openclaw config set (부분 변경) 또는 openclaw configure (대화형) 사용"
+              ]
+            },
+            {
+              "method": "D",
+              "title": "config.apply는 전체 설정을 교체하므로 부분 객체 전송 주의",
+              "trustLevel": 3,
+              "steps": [
+                "config.apply는 전체 설정을 교체하므로 부분 객체 전송 주의"
+              ]
+            }
+          ],
+          "id": "config.apply-wiped-my-config-설정-전체-덮어쓰기",
+          "severity": "medium",
+          "symptoms": [
+            "config.apply로 설정이 초기화됨"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "Cross-context messaging denied (크로스 프로바이더 메시징 차단)",
+          "error": "Cross-context messaging denied",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "agents.defaults.tools.message.crossContext.allowAcrossProviders",
+              "trustLevel": 3,
+              "steps": [
+                "agents.defaults.tools.message.crossContext.allowAcrossProviders: true 설정"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "게이트웨이 재시작",
+              "trustLevel": 3,
+              "steps": [
+                "게이트웨이 재시작"
+              ]
+            }
+          ],
+          "id": "cross-context-messaging-denied-크로스-프로바이더-메시징-차단",
+          "severity": "medium",
+          "symptoms": [
+            "Cross-context messaging denied"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "Main chat running in sandbox workspace (예상치 못한 샌드박스)",
+          "error": "pwd가 ~/.openclaw/sandboxes/...를 표시 (호스트 워크스페이스 예상)",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "agents.list[].sandbox.mode",
+              "trustLevel": 3,
+              "steps": [
+                "agents.list[].sandbox.mode: off로 호스트 워크스페이스 사용"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "workspaceAccess",
+              "trustLevel": 3,
+              "steps": [
+                "workspaceAccess: rw로 샌드박스 내 호스트 워크스페이스 접근"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "sandbox.mode",
+              "trustLevel": 3,
+              "steps": [
+                "sandbox.mode: non-main은 session.mainKey 기반이므로 그룹/채널 세션은 non-main으로 처리됨"
+              ]
+            }
+          ],
+          "id": "main-chat-running-in-sandbox-workspace-예상치-못한-샌드박스",
+          "severity": "medium",
+          "symptoms": [
+            "pwd가 ~/.openclaw/sandboxes/...를 표시 (호스트 워크스페이스 예상)"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "Extra Workspace Folders Detected (여러 워크스페이스 폴더 감지)",
+          "error": "업그레이드 후 ~/openclaw 등 여러 워크스페이스 폴더 존재",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "단일 활성 워크스페이스만 유지하고 나머지 아카이브/삭제",
+              "trustLevel": 3,
+              "steps": [
+                "단일 활성 워크스페이스만 유지하고 나머지 아카이브/삭제"
+              ]
+            }
+          ],
+          "id": "extra-workspace-folders-detected-여러-워크스페이스-폴더-감지",
+          "severity": "medium",
+          "symptoms": [
+            "업그레이드 후 ~/openclaw 등 여러 워크스페이스 폴더 존재"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "npm install fails (allow-build-scripts / missing tar or yargs)",
+          "error": "npm install 실패 (allow-build-scripts / tar 또는 yargs 누락)",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "소스에서 실행 시 pnpm 사용 (레포의 패키지 매니저)",
+              "trustLevel": 3,
+              "steps": [
+                "소스에서 실행 시 pnpm 사용 (레포의 패키지 매니저)"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "git status로 레포 루트 확인",
+              "trustLevel": 3,
+              "steps": [
+                "git status로 레포 루트 확인"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "pnpm install && pnpm build && openclaw doctor && openclaw ga",
+              "trustLevel": 3,
+              "steps": [
+                "pnpm install && pnpm build && openclaw doctor && openclaw gateway restart"
+              ]
+            }
+          ],
+          "id": "npm-install-fails-allow-build-scripts-/-missing-ta",
+          "severity": "medium",
+          "symptoms": [
+            "npm install 실패 (allow-build-scripts / tar 또는 yargs 누락)"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "Node + tsx __name is not a function 크래시",
+          "error": "TypeError: __name is not a function (createSubsystemLogger에서)",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "dev 스크립트에 Bun 사용 (임시 우회)",
+              "trustLevel": 3,
+              "steps": [
+                "dev 스크립트에 Bun 사용 (임시 우회)"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "Node + tsc watch 사용",
+              "trustLevel": 3,
+              "steps": [
+                "Node + tsc watch 사용: pnpm exec tsc --watch, node openclaw.mjs status"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "Node LTS (22/24)에서 테스트",
+              "trustLevel": 3,
+              "steps": [
+                "Node LTS (22/24)에서 테스트"
+              ]
+            },
+            {
+              "method": "D",
+              "title": "tsx/esbuild의 keepNames 헬퍼 문제 - Node 25 관련 가능성",
+              "trustLevel": 3,
+              "steps": [
+                "tsx/esbuild의 keepNames 헬퍼 문제 - Node 25 관련 가능성"
+              ]
+            }
+          ],
+          "id": "node-+-tsx-__name-is-not-a-function-크래시",
+          "severity": "medium",
+          "symptoms": [
+            "TypeError: __name is not a function (createSubsystemLogger에서)"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "macOS App Crashes when Granting Permissions (Speech/Mic)",
+          "error": "Abort trap 6 - 권한 프롬프트에서 Allow 클릭 시 앱 크래시",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "TCC 캐시 리셋",
+              "trustLevel": 3,
+              "steps": [
+                "TCC 캐시 리셋: tccutil reset All bot.molt.mac.debug"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "번들 ID 변경 후 리빌드 (scripts/package-mac-app.sh에서 BUNDLE_ID에 .tes",
+              "trustLevel": 3,
+              "steps": [
+                "번들 ID 변경 후 리빌드 (scripts/package-mac-app.sh에서 BUNDLE_ID에 .test 추가)"
+              ]
+            }
+          ],
+          "id": "macos-app-crashes-when-granting-permissions-speech",
+          "severity": "medium",
+          "symptoms": [
+            "Abort trap 6 - 권한 프롬프트에서 Allow 클릭 시 앱 크래시"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "WhatsApp logged me out (로그아웃됨)",
+          "error": "WhatsApp 세션이 로그아웃/언링크됨 (status 409-515 또는 loggedOut)",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "openclaw channels login으로 QR 코드 재스캔",
+              "trustLevel": 3,
+              "steps": [
+                "openclaw channels login으로 QR 코드 재스캔"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "상태 409-515 또는 loggedOut 시",
+              "trustLevel": 3,
+              "steps": [
+                "상태 409-515 또는 loggedOut 시: openclaw channels logout 후 openclaw channels login --verbose"
+              ]
+            }
+          ],
+          "id": "whatsapp-logged-me-out-로그아웃됨",
+          "severity": "medium",
+          "symptoms": [
+            "WhatsApp 세션이 로그아웃/언링크됨 (status 409-515 또는 loggedOut)"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "CI Secrets Scan Failed (detect-secrets)",
+          "error": "CI Secrets Scan Failed - detect-secrets가 baseline에 없는 새 후보 발견",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "Secret scanning 가이드 따르기",
+              "trustLevel": 3,
+              "steps": [
+                "Secret scanning 가이드 따르기: gateway/security#secret-scanning-detect-secrets"
+              ]
+            }
+          ],
+          "id": "ci-secrets-scan-failed-detect-secrets",
+          "severity": "medium",
+          "symptoms": [
+            "CI Secrets Scan Failed - detect-secrets가 baseline에 없는 새 후보 발견"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "context too large 에러 (컨텍스트 초과)",
+          "error": "context too large 에러",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "/compact로 압축 (선택적 지시사항 추가 가능)",
+              "trustLevel": 3,
+              "steps": [
+                "/compact로 압축 (선택적 지시사항 추가 가능)"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "/new 또는 /reset으로 새 세션 시작",
+              "trustLevel": 3,
+              "steps": [
+                "/new 또는 /reset으로 새 세션 시작"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "agents.defaults.contextPruning 설정으로 세션 프루닝 활성화",
+              "trustLevel": 3,
+              "steps": [
+                "agents.defaults.contextPruning 설정으로 세션 프루닝 활성화"
+              ]
+            },
+            {
+              "method": "D",
+              "title": "더 큰 컨텍스트 윈도우 모델 사용",
+              "trustLevel": 3,
+              "steps": [
+                "더 큰 컨텍스트 윈도우 모델 사용"
+              ]
+            }
+          ],
+          "id": "context-too-large-에러-컨텍스트-초과",
+          "severity": "medium",
+          "symptoms": [
+            "context too large 에러"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
         }
       ]
     },
@@ -3845,6 +5156,125 @@
               ]
             }
           ]
+        },
+        {
+          "title": "Agent failed: Unknown model (오래된/보안 취약 모델 거부)",
+          "error": "Agent failed before reply: Unknown model: anthropic/claude-haiku-3-5",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "최신 모델로 변경",
+              "trustLevel": 3,
+              "steps": [
+                "최신 모델로 변경: openclaw models list로 사용 가능한 모델 확인"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "openclaw models scan으로 지원 모델 스캔",
+              "trustLevel": 3,
+              "steps": [
+                "openclaw models scan으로 지원 모델 스캔"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "게이트웨이 로그에서 상세 실패 사유 확인",
+              "trustLevel": 3,
+              "steps": [
+                "게이트웨이 로그에서 상세 실패 사유 확인"
+              ]
+            }
+          ],
+          "id": "agent-failed:-unknown-model-오래된/보안-취약-모델-거부",
+          "severity": "medium",
+          "symptoms": [
+            "Agent failed before reply: Unknown model: anthropic/claude-haiku-3-5"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "Unknown model: minimax/MiniMax-M2.1",
+          "error": "Unknown model: minimax/MiniMax-M2.1",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "2026.1.12 이상으로 업그레이드 후 게이트웨이 재시작",
+              "trustLevel": 3,
+              "steps": [
+                "2026.1.12 이상으로 업그레이드 후 게이트웨이 재시작"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "MiniMax 프로바이더 설정 또는 API 키 확인",
+              "trustLevel": 3,
+              "steps": [
+                "MiniMax 프로바이더 설정 또는 API 키 확인"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "정확한 모델 ID 사용 (대소문자 구분)",
+              "trustLevel": 3,
+              "steps": [
+                "정확한 모델 ID 사용 (대소문자 구분): minimax/MiniMax-M2.1"
+              ]
+            },
+            {
+              "method": "D",
+              "title": "openclaw models list로 사용 가능한 모델 확인",
+              "trustLevel": 3,
+              "steps": [
+                "openclaw models list로 사용 가능한 모델 확인"
+              ]
+            }
+          ],
+          "id": "unknown-model:-minimax/minimax-m2.1",
+          "severity": "medium",
+          "symptoms": [
+            "Unknown model: minimax/MiniMax-M2.1"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
+        },
+        {
+          "title": "Cloud Code Assist API error: invalid tool schema (400)",
+          "error": "Cloud Code Assist API error: invalid tool schema (400)",
+          "solutions": [
+            {
+              "method": "A",
+              "title": "OpenClaw 업데이트 (main에서 스키마 스크러버 포함)",
+              "trustLevel": 3,
+              "steps": [
+                "OpenClaw 업데이트 (main에서 스키마 스크러버 포함)"
+              ]
+            },
+            {
+              "method": "B",
+              "title": "anyOf/oneOf/allOf, patternProperties, additionalProperties 등",
+              "trustLevel": 3,
+              "steps": [
+                "anyOf/oneOf/allOf, patternProperties, additionalProperties 등 미지원 키워드 사용 금지"
+              ]
+            },
+            {
+              "method": "C",
+              "title": "커스텀 도구 정의 시 type",
+              "trustLevel": 3,
+              "steps": [
+                "커스텀 도구 정의 시 type: object + properties + simple enums 유지"
+              ]
+            }
+          ],
+          "id": "cloud-code-assist-api-error:-invalid-tool-schema-4",
+          "severity": "medium",
+          "symptoms": [
+            "Cloud Code Assist API error: invalid tool schema (400)"
+          ],
+          "cause": "확인 중",
+          "solveTime": "5분"
         }
       ]
     }

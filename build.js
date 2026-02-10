@@ -247,7 +247,7 @@ function generateCategoryPage(category) {
                 증상
               </h3>
               <ul class="symptom-list">`;
-    error.symptoms.forEach(s => {
+    (error.symptoms || []).forEach(s => {
       html += `
                 <li>${escapeHtml(s)}</li>`;
     });
@@ -261,7 +261,7 @@ function generateCategoryPage(category) {
                 원인
               </h3>
               <div class="cause-block">
-                <p>${escapeHtml(error.cause)}</p>
+                <p>${escapeHtml(error.cause || '확인 중')}</p>
               </div>
             </div>
 
