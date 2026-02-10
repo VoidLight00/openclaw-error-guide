@@ -542,7 +542,7 @@ openclaw logs --follow   # 실시간 로그 확인</code></pre>
 
   <script>
   // ── Firebase Auth + Firestore Integration ──
-  var _fbApp = null, _fbAuth = null, _fbDb = null, _currentUser = null, _isPro = false;
+  var _fbApp = null, _fbAuth = null, _fbDb = null, _currentUser = null, _isPro = false, _isAdmin = false;
   function initFirebase() {
     if (_fbApp) return;
     if (typeof firebase === 'undefined' || !firebaseConfig || firebaseConfig.apiKey === 'PLACEHOLDER') {
@@ -556,7 +556,9 @@ openclaw logs --follow   # 실시간 로그 확인</code></pre>
       _currentUser = user;
       updateAuthUI();
       if (user) {
-        await loadProStatus(user.uid);
+        var ADMIN_EMAILS = ['icthyeon00@gmail.com'];
+        if (ADMIN_EMAILS.includes(user.email)) { _isPro = true; _isAdmin = true; }
+        else { _isAdmin = false; await loadProStatus(user.uid); }
       } else {
         _isPro = false;
       }

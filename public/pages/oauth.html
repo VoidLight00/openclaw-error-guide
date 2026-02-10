@@ -1375,7 +1375,7 @@ export ANTHROPIC_API_KEY=sk-ant-...</code></pre>
 
   <script>
   // ── Firebase Auth + Firestore Integration ──
-  var _fbApp = null, _fbAuth = null, _fbDb = null, _currentUser = null, _isPro = false;
+  var _fbApp = null, _fbAuth = null, _fbDb = null, _currentUser = null, _isPro = false, _isAdmin = false;
   function initFirebase() {
     if (_fbApp) return;
     if (typeof firebase === 'undefined' || !firebaseConfig || firebaseConfig.apiKey === 'PLACEHOLDER') {
@@ -1389,7 +1389,9 @@ export ANTHROPIC_API_KEY=sk-ant-...</code></pre>
       _currentUser = user;
       updateAuthUI();
       if (user) {
-        await loadProStatus(user.uid);
+        var ADMIN_EMAILS = ['icthyeon00@gmail.com'];
+        if (ADMIN_EMAILS.includes(user.email)) { _isPro = true; _isAdmin = true; }
+        else { _isAdmin = false; await loadProStatus(user.uid); }
       } else {
         _isPro = false;
       }
