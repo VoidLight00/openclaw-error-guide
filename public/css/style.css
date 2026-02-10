@@ -242,11 +242,13 @@ html, body {
   overflow-y: auto;
 }
 
-.sidebar-auth {
+/* ── Sidebar Bottom (auth) ── */
+.sidebar-bottom {
   margin-top: auto;
-  padding: 1rem 1.25rem;
+  padding: 0.75rem 1rem;
   border-top: 1px solid var(--border);
   flex-shrink: 0;
+  position: relative;
 }
 
 .sidebar-login-btn {
@@ -254,8 +256,8 @@ html, body {
   align-items: center;
   gap: 8px;
   width: 100%;
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
   border: 1px solid var(--border);
   background: transparent;
   color: var(--text-secondary);
@@ -269,51 +271,104 @@ html, body {
   color: var(--accent);
 }
 
-.sidebar-user {
+.sidebar-user-panel {
+  position: relative;
+}
+
+.sidebar-user-row {
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: 6px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.sidebar-user-row:hover {
+  background: var(--bg-tertiary);
 }
 
 .sidebar-user-avatar {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   border: 1px solid var(--border);
+  flex-shrink: 0;
 }
 
 .sidebar-user-info {
   display: flex;
-  align-items: center;
-  gap: 6px;
+  flex-direction: column;
+  gap: 2px;
   min-width: 0;
+  flex: 1;
 }
 
 .sidebar-user-name {
-  font-size: 12px;
-  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.sidebar-settings-btn {
-  margin-left: auto;
-  background: none;
-  border: none;
+.sidebar-dots {
+  flex-shrink: 0;
   color: var(--text-muted);
-  cursor: pointer;
+}
+
+/* Popup menu above user row */
+.sidebar-user-menu {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
   padding: 4px;
-  border-radius: 6px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  z-index: 100;
+}
+.sidebar-user-menu.show {
+  display: block;
+}
+
+.sidebar-menu-item {
   display: flex;
   align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-  flex-shrink: 0;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.15s;
+  text-decoration: none;
+  border: none;
+  background: none;
+  width: 100%;
+  font-family: inherit;
 }
-.sidebar-settings-btn:hover {
+.sidebar-menu-item:hover {
   background: var(--bg-tertiary);
   color: var(--text-primary);
+}
+
+.sidebar-menu-logout {
+  color: #e55;
+}
+.sidebar-menu-logout:hover {
+  background: rgba(238,85,85,0.08);
+  color: #e55;
+}
+
+.sidebar-menu-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 8px;
 }
 
 /* ── Sidebar Overlay (mobile) ── */
@@ -838,133 +893,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
   margin-left: auto;
 }
 
-.header-login-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text-primary);
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.header-login-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.header-avatar-wrap {
-  position: relative;
-}
-
-.header-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 2px solid var(--border);
-  transition: border-color 0.2s;
-}
-.header-avatar:hover {
-  border-color: var(--accent);
-}
-
-.profile-dropdown {
-  display: none;
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  width: 260px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  z-index: 1000;
-  overflow: hidden;
-}
-.profile-dropdown.show {
-  display: block;
-}
-
-.profile-dropdown-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 16px;
-}
-
-.profile-dropdown-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-}
-
-.profile-dropdown-info {
-  min-width: 0;
-}
-
-.profile-dropdown-name {
-  font-weight: 600;
-  font-size: 13px;
-  color: var(--text-primary);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.profile-dropdown-email {
-  font-size: 11px;
-  color: var(--text-muted);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.profile-dropdown-divider {
-  height: 1px;
-  background: var(--border);
-}
-
-.profile-dropdown-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  font-size: 13px;
-  color: var(--text-secondary);
-  cursor: default;
-  text-decoration: none;
-  border: none;
-  background: none;
-  width: 100%;
-  text-align: left;
-}
-
-.profile-dropdown-upgrade {
-  cursor: pointer;
-  color: var(--accent);
-  font-weight: 600;
-  transition: background 0.15s;
-}
-.profile-dropdown-upgrade:hover {
-  background: var(--bg-tertiary);
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.profile-dropdown-logout {
-  cursor: pointer;
-  color: var(--destructive);
-  transition: background 0.15s;
-  font-size: 13px;
-  font-family: inherit;
-}
-.profile-dropdown-logout:hover {
-  background: var(--bg-tertiary);
-}
+/* Header auth removed — moved to sidebar bottom */
 
 .plan-badge {
   display: inline-flex;
