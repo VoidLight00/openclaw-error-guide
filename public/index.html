@@ -325,6 +325,23 @@ openclaw logs --follow   # 실시간 로그 확인</code></pre>
       item.classList.toggle('open', !isOpen);
     }
 
+    // Auto-open accordion from URL hash
+    (function() {
+      function openFromHash() {
+        const hash = window.location.hash;
+        if (!hash) return;
+        const el = document.querySelector(hash);
+        if (el && el.classList.contains('accordion-item')) {
+          el.classList.add('open');
+          setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+          el.style.boxShadow = '0 0 0 2px #000';
+          setTimeout(() => el.style.boxShadow = '', 2000);
+        }
+      }
+      openFromHash();
+      window.addEventListener('hashchange', openFromHash);
+    })();
+
     // Mobile sidebar
     const hamburger = document.getElementById('hamburgerBtn');
     const sidebar = document.getElementById('sidebar');
