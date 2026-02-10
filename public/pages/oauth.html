@@ -1229,5 +1229,80 @@ export ANTHROPIC_API_KEY=sk-ant-...</code></pre>
       });
     }
   </script>
+
+  <!-- AI Chatbot -->
+  <div id="chatbot-fab" onclick="toggleChat()" style="position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(99,102,241,0.4);z-index:9999;font-size:24px;transition:transform 0.2s" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">💬</div>
+
+  <div id="chatbot-panel" style="display:none;position:fixed;bottom:90px;right:24px;width:380px;max-height:520px;background:#1a1a2e;border:1px solid #333;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.5);z-index:9999;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,sans-serif">
+    <div style="padding:14px 16px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;font-weight:600;display:flex;justify-content:space-between;align-items:center">
+      <span>🤖 AI 오류 진단</span>
+      <span onclick="toggleChat()" style="cursor:pointer;font-size:18px">✕</span>
+    </div>
+    <div style="padding:10px 12px;background:#16162a;border-bottom:1px solid #333">
+      <select id="chat-provider" style="width:48%;padding:6px;border-radius:8px;border:1px solid #444;background:#1a1a2e;color:#ddd;font-size:12px;margin-right:2%">
+        <option value="groq">Groq (무료)</option>
+        <option value="gemini">Google Gemini</option>
+        <option value="openai">OpenAI</option>
+        <option value="anthropic">Anthropic</option>
+      </select>
+      <input id="chat-apikey" type="password" placeholder="API Key 입력" style="width:48%;padding:6px;border-radius:8px;border:1px solid #444;background:#1a1a2e;color:#ddd;font-size:12px">
+    </div>
+    <div id="chat-messages" style="height:300px;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px">
+      <div style="background:#2a2a4a;padding:10px 14px;border-radius:12px;color:#ccc;font-size:13px;max-width:85%">
+        안녕하세요! 오류 증상을 설명해주세요.<br>예: "설치했는데 화면이 안 떠요"
+      </div>
+    </div>
+    <div style="padding:10px 12px;border-top:1px solid #333;display:flex;gap:8px">
+      <input id="chat-input" type="text" placeholder="증상이나 오류 메시지 입력..." onkeydown="if(event.key==='Enter')sendChat()" style="flex:1;padding:10px 14px;border-radius:24px;border:1px solid #444;background:#16162a;color:#ddd;font-size:13px;outline:none">
+      <button onclick="sendChat()" style="padding:10px 16px;border-radius:24px;border:none;background:#6366f1;color:white;cursor:pointer;font-size:13px;font-weight:600">전송</button>
+    </div>
+  </div>
+
+  <script>
+  function toggleChat() {
+    const p = document.getElementById('chatbot-panel');
+    p.style.display = p.style.display === 'none' ? 'block' : 'none';
+    // Load saved API key
+    const saved = localStorage.getItem('ochat_key');
+    const savedP = localStorage.getItem('ochat_provider');
+    if (saved) document.getElementById('chat-apikey').value = saved;
+    if (savedP) document.getElementById('chat-provider').value = savedP;
+  }
+  async function sendChat() {
+    const input = document.getElementById('chat-input');
+    const msg = input.value.trim();
+    if (!msg) return;
+    const apiKey = document.getElementById('chat-apikey').value.trim();
+    const provider = document.getElementById('chat-provider').value;
+    if (!apiKey) { alert('API Key를 입력해주세요'); return; }
+    // Save
+    localStorage.setItem('ochat_key', apiKey);
+    localStorage.setItem('ochat_provider', provider);
+
+    const box = document.getElementById('chat-messages');
+    box.innerHTML += '<div style="background:#6366f1;padding:10px 14px;border-radius:12px;color:white;font-size:13px;max-width:85%;align-self:flex-end">'+msg.replace(/</g,'&lt;')+'</div>';
+    input.value = '';
+    box.innerHTML += '<div id="typing" style="background:#2a2a4a;padding:10px 14px;border-radius:12px;color:#888;font-size:13px">분석 중...</div>';
+    box.scrollTop = box.scrollHeight;
+
+    try {
+      const r = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ message: msg, provider, apiKey })
+      });
+      const d = await r.json();
+      document.getElementById('typing')?.remove();
+      if (d.error) throw new Error(d.error);
+      // Simple markdown: bold, code, newlines
+      let html = d.answer.replace(/</g,'&lt;').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`(.+?)`/g,'<code style="background:#333;padding:2px 4px;border-radius:3px;font-size:12px">$1</code>').replace(/\n/g,'<br>');
+      box.innerHTML += '<div style="background:#2a2a4a;padding:10px 14px;border-radius:12px;color:#ccc;font-size:13px;max-width:85%;line-height:1.5">'+html+'</div>';
+    } catch(e) {
+      document.getElementById('typing')?.remove();
+      box.innerHTML += '<div style="background:#4a1a1a;padding:10px 14px;border-radius:12px;color:#f88;font-size:13px">오류: '+e.message+'</div>';
+    }
+    box.scrollTop = box.scrollHeight;
+  }
+  </script>
 </body>
 </html>
