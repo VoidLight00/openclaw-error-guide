@@ -209,9 +209,12 @@ function scriptHtml() {
 
   <div id="chatbot-panel" style="display:none;position:fixed;bottom:90px;right:24px;width:380px;max-height:540px;background:#fff;border:1px solid #e0e0e0;border-radius:16px;box-shadow:0 12px 48px rgba(0,0,0,0.15);z-index:9999;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
     <div style="padding:16px 20px;background:#000;color:#fff;display:flex;justify-content:space-between;align-items:center">
-      <div>
-        <div style="font-weight:700;font-size:15px;letter-spacing:-0.3px">가이드봇</div>
-        <div style="font-size:11px;color:#999;margin-top:2px">오류 해결 AI 어시스턴트</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div>
+          <div style="font-weight:700;font-size:15px;letter-spacing:-0.3px">가이드봇</div>
+          <div style="font-size:11px;color:#999;margin-top:2px">오류 해결 AI 어시스턴트</div>
+        </div>
+        <span id="usage-badge" style="padding:3px 8px;border-radius:8px;font-size:10px;font-weight:600;background:#f5f5f5;color:#666">3/3 무료</span>
       </div>
       <span onclick="toggleChat()" style="cursor:pointer;font-size:18px;color:#666;transition:color 0.2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#666'">✕</span>
     </div>
@@ -239,15 +242,65 @@ function scriptHtml() {
     const p = document.getElementById('chatbot-panel');
     p.style.display = p.style.display === 'none' ? 'block' : 'none';
     if (p.style.display === 'block') document.getElementById('chat-input')?.focus();
+    checkUsage();
   }
   function quickQ(el) {
     document.getElementById('chat-input').value = el.textContent + ' 해결 방법 알려주세요';
     sendChat();
   }
+  function getUsage() {
+    const data = JSON.parse(localStorage.getItem('guidebot_usage') || '{}');
+    const today = new Date().toISOString().slice(0,10);
+    if (data.date !== today) return { date: today, count: 0, pro: data.pro || false };
+    return data;
+  }
+  function setUsage(u) { localStorage.setItem('guidebot_usage', JSON.stringify(u)); }
+  function checkUsage() {
+    const u = getUsage();
+    const remaining = Math.max(0, 3 - u.count);
+    const badge = document.getElementById('usage-badge');
+    if (!badge) return;
+    if (u.pro) {
+      badge.textContent = 'PRO 무제한';
+      badge.style.background = '#000'; badge.style.color = '#fff';
+    } else {
+      badge.textContent = remaining + '/3 무료';
+      badge.style.background = remaining > 0 ? '#f5f5f5' : '#000';
+      badge.style.color = remaining > 0 ? '#666' : '#fff';
+    }
+  }
+  function showPaywall() {
+    const box = document.getElementById('chat-messages');
+    box.innerHTML += \`<div style="background:#fff;padding:16px;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.08);text-align:center">
+      <div style="font-size:20px;margin-bottom:8px">🔒</div>
+      <div style="font-weight:700;color:#000;font-size:14px;margin-bottom:4px">무료 체험이 끝났습니다</div>
+      <div style="color:#666;font-size:12px;margin-bottom:12px">월 \$3로 무제한 AI 오류 진단을 이용하세요</div>
+      <button onclick="subscribe()" style="width:100%;padding:12px;border-radius:12px;border:none;background:#000;color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:opacity 0.2s;margin-bottom:8px" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">구독하기 — \$3/월</button>
+      <div style="color:#999;font-size:11px">언제든 해지 가능 · 안전한 결제</div>
+    </div>\`;
+    box.scrollTop = box.scrollHeight;
+  }
+  function subscribe() {
+    // Creem checkout URL — replace with actual product link
+    const creemUrl = localStorage.getItem('guidebot_creem_url') || 'https://creem.io';
+    window.open(creemUrl, '_blank');
+  }
+  // Check for pro activation via URL param (after Creem redirect)
+  (function() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('pro') === 'activated') {
+      const u = getUsage(); u.pro = true; setUsage(u);
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  })();
   async function sendChat() {
     const input = document.getElementById('chat-input');
     const msg = input.value.trim();
     if (!msg) return;
+
+    // Check usage
+    const u = getUsage();
+    if (!u.pro && u.count >= 3) { showPaywall(); input.value = ''; return; }
 
     const box = document.getElementById('chat-messages');
     box.innerHTML += '<div style="background:#000;padding:10px 16px;border-radius:14px;color:#fff;font-size:13px;max-width:85%;align-self:flex-end">'+msg.replace(/</g,'&lt;')+'</div>';
@@ -266,6 +319,8 @@ function scriptHtml() {
       if (d.error) throw new Error(d.error);
       let html = d.answer.replace(/</g,'&lt;').replace(/\\*\\*(.+?)\\*\\*/g,'<b>$1</b>').replace(/\`([^\`]+)\`/g,'<code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;font-size:12px;color:#333">$1</code>').replace(/\\n/g,'<br>');
       box.innerHTML += '<div style="background:#fff;padding:12px 16px;border-radius:14px;color:#333;font-size:13px;max-width:85%;line-height:1.6;box-shadow:0 1px 3px rgba(0,0,0,0.08)">'+html+'</div>';
+      // Update usage
+      u.count++; setUsage(u); checkUsage();
     } catch(e) {
       document.getElementById('typing')?.remove();
       box.innerHTML += '<div style="background:#fff;border:1px solid #e0e0e0;padding:12px 16px;border-radius:14px;color:#c00;font-size:13px">일시적 오류가 발생했습니다. 다시 시도해주세요.</div>';
