@@ -759,7 +759,7 @@ openclaw gateway restart</code></pre>
           <div style="font-weight:700;font-size:15px;letter-spacing:-0.3px">가이드봇</div>
           <div style="font-size:11px;color:#999;margin-top:2px">오류 해결 AI 어시스턴트</div>
         </div>
-        <span id="usage-badge" style="padding:3px 8px;border-radius:8px;font-size:10px;font-weight:600;background:#f5f5f5;color:#666">3/3 무료</span>
+        <span id="usage-badge" style="padding:3px 8px;border-radius:8px;font-size:10px;font-weight:600;background:#f5f5f5;color:#666">10/10 무료</span>
       </div>
       <span onclick="toggleChat()" style="cursor:pointer;font-size:18px;color:#666;transition:color 0.2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#666'">✕</span>
     </div>
@@ -802,7 +802,7 @@ openclaw gateway restart</code></pre>
   function setUsage(u) { localStorage.setItem('guidebot_usage', JSON.stringify(u)); }
   function checkUsage() {
     const u = getUsage();
-    const remaining = Math.max(0, 3 - u.count);
+    const remaining = Math.max(0, 10 - u.count);
     const badge = document.getElementById('usage-badge');
     if (!badge) return;
     if (u.pro) {
@@ -857,7 +857,7 @@ openclaw gateway restart</code></pre>
 
     // Check usage
     const u = getUsage();
-    if (!u.pro && u.count >= 3) { showPaywall(); input.value = ''; return; }
+    if (!u.pro && u.count >= 10) { showPaywall(); input.value = ''; return; }
 
     const box = document.getElementById('chat-messages');
     box.innerHTML += '<div style="background:#000;padding:10px 16px;border-radius:14px;color:#fff;font-size:13px;max-width:85%;align-self:flex-end">'+msg.replace(/</g,'&lt;')+'</div>';
