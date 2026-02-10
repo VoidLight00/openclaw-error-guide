@@ -43,6 +43,12 @@ ${errorContext}`;
       case 'grok':
         answer = await callGrok(apiKey, systemPrompt, message);
         break;
+      case 'openrouter':
+        answer = await callOpenRouter(apiKey, systemPrompt, message);
+        break;
+      case 'kimi':
+        answer = await callKimi(apiKey, systemPrompt, message);
+        break;
       case 'groq':
       default:
         answer = await callGroq(apiKey, systemPrompt, message);
@@ -125,6 +131,36 @@ async function callGrok(apiKey, system, user) {
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
     body: JSON.stringify({
       model: 'grok-3-mini-fast',
+      messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
+      max_tokens: 1000, temperature: 0.3
+    })
+  });
+  const d = await r.json();
+  if (d.error) throw new Error(d.error.message);
+  return d.choices[0].message.content;
+}
+
+async function callOpenRouter(apiKey, system, user) {
+  const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+    body: JSON.stringify({
+      model: 'meta-llama/llama-3.3-70b-instruct:free',
+      messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
+      max_tokens: 1000, temperature: 0.3
+    })
+  });
+  const d = await r.json();
+  if (d.error) throw new Error(d.error.message || d.error);
+  return d.choices[0].message.content;
+}
+
+async function callKimi(apiKey, system, user) {
+  const r = await fetch('https://api.moonshot.cn/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+    body: JSON.stringify({
+      model: 'moonshot-v1-8k',
       messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
       max_tokens: 1000, temperature: 0.3
     })
