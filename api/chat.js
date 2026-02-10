@@ -40,6 +40,9 @@ ${errorContext}`;
       case 'gemini':
         answer = await callGemini(apiKey, systemPrompt, message);
         break;
+      case 'grok':
+        answer = await callGrok(apiKey, systemPrompt, message);
+        break;
       case 'groq':
       default:
         answer = await callGroq(apiKey, systemPrompt, message);
@@ -107,6 +110,21 @@ async function callGroq(apiKey, system, user) {
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
     body: JSON.stringify({
       model: 'llama-3.3-70b-versatile',
+      messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
+      max_tokens: 1000, temperature: 0.3
+    })
+  });
+  const d = await r.json();
+  if (d.error) throw new Error(d.error.message);
+  return d.choices[0].message.content;
+}
+
+async function callGrok(apiKey, system, user) {
+  const r = await fetch('https://api.x.ai/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+    body: JSON.stringify({
+      model: 'grok-3-mini-fast',
       messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
       max_tokens: 1000, temperature: 0.3
     })
