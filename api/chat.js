@@ -33,7 +33,7 @@ export default async function handler(req, res) {
   }).filter(e => e.score > 0).sort((a, b) => b.score - a.score).slice(0, 8);
 
   const errorContext = scored.map(e =>
-    `[${e.category}] ${e.title}\n  URL: ${e.url}\n  증상: ${(e.symptoms||[]).join(', ')}\n  해결: ${(e.solutions||[]).join(' | ')}`
+    `[${e.category}] ${e.title}\n  URL: https://openclaw-error-guide.vercel.app/${e.url}\n  증상: ${(e.symptoms||[]).join(', ')}\n  해결: ${(e.solutions||[]).join(' | ')}`
   ).join('\n\n');
 
   const systemPrompt = `당신은 OpenClaw 오류 해결 가이드봇입니다.
