@@ -1786,7 +1786,7 @@ tailscale serve --bg 18789</code></pre>
       if (d.error) throw new Error(d.error);
       var html = d.answer.replace(/</g,'&lt;').replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" style="color:#000;font-weight:600;text-decoration:underline;text-underline-offset:2px" target="_blank">$1</a>').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;font-size:12px;color:#333">$1</code>').replace(/\n/g,'<br>');
       box.innerHTML += '<div style="background:#fff;padding:12px 16px;border-radius:14px;color:#333;font-size:13px;max-width:85%;line-height:1.6;box-shadow:0 1px 3px rgba(0,0,0,0.08)">'+html+'</div>';
-      u.count++; setUsage(u); checkUsage();
+      if (!_isPro) { u.count++; setUsage(u); } checkUsage();
       saveChatHistory();
     } catch(e) {
       document.getElementById('typing')?.remove();
