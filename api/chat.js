@@ -25,28 +25,38 @@ export default async function handler(req, res) {
 
   // Find relevant errors by keyword matching
   const query = message.toLowerCase();
-  const queryWords = query.split(/\s+/).filter(w => w.length > 1);
+  const queryWords = query.split(/\s+/).filter(w => w.length > 0);
   const scored = errorIndex.map(err => {
     const text = (err.title + ' ' + err.error + ' ' + (err.symptoms||[]).join(' ') + ' ' + err.category + ' ' + (err.solutions||[]).join(' ')).toLowerCase();
-    const score = queryWords.filter(w => text.includes(w)).length;
+    let score = queryWords.filter(w => text.includes(w)).length;
+    // Boost exact error code/message matches
+    if (err.error && query.includes(err.error.toLowerCase())) score += 5;
+    if (err.id && query.includes(err.id)) score += 3;
     return { ...err, score };
-  }).filter(e => e.score > 0).sort((a, b) => b.score - a.score).slice(0, 8);
+  }).sort((a, b) => b.score - a.score);
+  // Always include at least top 5 for context, up to 10 if matched
+  const topErrors = scored.filter(e => e.score > 0).slice(0, 10);
+  const fallback = topErrors.length < 3 ? scored.slice(0, 5) : topErrors;
 
-  const errorContext = scored.map(e =>
-    `[${e.category}] ${e.title}\n  URL: https://openclaw-error-guide.vercel.app/${e.url}\n  증상: ${(e.symptoms||[]).join(', ')}\n  해결: ${(e.solutions||[]).join(' | ')}`
+  const errorContext = fallback.map(e =>
+    `[${e.category}] ${e.title}\n  URL: https://openclaw-error-guide.vercel.app/${e.url}\n  증상: ${(e.symptoms||[]).join(', ')}\n  해결 요약: ${(e.solutions||[]).map(s => s.split(':')[0]).join(' | ')}`
   ).join('\n\n');
 
   const systemPrompt = `당신은 OpenClaw 오류 해결 가이드봇입니다.
 
-규칙:
+## 필수 규칙
 1. 아래 오류 데이터베이스에서 매칭되는 오류를 찾아 답변하세요.
-2. 반드시 해당 오류의 URL 링크를 포함하세요. 형식: [오류 제목](URL)
-3. 해결 방법은 데이터베이스의 원문을 그대로 안내하세요.
-4. 매칭되는 오류가 여러개면 모두 나열하세요.
+2. **모든 오류를 언급할 때 반드시 클릭 가능한 링크를 포함하세요.**
+   - 형식: [오류 제목](URL) — URL은 아래 데이터에 제공된 것을 그대로 사용
+   - 예시: [PowerShell 실행 정책 차단](https://openclaw-error-guide.vercel.app/pages/windows.html#error-win-1)
+3. 해결 방법의 핵심 단계를 간결하게 안내하고, "자세한 해결법은 위 링크를 참고하세요"로 마무리하세요.
+4. 매칭되는 오류가 여러 개면 각각 링크와 함께 나열하세요.
 5. 한국어로 답변. 간결하게.
 6. 데이터베이스에 없는 내용은 "해당 오류는 가이드에 아직 등록되지 않았습니다"라고 답변.
 
-=== 매칭된 오류 (${scored.length}건) ===
+**절대 링크 없이 오류를 언급하지 마세요. 반드시 [제목](URL) 형식으로.**
+
+=== 매칭된 오류 (${fallback.length}건) ===
 ${errorContext || '매칭된 오류 없음'}`;
 
   try {
