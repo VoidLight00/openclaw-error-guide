@@ -3,933 +3,314 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OpenClaw 종합 오류 해결 가이드 - OpenClaw Guide</title>
-  <meta name="description" content="OpenClaw 설치·설정 오류 121개의 종합 해결 가이드. Windows, macOS, Linux, 인증, 게이트웨이 등 모든 오류 유형을 다룹니다.">
-  <link rel="canonical" href="https://openclaw-error-guide.vercel.app">
+  <title>OpenClaw Error Guide - AI 오류 해결</title>
+  <meta name="description" content="OpenClaw 오류를 AI가 진단하고 해결합니다. 121개 오류 유형, 274개 검증된 솔루션.">
+  <link rel="canonical" href="https://openclaw-error-guide.vercel.app/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="OpenClaw 종합 오류 해결 가이드 - OpenClaw Guide">
-  <meta property="og:description" content="OpenClaw 설치·설정 오류 121개의 종합 해결 가이드. Windows, macOS, Linux, 인증, 게이트웨이 등 모든 오류 유형을 다룹니다.">
-  <meta property="og:url" content="https://openclaw-error-guide.vercel.app">
+  <meta property="og:title" content="OpenClaw Error Guide - AI 오류 해결">
+  <meta property="og:description" content="OpenClaw 오류를 AI가 진단하고 해결합니다.">
+  <meta property="og:url" content="https://openclaw-error-guide.vercel.app/">
   <meta property="og:locale" content="ko_KR">
-  <link rel="stylesheet" href="css/style.css">
-  <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-  <script src="firebase-config.js"></script>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#0a0a0a;--bg2:#111;--text:#e0e0e0;--text2:#888;
+      --accent:#a78bfa;--accent2:#6366f1;--glow:rgba(167,139,250,0.15);
+      --radius:12px;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow-x:hidden;line-height:1.6}
+    
+    /* Grid background */
+    .grid-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+    .grid-bg::before{content:'';position:absolute;inset:-50%;width:200%;height:200%;
+      background-image:linear-gradient(rgba(167,139,250,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(167,139,250,0.03) 1px,transparent 1px);
+      background-size:60px 60px;animation:gridMove 20s linear infinite}
+    @keyframes gridMove{0%{transform:translate(0,0)}100%{transform:translate(60px,60px)}}
+    
+    /* Floating particles */
+    .particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+    .particle{position:absolute;width:2px;height:2px;background:var(--accent);border-radius:50%;opacity:0;animation:float linear infinite}
+    @keyframes float{0%{opacity:0;transform:translateY(100vh) scale(0)}10%{opacity:0.6}90%{opacity:0.6}100%{opacity:0;transform:translateY(-10vh) scale(1)}}
+    
+    /* Glow orbs */
+    .glow-orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0}
+    .glow-orb-1{width:400px;height:400px;background:rgba(99,102,241,0.08);top:10%;left:10%;animation:orbFloat 15s ease-in-out infinite}
+    .glow-orb-2{width:300px;height:300px;background:rgba(167,139,250,0.06);bottom:20%;right:10%;animation:orbFloat 20s ease-in-out infinite reverse}
+    @keyframes orbFloat{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-30px)}}
+    
+    .content{position:relative;z-index:1}
+    
+    /* Nav */
+    .landing-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 40px;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(12px);background:rgba(10,10,10,0.7);border-bottom:1px solid rgba(255,255,255,0.05);transition:all 0.3s}
+    .landing-nav.scrolled{padding:14px 40px;background:rgba(10,10,10,0.9)}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;color:#fff;text-decoration:none}
+    .nav-logo img{width:28px;height:28px;border-radius:6px}
+    .nav-logo span{color:var(--accent)}
+    .nav-cta{padding:10px 24px;border-radius:24px;border:1px solid rgba(167,139,250,0.3);background:transparent;color:var(--accent);font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;transition:all 0.3s}
+    .nav-cta:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+    
+    /* Hero */
+    .hero-section{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:24px;border:1px solid rgba(167,139,250,0.2);background:rgba(167,139,250,0.05);color:var(--accent);font-size:13px;font-weight:500;margin-bottom:32px;animation:fadeInUp 0.8s ease both}
+    .hero-badge svg{width:14px;height:14px}
+    .hero-title{font-size:clamp(36px,6vw,72px);font-weight:800;letter-spacing:-2px;line-height:1.1;margin-bottom:24px;animation:fadeInUp 0.8s ease 0.1s both}
+    .hero-title .gradient{background:linear-gradient(135deg,#a78bfa,#6366f1,#a78bfa);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gradientShift 4s ease infinite}
+    @keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    .hero-sub{font-size:clamp(16px,2vw,20px);color:var(--text2);max-width:560px;margin:0 auto 40px;animation:fadeInUp 0.8s ease 0.2s both}
+    .hero-actions{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;animation:fadeInUp 0.8s ease 0.3s both}
+    .btn-primary{padding:14px 36px;border-radius:28px;border:none;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;font-size:16px;font-weight:700;cursor:pointer;text-decoration:none;transition:all 0.3s;box-shadow:0 4px 24px rgba(99,102,241,0.3)}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(99,102,241,0.4)}
+    .btn-secondary{padding:14px 36px;border-radius:28px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--text);font-size:16px;font-weight:600;cursor:pointer;text-decoration:none;transition:all 0.3s}
+    .btn-secondary:hover{border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.03)}
+    .hero-scroll{position:absolute;bottom:40px;animation:bounce 2s ease infinite}
+    @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+    
+    /* Sections */
+    section{padding:100px 24px}
+    .section-inner{max-width:1100px;margin:0 auto}
+    .section-label{display:inline-block;padding:6px 16px;border-radius:20px;border:1px solid rgba(167,139,250,0.2);background:rgba(167,139,250,0.05);color:var(--accent);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
+    .section-title{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1px;margin-bottom:16px}
+    .section-desc{font-size:17px;color:var(--text2);max-width:520px;margin-bottom:56px}
+    
+    /* Features */
+    .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+    .feature-card{padding:36px 32px;border-radius:16px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);transition:all 0.4s;position:relative;overflow:hidden}
+    .feature-card::before{content:'';position:absolute;inset:0;border-radius:16px;padding:1px;background:linear-gradient(135deg,transparent,rgba(167,139,250,0.1),transparent);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity 0.4s}
+    .feature-card:hover{transform:translateY(-4px);border-color:rgba(167,139,250,0.15)}
+    .feature-card:hover::before{opacity:1}
+    .feature-icon{width:48px;height:48px;border-radius:12px;background:rgba(167,139,250,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+    .feature-icon svg{width:24px;height:24px;stroke:var(--accent)}
+    .feature-card h3{font-size:20px;font-weight:700;margin-bottom:10px}
+    .feature-card p{color:var(--text2);font-size:15px;line-height:1.7}
+    
+    /* Stats */
+    .stats-section{border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.01)}
+    .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;text-align:center}
+    .stat-item .stat-number{font-size:clamp(40px,5vw,64px);font-weight:800;background:linear-gradient(135deg,#a78bfa,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2}
+    .stat-item .stat-label{font-size:15px;color:var(--text2);margin-top:8px}
+    
+    /* How it works */
+    .steps-container{display:flex;align-items:flex-start;gap:0;position:relative}
+    .step{flex:1;text-align:center;position:relative;padding:0 20px}
+    .step-num{width:56px;height:56px;border-radius:50%;border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:20px;font-weight:800;color:var(--accent);position:relative;z-index:1;background:var(--bg)}
+    .step h3{font-size:18px;font-weight:700;margin-bottom:8px}
+    .step p{color:var(--text2);font-size:14px}
+    .steps-line{position:absolute;top:28px;left:calc(16.67% + 28px);right:calc(16.67% + 28px);height:2px;background:linear-gradient(90deg,var(--accent2),var(--accent));opacity:0.3}
+    
+    /* CTA */
+    .cta-section{text-align:center}
+    .cta-section .section-title{margin-bottom:12px}
+    .cta-sub{color:var(--text2);font-size:15px;margin-bottom:40px}
+    
+    /* Footer */
+    .landing-footer{padding:40px 24px;border-top:1px solid rgba(255,255,255,0.05);text-align:center}
+    .landing-footer p{color:var(--text2);font-size:13px}
+    .landing-footer a{color:var(--text2);text-decoration:none;transition:color 0.2s}
+    .landing-footer a:hover{color:var(--accent)}
+    .footer-links{display:flex;gap:24px;justify-content:center;margin-top:12px}
+    
+    /* Animations */
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+    .reveal{opacity:0;transform:translateY(32px);transition:all 0.7s cubic-bezier(0.16,1,0.3,1)}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+    
+    /* Responsive */
+    @media(max-width:768px){
+      .landing-nav{padding:16px 20px}
+      .features-grid{grid-template-columns:1fr}
+      .stats-grid{grid-template-columns:1fr;gap:40px}
+      .steps-container{flex-direction:column;gap:32px;align-items:center}
+      .steps-line{display:none}
+      .step{padding:0}
+      section{padding:72px 20px}
+    }
+  </style>
 </head>
 <body>
-    <header class="mobile-header" id="mobileHeader">
-      <button class="hamburger" id="hamburgerBtn" aria-label="메뉴 열기">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
-      <span class="mobile-title">OpenClaw Guide</span>
-      <div class="header-right">
-        <button class="theme-toggle" id="themeToggle" aria-label="테마 전환" onclick="toggleTheme()"><svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/></svg></button>
-        <!-- Auth moved to sidebar bottom -->
+  <!-- Background effects -->
+  <div class="grid-bg"></div>
+  <div class="particles" id="particles"></div>
+  <div class="glow-orb glow-orb-1"></div>
+  <div class="glow-orb glow-orb-2"></div>
+  
+  <div class="content">
+    <!-- Nav -->
+    <nav class="landing-nav" id="landingNav">
+      <a href="index.html" class="nav-logo">
+        <img src="logo.png" alt="OpenClaw">
+        OpenClaw <span>Guide</span>
+      </a>
+      <a href="pages/guide.html" class="nav-cta">가이드 시작하기</a>
+    </nav>
+    
+    <!-- Hero -->
+    <section class="hero-section">
+      <div class="hero-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        121개 오류 유형 | 274개 검증된 솔루션
       </div>
-    </header><div class="sidebar-overlay" id="sidebarOverlay"></div>
-  <div class="layout">
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <a href="index.html" class="sidebar-logo">
-          <img src="../logo.png" alt="VoidLight" style="width:28px;height:28px;border-radius:6px;object-fit:contain">
-          OpenClaw <span>Guide</span>
-        </a>
-        <div class="sidebar-header-actions">
-          <button class="theme-toggle desktop-theme-toggle" id="desktopThemeToggle" aria-label="테마 전환" onclick="toggleTheme()"><svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/></svg></button>
-          <button class="sidebar-close" id="sidebarClose" aria-label="메뉴 닫기">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
+      <h1 class="hero-title">OpenClaw 오류,<br><span class="gradient">AI가 해결합니다</span></h1>
+      <p class="hero-sub">에러 메시지를 붙여넣으면 즉시 원인을 진단하고 검증된 해결 방법을 제시합니다. 더 이상 Stack Overflow를 뒤질 필요 없습니다.</p>
+      <div class="hero-actions">
+        <a href="pages/guide.html" class="btn-primary">가이드 시작하기</a>
+        <a href="https://github.com/anthropics/openclaw" target="_blank" rel="noopener" class="btn-secondary">GitHub</a>
+      </div>
+      <div class="hero-scroll">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </section>
+    
+    <!-- Features -->
+    <section>
+      <div class="section-inner">
+        <div class="reveal">
+          <div class="section-label">Features</div>
+          <h2 class="section-title">강력한 오류 해결 도구</h2>
+          <p class="section-desc">복잡한 오류도 간단하게. AI 기반 진단부터 검증된 솔루션까지.</p>
         </div>
-      </div>
-      
-      <nav>
-        <ul class="sidebar-nav">
-          <li><a href="index.html" class="active">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            홈
-          </a></li>
-        </ul>
-        
-        <div class="sidebar-section">카테고리</div>
-        <ul class="sidebar-nav">
-          <li><a href="pages/windows.html">1. Windows 전용 오류</a></li>
-          <li><a href="pages/macos.html">2. macOS 전용 오류</a></li>
-          <li><a href="pages/linux.html">3. Linux 전용 오류</a></li>
-          <li><a href="pages/virtualenv.html">4. 가상환경 설정 오류</a></li>
-          <li><a href="pages/common.html">5. 공통 오류</a></li>
-          <li><a href="pages/oauth.html">6. 인증 (OAuth) 오류</a></li>
-          <li><a href="pages/gateway.html">7. 게이트웨이 접속 오류</a></li>
-          <li><a href="pages/channels.html">8. 채널 통합 오류</a></li>
-          <li><a href="pages/client.html">9. 클라이언트 연결 오류</a></li>
-          <li><a href="pages/runtime.html">10. 런타임 오류</a></li>
-          <li><a href="pages/browser.html">11. 브라우저 도구 오류</a></li>
-          <li><a href="pages/channels-ext.html">12. 채널 확장 오류</a></li>
-          <li><a href="pages/skills.html">13. 스킬 &amp; 모델 오류</a></li>
-        </ul>
-        
-        <div class="sidebar-section">도구</div>
-        <ul class="sidebar-nav">
-          <li><a href="pages/pricing.html">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="7" y1="15" x2="13" y2="15"/></svg>
-            요금제
-          </a></li>
-          <li><a href="index.html#favorites" onclick="showFavorites(event)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-            즐겨찾기
-          </a></li>
-        </ul>
-        
-        <div class="sidebar-section">리소스</div>
-        <ul class="sidebar-nav">
-          <li><a href="https://github.com/anthropics/openclaw" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-            GitHub
-          </a></li>
-          <li><a href="https://open.kakao.com/o/gugo7tCh" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            VoidLight 채팅방
-          </a></li>
-        </ul>
-      </nav>
-      
-      <div class="sidebar-bottom" id="sidebarAuth">
-        <!-- Logged out state -->
-        <button class="sidebar-login-btn" id="sidebarLoginBtn" onclick="googleLogin()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-          Google 로그인
-        </button>
-        <!-- Logged in state -->
-        <div class="sidebar-user-panel" id="sidebarUser" style="display:none">
-          <div class="sidebar-user-row" onclick="toggleSidebarMenu()">
-            <img class="sidebar-user-avatar" id="sidebarUserAvatar" src="" alt="">
-            <div class="sidebar-user-info">
-              <div class="sidebar-user-name" id="sidebarUserName"></div>
-              <span class="plan-badge plan-free" id="sidebarPlanBadge">무료</span>
+        <div class="features-grid">
+          <div class="feature-card reveal">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-2 3-2 8h-4c0-5-2-6.05-2-8a4 4 0 0 1 4-4z"/><line x1="10" y1="18" x2="14" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><line x1="11" y1="18" x2="11" y2="22"/><line x1="13" y1="18" x2="13" y2="22"/></svg>
             </div>
-            <svg class="sidebar-dots" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+            <h3>AI 오류 진단</h3>
+            <p>에러 메시지를 붙여넣으면 즉시 원인을 분석하고 맞춤형 해결책을 제시합니다.</p>
           </div>
-          <!-- Popup menu (shows above) -->
-          <div class="sidebar-user-menu" id="sidebarUserMenu">
-            <div class="sidebar-menu-item" id="sidebarUsage">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-              <span id="sidebarUsageText">오늘 0회 사용</span>
+          <div class="feature-card reveal">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.48 0 2.88.36 4.11 1"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
             </div>
-            <div class="sidebar-menu-divider"></div>
-            <a class="sidebar-menu-item" id="sidebarUpgrade" href="pages/pricing.html">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg>
-              PRO 업그레이드
-            </a>
-            <a class="sidebar-menu-item" href="pages/pricing.html">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-              설정
-            </a>
-            <div class="sidebar-menu-divider"></div>
-            <button class="sidebar-menu-item sidebar-menu-logout" onclick="googleLogout()">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-              로그아웃
-            </button>
+            <h3>검증된 솔루션</h3>
+            <p>공식 문서 기반 274개 해결 방법. 신뢰도 등급으로 최적의 솔루션을 선택하세요.</p>
+          </div>
+          <div class="feature-card reveal">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <h3>실시간 검색</h3>
+            <p>오타도 찾아주는 퍼지 검색. 키워드 하나로 관련 오류와 해결 방법을 즉시 탐색합니다.</p>
           </div>
         </div>
       </div>
-    </aside>
-    <main class="main">
-      <div class="hero">
-        <h1>OpenClaw 오류 해결 가이드</h1>
-        <p class="hero-subtitle">AI가 에러를 진단합니다</p>
-        <p class="lead">
-          OpenClaw 설치 및 설정에서 발생하는 모든 오류에 대한 종합 해결 가이드입니다.
-          실제 검증된 해결 방법과 단계별 명령어를 제공합니다.
-        </p>
-        <div class="hero-badges">
-          <span class="badge badge-info">121개 오류 유형</span>
-          <span class="badge badge-info">274개 해결 방법</span>
-          <span class="badge">vv3.0</span>
-        </div>
-        <div class="hero-users" id="heroUsers">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          <span>현재 <strong id="liveUserCount"></strong>명이 사용 중</span>
+    </section>
+    
+    <!-- Stats -->
+    <section class="stats-section">
+      <div class="section-inner">
+        <div class="stats-grid">
+          <div class="stat-item reveal">
+            <div class="stat-number" data-target="121">0</div>
+            <div class="stat-label">오류 유형</div>
+          </div>
+          <div class="stat-item reveal">
+            <div class="stat-number" data-target="274">0</div>
+            <div class="stat-label">해결 방법</div>
+          </div>
+          <div class="stat-item reveal">
+            <div class="stat-number" data-target="13">0</div>
+            <div class="stat-label">카테고리</div>
+          </div>
         </div>
       </div>
-
-      <!-- Pro activation celebration -->
-      <div class="pro-activated-banner" id="proActivatedBanner" style="display:none">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        <div>
-          <strong>PRO 활성화 완료!</strong>
-          <p>하루 300회 AI 오류 진단을 이용하실 수 있습니다.</p>
+    </section>
+    
+    <!-- How it works -->
+    <section>
+      <div class="section-inner">
+        <div class="reveal">
+          <div class="section-label">How it works</div>
+          <h2 class="section-title">3단계로 해결</h2>
+          <p class="section-desc">복잡한 오류도 간단한 프로세스로 해결됩니다.</p>
+        </div>
+        <div class="steps-container reveal">
+          <div class="steps-line"></div>
+          <div class="step">
+            <div class="step-num">1</div>
+            <h3>에러 발생</h3>
+            <p>OpenClaw 사용 중 오류 메시지가 나타나면 텍스트를 복사합니다.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <h3>AI에 질문</h3>
+            <p>가이드봇에 에러 메시지를 붙여넣으면 AI가 즉시 원인을 진단합니다.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <h3>해결 완료</h3>
+            <p>검증된 해결 방법을 따라 명령어를 실행하면 문제가 해결됩니다.</p>
+          </div>
         </div>
       </div>
-
-      <h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> 자주 찾는 오류 TOP 5</h2>
-      <div class="card-grid top5-grid">
-        <a href="pages/windows.html#error-win-1" class="card top5-card">
-          <span class="top5-rank">1</span>
-          <h4>PowerShell 실행정책 오류</h4>
-          <p>Windows에서 스크립트 실행 차단</p>
-        </a>
-        <a href="pages/common.html#error-common-1" class="card top5-card">
-          <span class="top5-rank">2</span>
-          <h4>EACCES Permission 오류</h4>
-          <p>npm 글로벌 설치 권한 문제</p>
-        </a>
-        <a href="pages/channels.html#error-ch-3" class="card top5-card">
-          <span class="top5-rank">3</span>
-          <h4>Telegram 그룹 메시지 수신 오류</h4>
-          <p>Privacy Mode 설정 문제</p>
-        </a>
-        <a href="pages/oauth.html#error-oauth-3" class="card top5-card">
-          <span class="top5-rank">4</span>
-          <h4>OAuth 토큰 만료</h4>
-          <p>setup-token 갱신 필요</p>
-        </a>
-        <a href="pages/gateway.html#error-gw-3" class="card top5-card">
-          <span class="top5-rank">5</span>
-          <h4>WebSocket 연결 실패</h4>
-          <p>게이트웨이 WebSocket 접속 불가</p>
-        </a>
+    </section>
+    
+    <!-- CTA -->
+    <section class="cta-section">
+      <div class="section-inner reveal">
+        <div class="section-label">Get Started</div>
+        <h2 class="section-title">지금 시작하기</h2>
+        <p class="cta-sub">무료로 시작 -- 설치나 가입 없이 바로 오류를 해결하세요.</p>
+        <a href="pages/guide.html" class="btn-primary">가이드 시작하기</a>
       </div>
-
-      <div class="search-bar">
-        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="searchInput" placeholder="오류 검색 (예: EACCES, PowerShell, Telegram...)" class="search-input">
+    </section>
+    
+    <!-- Footer -->
+    <footer class="landing-footer">
+      <p>OpenClaw Error Guide vv3.0 | 2026-02-10</p>
+      <div class="footer-links">
+        <a href="https://github.com/anthropics/openclaw" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://openclaw.ai" target="_blank" rel="noopener">OpenClaw</a>
+        <a href="https://open.kakao.com/o/gugo7tCh" target="_blank" rel="noopener">VoidLight</a>
       </div>
-
-      <h2>카테고리</h2>
-      
-      <div class="card-grid">
-        <a href="pages/windows.html" class="card search-target">
-          <div class="card-header-row">
-            <h4>Windows 전용 오류</h4>
-            <span class="badge badge-high">6 심각</span>
-          </div>
-          <p>16개 오류 | 30개 해결 방법</p>
-        </a>
-        <a href="pages/macos.html" class="card search-target">
-          <div class="card-header-row">
-            <h4>macOS 전용 오류</h4>
-            <span class="badge badge-high">1 심각</span>
-          </div>
-          <p>5개 오류 | 12개 해결 방법</p>
-        </a>
-        <a href="pages/linux.html" class="card search-target">
-          <div class="card-header-row">
-            <h4>Linux 전용 오류</h4>
-            <span class="badge badge-high">1 심각</span>
-          </div>
-          <p>2개 오류 | 5개 해결 방법</p>
-        </a>
-        <a href="pages/virtualenv.html" class="card search-target">
-          <div class="card-header-row">
-            <h4>가상환경 설정 오류</h4>
-            <span class="badge badge-high">1 심각</span>
-          </div>
-          <p>3개 오류 | 7개 해결 방법</p>
-        </a>
-        <a href="pages/common.html" class="card search-target">
-          <div class="card-header-row">
-            <h4>공통 오류</h4>
-            <span class="badge badge-high">3 심각</span>
-          </div>
-          <p>14개 오류 | 20개 해결 방법</p>
-        </a>
-        <a href="pages/oauth.html" class="card search-target">
-          <div class="card-header-row">
-            <h4>인증 (OAuth) 오류</h4>
-            <span class="badge badge-high">4 심각</span>
-          </div>
-          <p>12개 오류 | 29개 해결 방법</p>
-        </a>
-        <a href="pages/gateway.html" class="card search-target">
-          <div class="card-header-row">
-            <h4>게이트웨이 접속 오류</h4>
-            <span class="badge badge-high">1 심각</span>
-          </div>
-          <p>13개 오류 | 41개 해결 방법</p>
-        </a>
-        <a href="pages/channels.html" class="card search-target">
-          <div class="card-header-row">
-            <h4>채널 통합 오류</h4>
-            <span class="badge badge-high">3 심각</span>
-          </div>
-          <p>11개 오류 | 26개 해결 방법</p>
-        </a>
-        <a href="pages/client.html" class="card search-target">
-          <div class="card-header-row">
-            <h4>클라이언트 연결 오류</h4>
-            
-          </div>
-          <p>1개 오류 | 3개 해결 방법</p>
-        </a>
-        <a href="pages/runtime.html" class="card search-target">
-          <div class="card-header-row">
-            <h4>런타임 오류</h4>
-            <span class="badge badge-high">6 심각</span>
-          </div>
-          <p>30개 오류 | 71개 해결 방법</p>
-        </a>
-        <a href="pages/browser.html" class="card search-target">
-          <div class="card-header-row">
-            <h4>브라우저 도구 오류</h4>
-            <span class="badge badge-high">1 심각</span>
-          </div>
-          <p>2개 오류 | 4개 해결 방법</p>
-        </a>
-        <a href="pages/channels-ext.html" class="card search-target">
-          <div class="card-header-row">
-            <h4>채널 확장 오류</h4>
-            <span class="badge badge-high">2 심각</span>
-          </div>
-          <p>6개 오류 | 10개 해결 방법</p>
-        </a>
-        <a href="pages/skills.html" class="card search-target">
-          <div class="card-header-row">
-            <h4>스킬 &amp; 모델 오류</h4>
-            <span class="badge badge-high">1 심각</span>
-          </div>
-          <p>6개 오류 | 16개 해결 방법</p>
-        </a>
-      </div>
-
-      <h2>전체 통계</h2>
-      
-      <table>
-        <thead>
-          <tr>
-            <th>카테고리</th>
-            <th>오류 수</th>
-            <th>해결 방법</th>
-            <th>심각</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><a href="pages/windows.html">Windows 전용 오류</a></td>
-            <td>16</td>
-            <td>30</td>
-            <td><span class="badge badge-high">6</span></td>
-          </tr>
-          <tr>
-            <td><a href="pages/macos.html">macOS 전용 오류</a></td>
-            <td>5</td>
-            <td>12</td>
-            <td><span class="badge badge-high">1</span></td>
-          </tr>
-          <tr>
-            <td><a href="pages/linux.html">Linux 전용 오류</a></td>
-            <td>2</td>
-            <td>5</td>
-            <td><span class="badge badge-high">1</span></td>
-          </tr>
-          <tr>
-            <td><a href="pages/virtualenv.html">가상환경 설정 오류</a></td>
-            <td>3</td>
-            <td>7</td>
-            <td><span class="badge badge-high">1</span></td>
-          </tr>
-          <tr>
-            <td><a href="pages/common.html">공통 오류</a></td>
-            <td>14</td>
-            <td>20</td>
-            <td><span class="badge badge-high">3</span></td>
-          </tr>
-          <tr>
-            <td><a href="pages/oauth.html">인증 (OAuth) 오류</a></td>
-            <td>12</td>
-            <td>29</td>
-            <td><span class="badge badge-high">4</span></td>
-          </tr>
-          <tr>
-            <td><a href="pages/gateway.html">게이트웨이 접속 오류</a></td>
-            <td>13</td>
-            <td>41</td>
-            <td><span class="badge badge-high">1</span></td>
-          </tr>
-          <tr>
-            <td><a href="pages/channels.html">채널 통합 오류</a></td>
-            <td>11</td>
-            <td>26</td>
-            <td><span class="badge badge-high">3</span></td>
-          </tr>
-          <tr>
-            <td><a href="pages/client.html">클라이언트 연결 오류</a></td>
-            <td>1</td>
-            <td>3</td>
-            <td>-</td>
-          </tr>
-          <tr>
-            <td><a href="pages/runtime.html">런타임 오류</a></td>
-            <td>30</td>
-            <td>71</td>
-            <td><span class="badge badge-high">6</span></td>
-          </tr>
-          <tr>
-            <td><a href="pages/browser.html">브라우저 도구 오류</a></td>
-            <td>2</td>
-            <td>4</td>
-            <td><span class="badge badge-high">1</span></td>
-          </tr>
-          <tr>
-            <td><a href="pages/channels-ext.html">채널 확장 오류</a></td>
-            <td>6</td>
-            <td>10</td>
-            <td><span class="badge badge-high">2</span></td>
-          </tr>
-          <tr>
-            <td><a href="pages/skills.html">스킬 &amp; 모델 오류</a></td>
-            <td>6</td>
-            <td>16</td>
-            <td><span class="badge badge-high">1</span></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="alert alert-info">
-        <div class="alert-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;vertical-align:middle;margin-right:6px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-          빠른 진단 방법
-        </div>
-        <p>문제 발생 시 아래 명령어를 순서대로 실행해보세요:</p>
-        <div class="code-block" style="margin-top:0.75rem">
-          <div class="code-header">
-            <span>Terminal</span>
-            <button class="copy-btn" onclick="copyCode(this)">복사</button>
-          </div>
-          <pre><code>openclaw status          # 전체 상태 확인
-openclaw doctor          # 설정 문제 진단
-openclaw logs --follow   # 실시간 로그 확인</code></pre>
-        </div>
-      </div>
-
-      <!-- FAQ Section -->
-      <h2 id="faq">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        자주 묻는 질문
-      </h2>
-      <div class="faq-accordion">
-        <div class="faq-item">
-          <button class="faq-question" onclick="toggleFaq(this)">
-            <span>무료로 사용할 수 있나요?</span>
-            <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="faq-answer">하루 10회까지 무료로 AI 오류 진단을 이용하실 수 있습니다. 가이드 문서는 제한 없이 열람 가능합니다.</div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question" onclick="toggleFaq(this)">
-            <span>PRO는 무엇인가요?</span>
-            <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="faq-answer">월 $3로 하루 300회 AI 오류 진단을 이용할 수 있는 구독 플랜입니다. 더 복잡한 오류도 정확하게 진단합니다.</div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question" onclick="toggleFaq(this)">
-            <span>환불 가능한가요?</span>
-            <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="faq-answer">구독 해지 시 다음 결제일부터 요금이 청구되지 않습니다. 해지 후에도 남은 기간 동안은 PRO 기능을 계속 이용할 수 있습니다.</div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question" onclick="toggleFaq(this)">
-            <span>어떤 오류를 지원하나요?</span>
-            <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="faq-answer">121개 오류 유형과 274개의 검증된 해결 방법을 제공합니다. Windows, macOS, Linux 환경의 설치, 인증, 게이트웨이, 채널 통합 등 모든 영역을 다룹니다.</div>
-        </div>
-      </div>
-
-      <div class="pricing-cta-link" style="text-align:center;margin:1.5rem 0 2rem">
-        <a href="pages/pricing.html" style="font-size:0.95rem;font-weight:600;color:var(--accent)">
-          자세한 요금제 비교
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle"><polyline points="9 18 15 12 9 6"/></svg>
-        </a>
-      </div>
-      <footer class="site-footer">
-        <div class="footer-content">
-          <p>OpenClaw Error Guide vv3.0 | 최종 업데이트: 2026-02-10</p>
-          <div class="footer-links">
-            <a href="https://github.com/anthropics/openclaw" target="_blank" rel="noopener">GitHub</a>
-            <a href="https://openclaw.ai" target="_blank" rel="noopener">OpenClaw</a>
-            <a href="https://open.kakao.com/o/gugo7tCh" target="_blank" rel="noopener">VoidLight 채팅방</a>
-          </div>
-        </div>
-      </footer>
-    </main>
+    </footer>
   </div>
-    <button class="back-to-top" id="backToTop" aria-label="맨 위로">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
-    </button>
+  
   <script>
-    // ── Dark/Light mode toggle ──
-    function toggleTheme() {
-      const html = document.documentElement;
-      const current = html.getAttribute('data-theme');
-      const next = current === 'light' ? 'dark' : 'light';
-      html.setAttribute('data-theme', next);
-      localStorage.setItem('theme', next);
-      var ic = next === 'light' ? _sunSvg : _moonSvg;
-      var btn1 = document.getElementById('themeToggle');
-      var btn2 = document.getElementById('desktopThemeToggle');
-      if (btn1) btn1.innerHTML = ic;
-      if (btn2) btn2.innerHTML = ic;
-    }
-    var _sunSvg = '<svg width=\'18\' height=\'18\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\'><circle cx=\'12\' cy=\'12\' r=\'5\'/><line x1=\'12\' y1=\'1\' x2=\'12\' y2=\'3\'/><line x1=\'12\' y1=\'21\' x2=\'12\' y2=\'23\'/><line x1=\'4.22\' y1=\'4.22\' x2=\'5.64\' y2=\'5.64\'/><line x1=\'18.36\' y1=\'18.36\' x2=\'19.78\' y2=\'19.78\'/><line x1=\'1\' y1=\'12\' x2=\'3\' y2=\'12\'/><line x1=\'21\' y1=\'12\' x2=\'23\' y2=\'12\'/><line x1=\'4.22\' y1=\'19.78\' x2=\'5.64\' y2=\'18.36\'/><line x1=\'18.36\' y1=\'5.64\' x2=\'19.78\' y2=\'4.22\'/></svg>';
-    var _moonSvg = '<svg width=\'18\' height=\'18\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\'><path d=\'M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\'/></svg>';
-    (function initTheme() {
-      var saved = localStorage.getItem('theme') || 'dark';
-      document.documentElement.setAttribute('data-theme', saved);
-      var ic = saved === 'light' ? _sunSvg : _moonSvg;
-      var btn = document.getElementById('themeToggle');
-      if (btn) btn.innerHTML = ic;
-      var btn2 = document.getElementById('desktopThemeToggle');
-      if (btn2) btn2.innerHTML = ic;
+    // Particles
+    (function(){
+      var c=document.getElementById('particles');
+      for(var i=0;i<30;i++){
+        var p=document.createElement('div');
+        p.className='particle';
+        p.style.left=Math.random()*100+'%';
+        p.style.animationDuration=(8+Math.random()*12)+'s';
+        p.style.animationDelay=Math.random()*10+'s';
+        p.style.width=p.style.height=(1+Math.random()*2)+'px';
+        c.appendChild(p);
+      }
     })();
-
-    // ── Copy code (feature #4) ──
-    function copyCode(btn) {
-      const pre = btn.closest('.code-block').querySelector('pre');
-      const code = pre.textContent;
-      navigator.clipboard.writeText(code).then(() => {
-        btn.textContent = '\u2713 복사됨!';
-        btn.style.color = '#22c55e';
-        setTimeout(() => { btn.textContent = '복사'; btn.style.color = ''; }, 2000);
-      });
-    }
-
-    // ── Error report modal (feature #1) ──
-    function openReportModal() {
-      const m = document.getElementById('reportModal');
-      if (m) m.style.display = 'flex';
-    }
-    function closeReportModal() {
-      const m = document.getElementById('reportModal');
-      if (m) m.style.display = 'none';
-    }
-    function submitReport() {
-      const title = document.getElementById('reportTitle')?.value?.trim();
-      const symptom = document.getElementById('reportSymptom')?.value?.trim();
-      const screenshot = document.getElementById('reportScreenshot')?.value?.trim();
-      if (!title || !symptom) { alert('제목과 증상을 입력해주세요.'); return; }
-      const reports = JSON.parse(localStorage.getItem('error_reports') || '[]');
-      reports.push({ title, symptom, screenshot, date: new Date().toISOString() });
-      localStorage.setItem('error_reports', JSON.stringify(reports));
-      alert('제보가 저장되었습니다. 감사합니다!');
-      closeReportModal();
-      document.getElementById('reportTitle').value = '';
-      document.getElementById('reportSymptom').value = '';
-      document.getElementById('reportScreenshot').value = '';
-    }
-
-    // Accordion toggle
-    function toggleAccordion(header) {
-      const item = header.parentElement;
-      const isOpen = item.classList.contains('open');
-      // Close all in same parent
-      item.parentElement.querySelectorAll('.accordion-item.open').forEach(el => {
-        if (el !== item) el.classList.remove('open');
-      });
-      item.classList.toggle('open', !isOpen);
-    }
-
-    // Auto-open accordion from URL hash
-    (function() {
-      function openFromHash() {
-        const hash = window.location.hash;
-        if (!hash) return;
-        const el = document.querySelector(hash);
-        if (el && el.classList.contains('accordion-item')) {
-          el.classList.add('open');
-          setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
-          el.style.boxShadow = '0 0 0 2px #000';
-          setTimeout(() => el.style.boxShadow = '', 2000);
+    
+    // Nav scroll
+    var nav=document.getElementById('landingNav');
+    window.addEventListener('scroll',function(){
+      nav.classList.toggle('scrolled',window.scrollY>50);
+    });
+    
+    // Intersection Observer for reveals
+    var observer=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          e.target.classList.add('visible');
+          // Count-up for stats
+          var num=e.target.querySelector('.stat-number');
+          if(num&&num.dataset.target&&!num.dataset.counted){
+            num.dataset.counted='1';
+            var target=parseInt(num.dataset.target);
+            var duration=1500;
+            var start=performance.now();
+            function tick(now){
+              var progress=Math.min((now-start)/duration,1);
+              var eased=1-Math.pow(1-progress,3);
+              num.textContent=Math.floor(eased*target);
+              if(progress<1)requestAnimationFrame(tick);
+              else num.textContent=target;
+            }
+            requestAnimationFrame(tick);
+          }
         }
-      }
-      openFromHash();
-      window.addEventListener('hashchange', openFromHash);
-    })();
-
-    // Mobile sidebar
-    const hamburger = document.getElementById('hamburgerBtn');
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebarOverlay');
-    const closeBtn = document.getElementById('sidebarClose');
-    
-    function openSidebar() {
-      sidebar.classList.add('open');
-      overlay.classList.add('show');
-      document.body.style.overflow = 'hidden';
-    }
-    function closeSidebar() {
-      sidebar.classList.remove('open');
-      overlay.classList.remove('show');
-      document.body.style.overflow = '';
-    }
-    
-    if (hamburger) hamburger.addEventListener('click', openSidebar);
-    if (overlay) overlay.addEventListener('click', closeSidebar);
-    if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
-
-    // Back to top
-    const backToTop = document.getElementById('backToTop');
-    const mainEl = document.querySelector('.main');
-    if (mainEl && backToTop) {
-      mainEl.addEventListener('scroll', () => {
-        backToTop.classList.toggle('show', mainEl.scrollTop > 400);
       });
-      backToTop.addEventListener('click', () => {
-        mainEl.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-    }
-
-    // Fuzzy Search (Fuse.js)
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput && typeof Fuse !== 'undefined') {
-      const items = Array.from(document.querySelectorAll('.accordion-item, .search-target'));
-      const fuseList = items.map((el, i) => ({ idx: i, text: el.textContent }));
-      const fuse = new Fuse(fuseList, {
-        keys: ['text'],
-        threshold: 0.4,
-        distance: 200,
-        minMatchCharLength: 2,
-        ignoreLocation: true
-      });
-      searchInput.addEventListener('input', (e) => {
-        const query = e.target.value.trim();
-        if (!query) {
-          items.forEach(el => el.style.display = '');
-          document.querySelectorAll('.category-section').forEach(s => s.style.display = '');
-          return;
-        }
-        const results = fuse.search(query);
-        const matchedIdx = new Set(results.map(r => r.item.idx));
-        items.forEach((el, i) => el.style.display = matchedIdx.has(i) ? '' : 'none');
-        // Show/hide category sections based on visible cards
-        document.querySelectorAll('.category-section').forEach(sec => {
-          const hasVisible = sec.querySelectorAll('.card:not([style*="display: none"])').length > 0;
-          sec.style.display = hasVisible ? '' : 'none';
-        });
-      });
-    }
-  </script>
-
-  <!-- AI Guide Bot -->
-  <div id="chatbot-fab" onclick="toggleChat()" style="position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 24px rgba(0,0,0,0.3);z-index:9999;font-size:20px;transition:all 0.3s;border:2px solid #333" onmouseover="this.style.transform='scale(1.08)';this.style.boxShadow='0 6px 28px rgba(0,0,0,0.4)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 24px rgba(0,0,0,0.3)'">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-  </div>
-
-  <div id="chatbot-panel" style="display:none;position:fixed;bottom:90px;right:24px;width:380px;max-height:540px;background:#fff;border:1px solid #e0e0e0;border-radius:16px;box-shadow:0 12px 48px rgba(0,0,0,0.15);z-index:9999;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
-    <div style="padding:16px 20px;background:#000;color:#fff">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div style="display:flex;align-items:center;gap:10px">
-          <div>
-            <div style="font-weight:700;font-size:15px;letter-spacing:-0.3px">가이드봇</div>
-            <div style="font-size:11px;color:#999;margin-top:2px">오류 해결 AI 어시스턴트</div>
-          </div>
-          <span id="usage-badge" style="padding:3px 8px;border-radius:8px;font-size:10px;font-weight:600;background:#f5f5f5;color:#666">10/10 무료</span>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <span onclick="resetChat()" style="cursor:pointer;font-size:12px;color:#666;transition:color 0.2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#666'" title="대화 초기화"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>
-          <span onclick="toggleChat()" style="cursor:pointer;font-size:18px;color:#666;transition:color 0.2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#666'">&#10005;</span>
-        </div>
-      </div>
-      <!-- auth moved to header -->
-    </div>
-    <div id="chat-messages" style="height:340px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#fafafa">
-      <div style="background:#fff;padding:12px 16px;border-radius:14px;color:#333;font-size:13px;max-width:85%;box-shadow:0 1px 3px rgba(0,0,0,0.08);line-height:1.6">
-        안녕하세요! 오류 증상을 설명해주시면<br>해결 방법을 안내해드릴게요.<br><br><span style="color:#888;font-size:11px">스크린샷의 오류 메시지를 텍스트로 붙여넣어주시면 더 정확한 진단이 가능합니다.</span>
-      </div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <span onclick="quickQ(this)" style="background:#fff;border:1px solid #ddd;padding:6px 12px;border-radius:20px;font-size:11px;color:#555;cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor='#000';this.style.color='#000'" onmouseout="this.style.borderColor='#ddd';this.style.color='#555'">설치 오류</span>
-        <span onclick="quickQ(this)" style="background:#fff;border:1px solid #ddd;padding:6px 12px;border-radius:20px;font-size:11px;color:#555;cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor='#000';this.style.color='#000'" onmouseout="this.style.borderColor='#ddd';this.style.color='#555'">연결 안됨</span>
-        <span onclick="quickQ(this)" style="background:#fff;border:1px solid #ddd;padding:6px 12px;border-radius:20px;font-size:11px;color:#555;cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor='#000';this.style.color='#000'" onmouseout="this.style.borderColor='#ddd';this.style.color='#555'">인증 오류</span>
-        <span onclick="quickQ(this)" style="background:#fff;border:1px solid #ddd;padding:6px 12px;border-radius:20px;font-size:11px;color:#555;cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor='#000';this.style.color='#000'" onmouseout="this.style.borderColor='#ddd';this.style.color='#555'">텔레그램 봇</span>
-      </div>
-    </div>
-    <div style="padding:12px 16px;border-top:1px solid #eee;display:flex;gap:8px;background:#fff">
-      <input id="chat-input" type="text" placeholder="오류 증상을 입력하세요..." onkeydown="if(event.key==='Enter')sendChat()" style="flex:1;padding:10px 16px;border-radius:24px;border:1px solid #ddd;background:#f5f5f5;color:#333;font-size:13px;outline:none;transition:border 0.2s" onfocus="this.style.borderColor='#000'" onblur="this.style.borderColor='#ddd'">
-      <button onclick="sendChat()" style="padding:10px 18px;border-radius:24px;border:none;background:#000;color:#fff;cursor:pointer;font-size:13px;font-weight:600;transition:opacity 0.2s" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-      </button>
-    </div>
-  </div>
-
-  <script>
-  // ── Firebase Auth + Firestore Integration ──
-  var _fbApp = null, _fbAuth = null, _fbDb = null, _currentUser = null, _isPro = false, _isAdmin = false;
-  function initFirebase() {
-    if (_fbApp) return;
-    if (typeof firebase === 'undefined' || !firebaseConfig || firebaseConfig.apiKey === 'PLACEHOLDER') {
-      console.warn('Firebase not configured — running in local-only mode');
-      return;
-    }
-    _fbApp = firebase.initializeApp(firebaseConfig);
-    _fbAuth = firebase.auth();
-    _fbDb = firebase.firestore();
-    _fbAuth.onAuthStateChanged(async function(user) {
-      _currentUser = user;
-      updateAuthUI();
-      if (user) {
-        var ADMIN_EMAILS = ['icthyeon00@gmail.com'];
-        if (ADMIN_EMAILS.includes(user.email)) { _isPro = true; _isAdmin = true; }
-        else { _isAdmin = false; await loadProStatus(user.uid); }
-      } else {
-        _isPro = false;
-      }
-      checkUsage();
-    });
-  }
-  function updateAuthUI() {
-    // Sidebar auth (primary — bottom-left)
-    var sidebarLoginBtn = document.getElementById('sidebarLoginBtn');
-    var sidebarUser = document.getElementById('sidebarUser');
-    var sidebarUserAvatar = document.getElementById('sidebarUserAvatar');
-    var sidebarUserName = document.getElementById('sidebarUserName');
-    var sidebarPlanBadge = document.getElementById('sidebarPlanBadge');
-    var sidebarUpgrade = document.getElementById('sidebarUpgrade');
-    var sidebarUsageText = document.getElementById('sidebarUsageText');
-    
-    if (_currentUser) {
-      if (sidebarLoginBtn) sidebarLoginBtn.style.display = 'none';
-      if (sidebarUser) sidebarUser.style.display = 'block';
-      if (sidebarUserAvatar) sidebarUserAvatar.src = _currentUser.photoURL || '';
-      if (sidebarUserName) sidebarUserName.textContent = _currentUser.displayName || _currentUser.email || '';
-      if (sidebarPlanBadge) {
-        sidebarPlanBadge.textContent = _isPro ? 'PRO' : '무료';
-        sidebarPlanBadge.className = 'plan-badge ' + (_isPro ? 'plan-pro' : 'plan-free');
-      }
-      if (sidebarUpgrade) sidebarUpgrade.style.display = _isPro ? 'none' : 'flex';
-    } else {
-      if (sidebarLoginBtn) sidebarLoginBtn.style.display = 'flex';
-      if (sidebarUser) sidebarUser.style.display = 'none';
-    }
-    updateSidebarUsage();
-  }
-  function updateSidebarUsage() {
-    var el = document.getElementById('sidebarUsageText');
-    if (!el) return;
-    var u = getUsage();
-    el.textContent = '오늘 ' + u.count + '회 사용';
-  }
-  function toggleSidebarMenu() {
-    var menu = document.getElementById('sidebarUserMenu');
-    if (menu) menu.classList.toggle('show');
-  }
-  // Close sidebar menu on outside click
-  document.addEventListener('click', function(e) {
-    var panel = document.getElementById('sidebarUser');
-    var menu = document.getElementById('sidebarUserMenu');
-    if (menu && panel && !panel.contains(e.target)) menu.classList.remove('show');
-  });
-  async function loadProStatus(uid) {
-    if (!_fbDb) return;
-    try {
-      var doc = await _fbDb.collection('users').doc(uid).get();
-      if (doc.exists && doc.data().pro === true) {
-        _isPro = true;
-      } else {
-        _isPro = false;
-      }
-    } catch(e) {
-      console.warn('Firestore read error:', e);
-      _isPro = false;
-    }
-    updateAuthUI();
-  }
-  function googleLogin() {
-    if (!_fbAuth) { alert('Firebase가 설정되지 않았습니다. firebase-config.js를 확인하세요.'); return; }
-    var provider = new firebase.auth.GoogleAuthProvider();
-    _fbAuth.signInWithPopup(provider).catch(function(e) {
-      console.error('Login error:', e);
-    });
-  }
-  function googleLogout() {
-    if (_fbAuth) _fbAuth.signOut();
-    _currentUser = null;
-    _isPro = false;
-    updateAuthUI();
-    checkUsage();
-  }
-
-  // ── Chatbot session storage ──
-  function saveChatHistory() {
-    var box = document.getElementById('chat-messages');
-    if (box) sessionStorage.setItem('chat_history', box.innerHTML);
-  }
-  function restoreChatHistory() {
-    var saved = sessionStorage.getItem('chat_history');
-    var box = document.getElementById('chat-messages');
-    if (saved && box) box.innerHTML = saved;
-  }
-  function resetChat() {
-    sessionStorage.removeItem('chat_history');
-    var box = document.getElementById('chat-messages');
-    if (box) {
-      box.innerHTML = "<div style='background:#fff;padding:12px 16px;border-radius:14px;color:#333;font-size:13px;max-width:85%;box-shadow:0 1px 3px rgba(0,0,0,0.08);line-height:1.6'>안녕하세요! 오류 증상을 설명해주시면<br>해결 방법을 안내해드릴게요.<br><br><span style='color:#888;font-size:11px'>스크린샷의 오류 메시지를 텍스트로 붙여넣어주시면 더 정확한 진단이 가능합니다.</span></div>";
-    }
-  }
-  function toggleChat() {
-    var p = document.getElementById('chatbot-panel');
-    p.style.display = p.style.display === 'none' ? 'block' : 'none';
-    if (p.style.display === 'block') {
-      restoreChatHistory();
-      document.getElementById('chat-input')?.focus();
-    }
-    checkUsage();
-  }
-  function quickQ(el) {
-    document.getElementById('chat-input').value = el.textContent + ' 해결 방법 알려주세요';
-    sendChat();
-  }
-  // Usage: Firebase uid-based if logged in, localStorage fallback
-  function getUsageKey() {
-    return _currentUser ? 'guidebot_usage_' + _currentUser.uid : 'guidebot_usage';
-  }
-  function getUsage() {
-    var key = getUsageKey();
-    var data = JSON.parse(localStorage.getItem(key) || '{}');
-    var today = new Date().toISOString().slice(0,10);
-    if (data.date !== today) return { date: today, count: 0 };
-    return data;
-  }
-  function setUsage(u) { localStorage.setItem(getUsageKey(), JSON.stringify(u)); }
-  function checkUsage() {
-    var u = getUsage();
-    var remaining = Math.max(0, 10 - u.count);
-    var badge = document.getElementById('usage-badge');
-    if (!badge) return;
-    if (_isPro) {
-      var proRemaining = Math.max(0, 300 - u.count);
-      badge.textContent = 'PRO ' + proRemaining + '/300';
-      badge.style.background = '#000'; badge.style.color = '#fff';
-    } else {
-      badge.textContent = remaining + '/10 무료';
-      badge.style.background = remaining > 0 ? '#f5f5f5' : '#000';
-      badge.style.color = remaining > 0 ? '#666' : '#fff';
-    }
-  }
-  function showPaywall() {
-    var box = document.getElementById('chat-messages');
-    var loginHint = !_currentUser ? '<div style="color:#888;font-size:11px;margin-bottom:8px">구독하려면 먼저 Google로 로그인하세요</div>' : '';
-    box.innerHTML += '<div style="background:#fff;padding:16px;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.08);text-align:center"><div style="margin-bottom:8px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div style="font-weight:700;color:#000;font-size:14px;margin-bottom:4px">무료 체험이 끝났습니다</div><div style="color:#666;font-size:12px;margin-bottom:12px">월 $3로 하루 300회 AI 오류 진단을 이용하세요</div>' + loginHint + '<button onclick="subscribe()" style="width:100%;padding:12px;border-radius:12px;border:none;background:#000;color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:opacity 0.2s;margin-bottom:8px" onmouseover="this.style.opacity=\'0.8\'" onmouseout="this.style.opacity=\'1\'">구독하기 -- $3/월</button><div style="color:#999;font-size:11px">언제든 해지 가능 -- 안전한 결제</div></div>';
-    box.scrollTop = box.scrollHeight;
-  }
-  function subscribe() {
-    if (!_currentUser) { googleLogin(); return; }
-    // Creem checkout — pass email for webhook matching
-    var creemUrl = 'https://www.creem.io/test/payment/prod_6nhRuGebUqLLtBkGJcHrNO?success_url=' + encodeURIComponent(window.location.origin + '?pro=activated') + '&customer_email=' + encodeURIComponent(_currentUser.email || '');
-    window.open(creemUrl, '_blank');
-  }
-  // Check for pro activation via URL param (after Creem redirect)
-  (function() {
-    var params = new URLSearchParams(window.location.search);
-    if (params.get('pro') === 'activated') {
-      window.history.replaceState({}, '', window.location.pathname);
-      var banner = document.getElementById('proActivatedBanner');
-      if (banner) banner.style.display = 'flex';
-    }
-  })();
-  function unlockAdmin() {
-    var code = prompt('관리자 코드를 입력하세요');
-    if (code === 'ediboom-admin-2026') {
-      _isPro = true; updateAuthUI(); checkUsage();
-      alert('관리자 모드 활성화!');
-    }
-  }
-
-  // ── FAQ toggle ──
-  function toggleFaq(btn) {
-    var item = btn.parentElement;
-    var wasOpen = item.classList.contains('open');
-    item.parentElement.querySelectorAll('.faq-item.open').forEach(function(el) { el.classList.remove('open'); });
-    if (!wasOpen) item.classList.add('open');
-  }
-
-  // ── Favorites (localStorage) ──
-  function getFavorites() {
-    return JSON.parse(localStorage.getItem('oc_favorites') || '[]');
-  }
-  function toggleFavorite(errorId, btn) {
-    var favs = getFavorites();
-    var idx = favs.indexOf(errorId);
-    if (idx >= 0) { favs.splice(idx, 1); btn.classList.remove('favorited'); }
-    else { favs.push(errorId); btn.classList.add('favorited'); }
-    localStorage.setItem('oc_favorites', JSON.stringify(favs));
-  }
-  function initFavorites() {
-    var favs = getFavorites();
-    document.querySelectorAll('.favorite-btn').forEach(function(btn) {
-      if (favs.indexOf(btn.dataset.errorId) >= 0) btn.classList.add('favorited');
-    });
-  }
-  function showFavorites(e) {
-    if (e) e.preventDefault();
-    var favs = getFavorites();
-    var items = document.querySelectorAll('.accordion-item');
-    if (!items.length) return;
-    var showing = document.body.classList.toggle('show-favorites');
-    if (showing) {
-      items.forEach(function(el) {
-        el.style.display = favs.indexOf(el.id) >= 0 ? '' : 'none';
-      });
-      document.querySelectorAll('.category-section').forEach(function(s) {
-        var has = s.querySelectorAll('.accordion-item:not([style*="display: none"])').length > 0;
-        s.style.display = has ? '' : 'none';
-      });
-    } else {
-      items.forEach(function(el) { el.style.display = ''; });
-      document.querySelectorAll('.category-section').forEach(function(s) { s.style.display = ''; });
-    }
-    closeSidebar();
-  }
-
-  // ── Vanity metrics ──
-  function initVanityMetrics() {
-    var el = document.getElementById('liveUserCount');
-    if (el) el.textContent = Math.floor(Math.random() * 14) + 10;
-  }
-
-  document.addEventListener('DOMContentLoaded', function() {
-    var badge = document.getElementById('usage-badge');
-    if (badge) badge.addEventListener('dblclick', unlockAdmin);
-    initFirebase();
-    initFavorites();
-    initVanityMetrics();
-  });
-  async function sendChat() {
-    var input = document.getElementById('chat-input');
-    var msg = input.value.trim();
-    if (!msg) return;
-
-    var u = getUsage();
-    if (_isPro && u.count >= 300) { showPaywall(); input.value = ''; return; }
-    if (!_isPro && u.count >= 10) { showPaywall(); input.value = ''; return; }
-
-    var box = document.getElementById('chat-messages');
-    box.innerHTML += '<div style="background:#000;padding:10px 16px;border-radius:14px;color:#fff;font-size:13px;max-width:85%;align-self:flex-end">'+msg.replace(/</g,'&lt;')+'</div>';
-    input.value = '';
-    box.innerHTML += '<div id="typing" style="background:#fff;padding:12px 16px;border-radius:14px;color:#999;font-size:13px;box-shadow:0 1px 3px rgba(0,0,0,0.08)"><span style="animation:pulse 1.5s infinite">분석 중</span><style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}</style></div>';
-    box.scrollTop = box.scrollHeight;
-
-    try {
-      var r = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ message: msg })
-      });
-      var d = await r.json();
-      document.getElementById('typing')?.remove();
-      if (d.error) throw new Error(d.error);
-      var html = d.answer.replace(/</g,'&lt;').replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" style="color:#000;font-weight:600;text-decoration:underline;text-underline-offset:2px" target="_blank">$1</a>').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;font-size:12px;color:#333">$1</code>').replace(/\n/g,'<br>');
-      box.innerHTML += '<div style="background:#fff;padding:12px 16px;border-radius:14px;color:#333;font-size:13px;max-width:85%;line-height:1.6;box-shadow:0 1px 3px rgba(0,0,0,0.08)">'+html+'</div>';
-      u.count++; setUsage(u); checkUsage();
-      saveChatHistory();
-    } catch(e) {
-      document.getElementById('typing')?.remove();
-      box.innerHTML += '<div style="background:#fff;border:1px solid #e0e0e0;padding:12px 16px;border-radius:14px;color:#c00;font-size:13px">일시적 오류가 발생했습니다. 다시 시도해주세요.</div>';
-      saveChatHistory();
-    }
-    box.scrollTop = box.scrollHeight;
-  }
+    },{threshold:0.15});
+    document.querySelectorAll('.reveal').forEach(function(el){observer.observe(el)});
   </script>
 </body>
 </html>

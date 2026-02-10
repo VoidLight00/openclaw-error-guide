@@ -27,14 +27,17 @@ function escapeHtml(text) {
 }
 
 function sidebarHtml(activePage, prefix) {
-  const homeHref = prefix ? `${prefix}index.html` : 'index.html';
+  const isSubpage = !!prefix;
+  const landingHref = isSubpage ? '../index.html' : 'index.html';
+  const guideHref = isSubpage ? 'guide.html' : 'pages/guide.html';
+  const homeHref = isSubpage ? 'guide.html' : 'pages/guide.html';
   const pagePrefix = prefix ? '' : 'pages/';
   
   let html = `
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
-        <a href="${homeHref}" class="sidebar-logo">
-          <img src="${homeHref === '/' ? '' : '../'}logo.png" alt="VoidLight" style="width:28px;height:28px;border-radius:6px;object-fit:contain">
+        <a href="${landingHref}" class="sidebar-logo">
+          <img src="${isSubpage ? '../' : ''}logo.png" alt="VoidLight" style="width:28px;height:28px;border-radius:6px;object-fit:contain">
           OpenClaw <span>Guide</span>
         </a>
         <div class="sidebar-header-actions">
@@ -47,9 +50,13 @@ function sidebarHtml(activePage, prefix) {
       
       <nav>
         <ul class="sidebar-nav">
-          <li><a href="${homeHref}"${activePage === 'index' ? ' class="active"' : ''}>
+          <li><a href="${landingHref}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             홈
+          </a></li>
+          <li><a href="${guideHref}"${activePage === 'index' ? ' class="active"' : ''}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            가이드
           </a></li>
         </ul>
         
@@ -811,11 +818,11 @@ function generateCategoryPage(category) {
 
 // Generate index page
 function generateIndexPage() {
-  let html = headHtml('OpenClaw 종합 오류 해결 가이드', 'css/style.css', '', 'OpenClaw 설치·설정 오류 121개의 종합 해결 가이드. Windows, macOS, Linux, 인증, 게이트웨이 등 모든 오류 유형을 다룹니다.');
+  let html = headHtml('OpenClaw 종합 오류 해결 가이드', '../css/style.css', 'pages/guide.html', 'OpenClaw 설치·설정 오류 121개의 종합 해결 가이드. Windows, macOS, Linux, 인증, 게이트웨이 등 모든 오류 유형을 다룹니다.');
   html += headerHtml();
   html += overlayHtml();
   html += `\n  <div class="layout">`;
-  html += sidebarHtml('index', '');
+  html += sidebarHtml('index', '../');
   html += `
     <main class="main">
       <div class="hero">
@@ -847,27 +854,27 @@ function generateIndexPage() {
 
       <h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> 자주 찾는 오류 TOP 5</h2>
       <div class="card-grid top5-grid">
-        <a href="pages/windows.html#error-win-1" class="card top5-card">
+        <a href="windows.html#error-win-1" class="card top5-card">
           <span class="top5-rank">1</span>
           <h4>PowerShell 실행정책 오류</h4>
           <p>Windows에서 스크립트 실행 차단</p>
         </a>
-        <a href="pages/common.html#error-common-1" class="card top5-card">
+        <a href="common.html#error-common-1" class="card top5-card">
           <span class="top5-rank">2</span>
           <h4>EACCES Permission 오류</h4>
           <p>npm 글로벌 설치 권한 문제</p>
         </a>
-        <a href="pages/channels.html#error-ch-3" class="card top5-card">
+        <a href="channels.html#error-ch-3" class="card top5-card">
           <span class="top5-rank">3</span>
           <h4>Telegram 그룹 메시지 수신 오류</h4>
           <p>Privacy Mode 설정 문제</p>
         </a>
-        <a href="pages/oauth.html#error-oauth-3" class="card top5-card">
+        <a href="oauth.html#error-oauth-3" class="card top5-card">
           <span class="top5-rank">4</span>
           <h4>OAuth 토큰 만료</h4>
           <p>setup-token 갱신 필요</p>
         </a>
-        <a href="pages/gateway.html#error-gw-3" class="card top5-card">
+        <a href="gateway.html#error-gw-3" class="card top5-card">
           <span class="top5-rank">5</span>
           <h4>WebSocket 연결 실패</h4>
           <p>게이트웨이 WebSocket 접속 불가</p>
@@ -887,7 +894,7 @@ function generateIndexPage() {
     const totalSolutions = cat.errors.reduce((s, e) => s + e.solutions.length, 0);
     const highCount = cat.errors.filter(e => e.severity === 'high').length;
     html += `
-        <a href="pages/${cat.id}.html" class="card search-target">
+        <a href="${cat.id}.html" class="card search-target">
           <div class="card-header-row">
             <h4>${escapeHtml(cat.name)}</h4>
             ${highCount > 0 ? `<span class="badge badge-high">${highCount} 심각</span>` : ''}
@@ -917,7 +924,7 @@ function generateIndexPage() {
     const highCount = cat.errors.filter(e => e.severity === 'high').length;
     html += `
           <tr>
-            <td><a href="pages/${cat.id}.html">${escapeHtml(cat.name)}</a></td>
+            <td><a href="${cat.id}.html">${escapeHtml(cat.name)}</a></td>
             <td>${cat.errors.length}</td>
             <td>${totalSolutions}</td>
             <td>${highCount > 0 ? `<span class="badge badge-high">${highCount}</span>` : '-'}</td>
@@ -982,7 +989,7 @@ openclaw logs --follow   # 실시간 로그 확인</code></pre>
       </div>
 
       <div class="pricing-cta-link" style="text-align:center;margin:1.5rem 0 2rem">
-        <a href="pages/pricing.html" style="font-size:0.95rem;font-weight:600;color:var(--accent)">
+        <a href="pricing.html" style="font-size:0.95rem;font-weight:600;color:var(--accent)">
           자세한 요금제 비교
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle"><polyline points="9 18 15 12 9 6"/></svg>
         </a>
@@ -1087,14 +1094,342 @@ function generatePricingPage() {
   return html;
 }
 
+// Generate landing page (Cosmos-style)
+function generateLandingPage() {
+  const totalErrors = data.metadata.totalErrors;
+  const totalSolutions = data.metadata.totalSolutions;
+  const totalCategories = categories.length;
+  
+  return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenClaw Error Guide - AI 오류 해결</title>
+  <meta name="description" content="OpenClaw 오류를 AI가 진단하고 해결합니다. ${totalErrors}개 오류 유형, ${totalSolutions}개 검증된 솔루션.">
+  <link rel="canonical" href="${SITE_URL}/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="OpenClaw Error Guide - AI 오류 해결">
+  <meta property="og:description" content="OpenClaw 오류를 AI가 진단하고 해결합니다.">
+  <meta property="og:url" content="${SITE_URL}/">
+  <meta property="og:locale" content="ko_KR">
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#0a0a0a;--bg2:#111;--text:#e0e0e0;--text2:#888;
+      --accent:#a78bfa;--accent2:#6366f1;--glow:rgba(167,139,250,0.15);
+      --radius:12px;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow-x:hidden;line-height:1.6}
+    
+    /* Grid background */
+    .grid-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+    .grid-bg::before{content:'';position:absolute;inset:-50%;width:200%;height:200%;
+      background-image:linear-gradient(rgba(167,139,250,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(167,139,250,0.03) 1px,transparent 1px);
+      background-size:60px 60px;animation:gridMove 20s linear infinite}
+    @keyframes gridMove{0%{transform:translate(0,0)}100%{transform:translate(60px,60px)}}
+    
+    /* Floating particles */
+    .particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+    .particle{position:absolute;width:2px;height:2px;background:var(--accent);border-radius:50%;opacity:0;animation:float linear infinite}
+    @keyframes float{0%{opacity:0;transform:translateY(100vh) scale(0)}10%{opacity:0.6}90%{opacity:0.6}100%{opacity:0;transform:translateY(-10vh) scale(1)}}
+    
+    /* Glow orbs */
+    .glow-orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0}
+    .glow-orb-1{width:400px;height:400px;background:rgba(99,102,241,0.08);top:10%;left:10%;animation:orbFloat 15s ease-in-out infinite}
+    .glow-orb-2{width:300px;height:300px;background:rgba(167,139,250,0.06);bottom:20%;right:10%;animation:orbFloat 20s ease-in-out infinite reverse}
+    @keyframes orbFloat{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-30px)}}
+    
+    .content{position:relative;z-index:1}
+    
+    /* Nav */
+    .landing-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 40px;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(12px);background:rgba(10,10,10,0.7);border-bottom:1px solid rgba(255,255,255,0.05);transition:all 0.3s}
+    .landing-nav.scrolled{padding:14px 40px;background:rgba(10,10,10,0.9)}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;color:#fff;text-decoration:none}
+    .nav-logo img{width:28px;height:28px;border-radius:6px}
+    .nav-logo span{color:var(--accent)}
+    .nav-cta{padding:10px 24px;border-radius:24px;border:1px solid rgba(167,139,250,0.3);background:transparent;color:var(--accent);font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;transition:all 0.3s}
+    .nav-cta:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+    
+    /* Hero */
+    .hero-section{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:24px;border:1px solid rgba(167,139,250,0.2);background:rgba(167,139,250,0.05);color:var(--accent);font-size:13px;font-weight:500;margin-bottom:32px;animation:fadeInUp 0.8s ease both}
+    .hero-badge svg{width:14px;height:14px}
+    .hero-title{font-size:clamp(36px,6vw,72px);font-weight:800;letter-spacing:-2px;line-height:1.1;margin-bottom:24px;animation:fadeInUp 0.8s ease 0.1s both}
+    .hero-title .gradient{background:linear-gradient(135deg,#a78bfa,#6366f1,#a78bfa);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gradientShift 4s ease infinite}
+    @keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    .hero-sub{font-size:clamp(16px,2vw,20px);color:var(--text2);max-width:560px;margin:0 auto 40px;animation:fadeInUp 0.8s ease 0.2s both}
+    .hero-actions{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;animation:fadeInUp 0.8s ease 0.3s both}
+    .btn-primary{padding:14px 36px;border-radius:28px;border:none;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;font-size:16px;font-weight:700;cursor:pointer;text-decoration:none;transition:all 0.3s;box-shadow:0 4px 24px rgba(99,102,241,0.3)}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(99,102,241,0.4)}
+    .btn-secondary{padding:14px 36px;border-radius:28px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--text);font-size:16px;font-weight:600;cursor:pointer;text-decoration:none;transition:all 0.3s}
+    .btn-secondary:hover{border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.03)}
+    .hero-scroll{position:absolute;bottom:40px;animation:bounce 2s ease infinite}
+    @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+    
+    /* Sections */
+    section{padding:100px 24px}
+    .section-inner{max-width:1100px;margin:0 auto}
+    .section-label{display:inline-block;padding:6px 16px;border-radius:20px;border:1px solid rgba(167,139,250,0.2);background:rgba(167,139,250,0.05);color:var(--accent);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
+    .section-title{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1px;margin-bottom:16px}
+    .section-desc{font-size:17px;color:var(--text2);max-width:520px;margin-bottom:56px}
+    
+    /* Features */
+    .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+    .feature-card{padding:36px 32px;border-radius:16px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);transition:all 0.4s;position:relative;overflow:hidden}
+    .feature-card::before{content:'';position:absolute;inset:0;border-radius:16px;padding:1px;background:linear-gradient(135deg,transparent,rgba(167,139,250,0.1),transparent);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity 0.4s}
+    .feature-card:hover{transform:translateY(-4px);border-color:rgba(167,139,250,0.15)}
+    .feature-card:hover::before{opacity:1}
+    .feature-icon{width:48px;height:48px;border-radius:12px;background:rgba(167,139,250,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+    .feature-icon svg{width:24px;height:24px;stroke:var(--accent)}
+    .feature-card h3{font-size:20px;font-weight:700;margin-bottom:10px}
+    .feature-card p{color:var(--text2);font-size:15px;line-height:1.7}
+    
+    /* Stats */
+    .stats-section{border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.01)}
+    .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;text-align:center}
+    .stat-item .stat-number{font-size:clamp(40px,5vw,64px);font-weight:800;background:linear-gradient(135deg,#a78bfa,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2}
+    .stat-item .stat-label{font-size:15px;color:var(--text2);margin-top:8px}
+    
+    /* How it works */
+    .steps-container{display:flex;align-items:flex-start;gap:0;position:relative}
+    .step{flex:1;text-align:center;position:relative;padding:0 20px}
+    .step-num{width:56px;height:56px;border-radius:50%;border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:20px;font-weight:800;color:var(--accent);position:relative;z-index:1;background:var(--bg)}
+    .step h3{font-size:18px;font-weight:700;margin-bottom:8px}
+    .step p{color:var(--text2);font-size:14px}
+    .steps-line{position:absolute;top:28px;left:calc(16.67% + 28px);right:calc(16.67% + 28px);height:2px;background:linear-gradient(90deg,var(--accent2),var(--accent));opacity:0.3}
+    
+    /* CTA */
+    .cta-section{text-align:center}
+    .cta-section .section-title{margin-bottom:12px}
+    .cta-sub{color:var(--text2);font-size:15px;margin-bottom:40px}
+    
+    /* Footer */
+    .landing-footer{padding:40px 24px;border-top:1px solid rgba(255,255,255,0.05);text-align:center}
+    .landing-footer p{color:var(--text2);font-size:13px}
+    .landing-footer a{color:var(--text2);text-decoration:none;transition:color 0.2s}
+    .landing-footer a:hover{color:var(--accent)}
+    .footer-links{display:flex;gap:24px;justify-content:center;margin-top:12px}
+    
+    /* Animations */
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+    .reveal{opacity:0;transform:translateY(32px);transition:all 0.7s cubic-bezier(0.16,1,0.3,1)}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+    
+    /* Responsive */
+    @media(max-width:768px){
+      .landing-nav{padding:16px 20px}
+      .features-grid{grid-template-columns:1fr}
+      .stats-grid{grid-template-columns:1fr;gap:40px}
+      .steps-container{flex-direction:column;gap:32px;align-items:center}
+      .steps-line{display:none}
+      .step{padding:0}
+      section{padding:72px 20px}
+    }
+  </style>
+</head>
+<body>
+  <!-- Background effects -->
+  <div class="grid-bg"></div>
+  <div class="particles" id="particles"></div>
+  <div class="glow-orb glow-orb-1"></div>
+  <div class="glow-orb glow-orb-2"></div>
+  
+  <div class="content">
+    <!-- Nav -->
+    <nav class="landing-nav" id="landingNav">
+      <a href="index.html" class="nav-logo">
+        <img src="logo.png" alt="OpenClaw">
+        OpenClaw <span>Guide</span>
+      </a>
+      <a href="pages/guide.html" class="nav-cta">가이드 시작하기</a>
+    </nav>
+    
+    <!-- Hero -->
+    <section class="hero-section">
+      <div class="hero-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        ${totalErrors}개 오류 유형 | ${totalSolutions}개 검증된 솔루션
+      </div>
+      <h1 class="hero-title">OpenClaw 오류,<br><span class="gradient">AI가 해결합니다</span></h1>
+      <p class="hero-sub">에러 메시지를 붙여넣으면 즉시 원인을 진단하고 검증된 해결 방법을 제시합니다. 더 이상 Stack Overflow를 뒤질 필요 없습니다.</p>
+      <div class="hero-actions">
+        <a href="pages/guide.html" class="btn-primary">가이드 시작하기</a>
+        <a href="https://github.com/anthropics/openclaw" target="_blank" rel="noopener" class="btn-secondary">GitHub</a>
+      </div>
+      <div class="hero-scroll">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </section>
+    
+    <!-- Features -->
+    <section>
+      <div class="section-inner">
+        <div class="reveal">
+          <div class="section-label">Features</div>
+          <h2 class="section-title">강력한 오류 해결 도구</h2>
+          <p class="section-desc">복잡한 오류도 간단하게. AI 기반 진단부터 검증된 솔루션까지.</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card reveal">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-2 3-2 8h-4c0-5-2-6.05-2-8a4 4 0 0 1 4-4z"/><line x1="10" y1="18" x2="14" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><line x1="11" y1="18" x2="11" y2="22"/><line x1="13" y1="18" x2="13" y2="22"/></svg>
+            </div>
+            <h3>AI 오류 진단</h3>
+            <p>에러 메시지를 붙여넣으면 즉시 원인을 분석하고 맞춤형 해결책을 제시합니다.</p>
+          </div>
+          <div class="feature-card reveal">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.48 0 2.88.36 4.11 1"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <h3>검증된 솔루션</h3>
+            <p>공식 문서 기반 ${totalSolutions}개 해결 방법. 신뢰도 등급으로 최적의 솔루션을 선택하세요.</p>
+          </div>
+          <div class="feature-card reveal">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <h3>실시간 검색</h3>
+            <p>오타도 찾아주는 퍼지 검색. 키워드 하나로 관련 오류와 해결 방법을 즉시 탐색합니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Stats -->
+    <section class="stats-section">
+      <div class="section-inner">
+        <div class="stats-grid">
+          <div class="stat-item reveal">
+            <div class="stat-number" data-target="${totalErrors}">0</div>
+            <div class="stat-label">오류 유형</div>
+          </div>
+          <div class="stat-item reveal">
+            <div class="stat-number" data-target="${totalSolutions}">0</div>
+            <div class="stat-label">해결 방법</div>
+          </div>
+          <div class="stat-item reveal">
+            <div class="stat-number" data-target="${totalCategories}">0</div>
+            <div class="stat-label">카테고리</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- How it works -->
+    <section>
+      <div class="section-inner">
+        <div class="reveal">
+          <div class="section-label">How it works</div>
+          <h2 class="section-title">3단계로 해결</h2>
+          <p class="section-desc">복잡한 오류도 간단한 프로세스로 해결됩니다.</p>
+        </div>
+        <div class="steps-container reveal">
+          <div class="steps-line"></div>
+          <div class="step">
+            <div class="step-num">1</div>
+            <h3>에러 발생</h3>
+            <p>OpenClaw 사용 중 오류 메시지가 나타나면 텍스트를 복사합니다.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <h3>AI에 질문</h3>
+            <p>가이드봇에 에러 메시지를 붙여넣으면 AI가 즉시 원인을 진단합니다.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <h3>해결 완료</h3>
+            <p>검증된 해결 방법을 따라 명령어를 실행하면 문제가 해결됩니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- CTA -->
+    <section class="cta-section">
+      <div class="section-inner reveal">
+        <div class="section-label">Get Started</div>
+        <h2 class="section-title">지금 시작하기</h2>
+        <p class="cta-sub">무료로 시작 -- 설치나 가입 없이 바로 오류를 해결하세요.</p>
+        <a href="pages/guide.html" class="btn-primary">가이드 시작하기</a>
+      </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="landing-footer">
+      <p>OpenClaw Error Guide v${data.metadata.version} | ${data.metadata.lastUpdated}</p>
+      <div class="footer-links">
+        <a href="https://github.com/anthropics/openclaw" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://openclaw.ai" target="_blank" rel="noopener">OpenClaw</a>
+        <a href="https://open.kakao.com/o/gugo7tCh" target="_blank" rel="noopener">VoidLight</a>
+      </div>
+    </footer>
+  </div>
+  
+  <script>
+    // Particles
+    (function(){
+      var c=document.getElementById('particles');
+      for(var i=0;i<30;i++){
+        var p=document.createElement('div');
+        p.className='particle';
+        p.style.left=Math.random()*100+'%';
+        p.style.animationDuration=(8+Math.random()*12)+'s';
+        p.style.animationDelay=Math.random()*10+'s';
+        p.style.width=p.style.height=(1+Math.random()*2)+'px';
+        c.appendChild(p);
+      }
+    })();
+    
+    // Nav scroll
+    var nav=document.getElementById('landingNav');
+    window.addEventListener('scroll',function(){
+      nav.classList.toggle('scrolled',window.scrollY>50);
+    });
+    
+    // Intersection Observer for reveals
+    var observer=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          e.target.classList.add('visible');
+          // Count-up for stats
+          var num=e.target.querySelector('.stat-number');
+          if(num&&num.dataset.target&&!num.dataset.counted){
+            num.dataset.counted='1';
+            var target=parseInt(num.dataset.target);
+            var duration=1500;
+            var start=performance.now();
+            function tick(now){
+              var progress=Math.min((now-start)/duration,1);
+              var eased=1-Math.pow(1-progress,3);
+              num.textContent=Math.floor(eased*target);
+              if(progress<1)requestAnimationFrame(tick);
+              else num.textContent=target;
+            }
+            requestAnimationFrame(tick);
+          }
+        }
+      });
+    },{threshold:0.15});
+    document.querySelectorAll('.reveal').forEach(function(el){observer.observe(el)});
+  </script>
+</body>
+</html>`;
+}
+
 // Write files
 const publicDir = path.join(__dirname, 'public');
 const pagesDir = path.join(publicDir, 'pages');
 fs.mkdirSync(pagesDir, { recursive: true });
 
-// Index
-fs.writeFileSync(path.join(publicDir, 'index.html'), generateIndexPage());
-console.log('Generated: public/index.html');
+// Guide page (was index)
+fs.writeFileSync(path.join(pagesDir, 'guide.html'), generateIndexPage());
+console.log('Generated: public/pages/guide.html');
+
+// Landing page
+fs.writeFileSync(path.join(publicDir, 'index.html'), generateLandingPage());
+console.log('Generated: public/index.html (landing)');
 
 // Category pages
 categories.forEach(cat => {
@@ -1120,7 +1455,7 @@ fs.writeFileSync(path.join(publicDir, 'error-index.json'), JSON.stringify(errorI
 console.log(`Generated: public/error-index.json (${errorIndex.length} errors)`);
 
 // SEO: sitemap.xml
-const sitemapUrls = [`${SITE_URL}/`, `${SITE_URL}/pages/pricing.html`];
+const sitemapUrls = [`${SITE_URL}/`, `${SITE_URL}/pages/guide.html`, `${SITE_URL}/pages/pricing.html`];
 categories.forEach(cat => sitemapUrls.push(`${SITE_URL}/pages/${cat.id}.html`));
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
