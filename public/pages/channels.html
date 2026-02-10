@@ -1194,34 +1194,35 @@ echo 'nameserver 8.8.8.8' | sudo tee /etc/resolv.conf</code></pre>
     }
   </script>
 
-  <!-- AI Chatbot -->
-  <div id="chatbot-fab" onclick="toggleChat()" style="position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(99,102,241,0.4);z-index:9999;font-size:24px;transition:transform 0.2s" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">💬</div>
+  <!-- AI Guide Bot -->
+  <div id="chatbot-fab" onclick="toggleChat()" style="position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 24px rgba(0,0,0,0.3);z-index:9999;font-size:20px;transition:all 0.3s;border:2px solid #333" onmouseover="this.style.transform='scale(1.08)';this.style.boxShadow='0 6px 28px rgba(0,0,0,0.4)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 24px rgba(0,0,0,0.3)'">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  </div>
 
-  <div id="chatbot-panel" style="display:none;position:fixed;bottom:90px;right:24px;width:380px;max-height:520px;background:#1a1a2e;border:1px solid #333;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.5);z-index:9999;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,sans-serif">
-    <div style="padding:14px 16px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;font-weight:600;display:flex;justify-content:space-between;align-items:center">
-      <span>🤖 AI 오류 진단</span>
-      <span onclick="toggleChat()" style="cursor:pointer;font-size:18px">✕</span>
+  <div id="chatbot-panel" style="display:none;position:fixed;bottom:90px;right:24px;width:380px;max-height:540px;background:#fff;border:1px solid #e0e0e0;border-radius:16px;box-shadow:0 12px 48px rgba(0,0,0,0.15);z-index:9999;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+    <div style="padding:16px 20px;background:#000;color:#fff;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-weight:700;font-size:15px;letter-spacing:-0.3px">가이드봇</div>
+        <div style="font-size:11px;color:#999;margin-top:2px">오류 해결 AI 어시스턴트</div>
+      </div>
+      <span onclick="toggleChat()" style="cursor:pointer;font-size:18px;color:#666;transition:color 0.2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#666'">✕</span>
     </div>
-    <div style="padding:10px 12px;background:#16162a;border-bottom:1px solid #333">
-      <select id="chat-provider" style="width:48%;padding:6px;border-radius:8px;border:1px solid #444;background:#1a1a2e;color:#ddd;font-size:12px;margin-right:2%">
-        <option value="groq">Groq (무료)</option>
-        <option value="openrouter">OpenRouter (무료모델)</option>
-        <option value="grok">xAI Grok</option>
-        <option value="kimi">Kimi (Moonshot)</option>
-        <option value="gemini">Google Gemini</option>
-        <option value="openai">OpenAI</option>
-        <option value="anthropic">Anthropic</option>
-      </select>
-      <input id="chat-apikey" type="password" placeholder="API Key (Groq는 생략 가능)" style="width:48%;padding:6px;border-radius:8px;border:1px solid #444;background:#1a1a2e;color:#ddd;font-size:12px">
-    </div>
-    <div id="chat-messages" style="height:300px;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px">
-      <div style="background:#2a2a4a;padding:10px 14px;border-radius:12px;color:#ccc;font-size:13px;max-width:85%">
-        안녕하세요! 오류 증상을 설명해주세요.<br>예: "설치했는데 화면이 안 떠요"
+    <div id="chat-messages" style="height:340px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#fafafa">
+      <div style="background:#fff;padding:12px 16px;border-radius:14px;color:#333;font-size:13px;max-width:85%;box-shadow:0 1px 3px rgba(0,0,0,0.08);line-height:1.6">
+        안녕하세요! 오류 증상을 설명해주시면<br>해결 방법을 안내해드릴게요.
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span onclick="quickQ(this)" style="background:#fff;border:1px solid #ddd;padding:6px 12px;border-radius:20px;font-size:11px;color:#555;cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor='#000';this.style.color='#000'" onmouseout="this.style.borderColor='#ddd';this.style.color='#555'">설치 오류</span>
+        <span onclick="quickQ(this)" style="background:#fff;border:1px solid #ddd;padding:6px 12px;border-radius:20px;font-size:11px;color:#555;cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor='#000';this.style.color='#000'" onmouseout="this.style.borderColor='#ddd';this.style.color='#555'">연결 안됨</span>
+        <span onclick="quickQ(this)" style="background:#fff;border:1px solid #ddd;padding:6px 12px;border-radius:20px;font-size:11px;color:#555;cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor='#000';this.style.color='#000'" onmouseout="this.style.borderColor='#ddd';this.style.color='#555'">인증 오류</span>
+        <span onclick="quickQ(this)" style="background:#fff;border:1px solid #ddd;padding:6px 12px;border-radius:20px;font-size:11px;color:#555;cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor='#000';this.style.color='#000'" onmouseout="this.style.borderColor='#ddd';this.style.color='#555'">텔레그램 봇</span>
       </div>
     </div>
-    <div style="padding:10px 12px;border-top:1px solid #333;display:flex;gap:8px">
-      <input id="chat-input" type="text" placeholder="증상이나 오류 메시지 입력..." onkeydown="if(event.key==='Enter')sendChat()" style="flex:1;padding:10px 14px;border-radius:24px;border:1px solid #444;background:#16162a;color:#ddd;font-size:13px;outline:none">
-      <button onclick="sendChat()" style="padding:10px 16px;border-radius:24px;border:none;background:#6366f1;color:white;cursor:pointer;font-size:13px;font-weight:600">전송</button>
+    <div style="padding:12px 16px;border-top:1px solid #eee;display:flex;gap:8px;background:#fff">
+      <input id="chat-input" type="text" placeholder="오류 증상을 입력하세요..." onkeydown="if(event.key==='Enter')sendChat()" style="flex:1;padding:10px 16px;border-radius:24px;border:1px solid #ddd;background:#f5f5f5;color:#333;font-size:13px;outline:none;transition:border 0.2s" onfocus="this.style.borderColor='#000'" onblur="this.style.borderColor='#ddd'">
+      <button onclick="sendChat()" style="padding:10px 18px;border-radius:24px;border:none;background:#000;color:#fff;cursor:pointer;font-size:13px;font-weight:600;transition:opacity 0.2s" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
     </div>
   </div>
 
@@ -1229,44 +1230,37 @@ echo 'nameserver 8.8.8.8' | sudo tee /etc/resolv.conf</code></pre>
   function toggleChat() {
     const p = document.getElementById('chatbot-panel');
     p.style.display = p.style.display === 'none' ? 'block' : 'none';
-    // Load saved API key
-    const saved = localStorage.getItem('ochat_key');
-    const savedP = localStorage.getItem('ochat_provider');
-    if (saved) document.getElementById('chat-apikey').value = saved;
-    if (savedP) document.getElementById('chat-provider').value = savedP;
+    if (p.style.display === 'block') document.getElementById('chat-input')?.focus();
+  }
+  function quickQ(el) {
+    document.getElementById('chat-input').value = el.textContent + ' 해결 방법 알려주세요';
+    sendChat();
   }
   async function sendChat() {
     const input = document.getElementById('chat-input');
     const msg = input.value.trim();
     if (!msg) return;
-    const apiKey = document.getElementById('chat-apikey').value.trim();
-    const provider = document.getElementById('chat-provider').value;
-    if (!apiKey && provider !== 'groq') { alert('API Key를 입력해주세요 (Groq는 키 없이 사용 가능)'); return; }
-    // Save
-    localStorage.setItem('ochat_key', apiKey);
-    localStorage.setItem('ochat_provider', provider);
 
     const box = document.getElementById('chat-messages');
-    box.innerHTML += '<div style="background:#6366f1;padding:10px 14px;border-radius:12px;color:white;font-size:13px;max-width:85%;align-self:flex-end">'+msg.replace(/</g,'&lt;')+'</div>';
+    box.innerHTML += '<div style="background:#000;padding:10px 16px;border-radius:14px;color:#fff;font-size:13px;max-width:85%;align-self:flex-end">'+msg.replace(/</g,'&lt;')+'</div>';
     input.value = '';
-    box.innerHTML += '<div id="typing" style="background:#2a2a4a;padding:10px 14px;border-radius:12px;color:#888;font-size:13px">분석 중...</div>';
+    box.innerHTML += '<div id="typing" style="background:#fff;padding:12px 16px;border-radius:14px;color:#999;font-size:13px;box-shadow:0 1px 3px rgba(0,0,0,0.08)"><span style="animation:pulse 1.5s infinite">분석 중</span><style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}</style></div>';
     box.scrollTop = box.scrollHeight;
 
     try {
       const r = await fetch('/api/chat', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ message: msg, provider, apiKey })
+        body: JSON.stringify({ message: msg })
       });
       const d = await r.json();
       document.getElementById('typing')?.remove();
       if (d.error) throw new Error(d.error);
-      // Simple markdown: bold, code, newlines
-      let html = d.answer.replace(/</g,'&lt;').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`(.+?)`/g,'<code style="background:#333;padding:2px 4px;border-radius:3px;font-size:12px">$1</code>').replace(/\n/g,'<br>');
-      box.innerHTML += '<div style="background:#2a2a4a;padding:10px 14px;border-radius:12px;color:#ccc;font-size:13px;max-width:85%;line-height:1.5">'+html+'</div>';
+      let html = d.answer.replace(/</g,'&lt;').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;font-size:12px;color:#333">$1</code>').replace(/\n/g,'<br>');
+      box.innerHTML += '<div style="background:#fff;padding:12px 16px;border-radius:14px;color:#333;font-size:13px;max-width:85%;line-height:1.6;box-shadow:0 1px 3px rgba(0,0,0,0.08)">'+html+'</div>';
     } catch(e) {
       document.getElementById('typing')?.remove();
-      box.innerHTML += '<div style="background:#4a1a1a;padding:10px 14px;border-radius:12px;color:#f88;font-size:13px">오류: '+e.message+'</div>';
+      box.innerHTML += '<div style="background:#fff;border:1px solid #e0e0e0;padding:12px 16px;border-radius:14px;color:#c00;font-size:13px">일시적 오류가 발생했습니다. 다시 시도해주세요.</div>';
     }
     box.scrollTop = box.scrollHeight;
   }
