@@ -1,0 +1,57 @@
+{
+  "summary": {
+    "total": 1034,
+    "pass": 1029,
+    "fail": 5,
+    "passRate": "99.5%"
+  },
+  "neverMatched": [],
+  "failures": [
+    {
+      "targetId": "common-11",
+      "targetTitle": "/model 명령어 'model not allowed' 에러",
+      "query": " 오류",
+      "topMatches": [
+        "win-1(1)",
+        "win-2(1)",
+        "win-3(1)"
+      ]
+    },
+    {
+      "targetId": "common-11",
+      "targetTitle": "/model 명령어 'model not allowed' 에러",
+      "query": " 안돼요",
+      "topMatches": []
+    },
+    {
+      "targetId": "config-cli와-config-service-불일치",
+      "targetTitle": "Config (cli)와 Config (service) 불일치",
+      "query": "Config 오류",
+      "topMatches": [
+        "win-9(2)",
+        "win-12(2)",
+        "mac-1(2)"
+      ]
+    },
+    {
+      "targetId": "config-cli와-config-service-불일치",
+      "targetTitle": "Config (cli)와 Config (service) 불일치",
+      "query": "Config 안돼요",
+      "topMatches": [
+        "win-9(1)",
+        "win-12(1)",
+        "mac-1(1)"
+      ]
+    },
+    {
+      "targetId": "npm-install-fails-allow-build-scripts-/-missing-ta",
+      "targetTitle": "npm install fails (allow-build-scripts / missing tar or yargs)",
+      "query": "npm install",
+      "topMatches": [
+        "win-5(2)",
+        "win-6(2)",
+        "win-8(2)"
+      ]
+    }
+  ]
+}
