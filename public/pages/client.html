@@ -471,7 +471,7 @@ nslookup api.anthropic.com
       </div>
     </div>
     <div style="padding:12px 16px;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:8px;background:rgba(255,255,255,0.02)">
-      <input id="chat-input" type="text" placeholder="오류 증상을 입력하세요..." onkeydown="if(event.key==='Enter')sendChat()" style="flex:1;padding:10px 16px;border-radius:24px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;font-size:13px;outline:none;transition:all 0.2s" onfocus="this.style.borderColor='rgba(255,255,255,0.25)';this.style.boxShadow='0 0 16px rgba(255,255,255,0.04)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)';this.style.boxShadow='none'">
+      <input id="chat-input" type="text" placeholder="에러 메시지를 붙여넣거나 증상을 입력하세요..." onkeydown="if(event.key==='Enter')sendChat()" style="flex:1;padding:10px 16px;border-radius:24px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;font-size:13px;outline:none;transition:all 0.2s" onfocus="this.style.borderColor='rgba(255,255,255,0.25)';this.style.boxShadow='0 0 16px rgba(255,255,255,0.04)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)';this.style.boxShadow='none'">
       <button onclick="sendChat()" style="padding:10px 18px;border-radius:24px;border:none;background:#fff;color:#000;cursor:pointer;font-size:13px;font-weight:600;transition:all 0.2s" onmouseover="this.style.boxShadow='0 0 20px rgba(255,255,255,0.15)'" onmouseout="this.style.boxShadow='none'">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
       </button>
@@ -575,22 +575,39 @@ nslookup api.anthropic.com
     checkUsage();
   }
 
+  // ── Multi-turn conversation history ──
+  var _chatHistory = []; // { role, content }[]
+
   // ── Chatbot session storage ──
   function saveChatHistory() {
     var box = document.getElementById('chat-messages');
     if (box) sessionStorage.setItem('chat_history', box.innerHTML);
+    sessionStorage.setItem('chat_turns', JSON.stringify(_chatHistory));
   }
   function restoreChatHistory() {
     var saved = sessionStorage.getItem('chat_history');
     var box = document.getElementById('chat-messages');
     if (saved && box) box.innerHTML = saved;
+    try { _chatHistory = JSON.parse(sessionStorage.getItem('chat_turns') || '[]'); } catch(e) { _chatHistory = []; }
   }
   function resetChat() {
     sessionStorage.removeItem('chat_history');
+    sessionStorage.removeItem('chat_turns');
+    _chatHistory = [];
     var box = document.getElementById('chat-messages');
     if (box) {
-      box.innerHTML = "<div style='background:rgba(255,255,255,0.05);padding:12px 16px;border-radius:14px;color:rgba(255,255,255,0.8);font-size:13px;max-width:85%;border:1px solid rgba(255,255,255,0.06);line-height:1.6'>안녕하세요! 오류 증상을 설명해주시면<br>해결 방법을 안내해드릴게요.<br><br><span style='color:rgba(255,255,255,0.35);font-size:11px'>스크린샷의 오류 메시지를 텍스트로 붙여넣어주시면 더 정확한 진단이 가능합니다.</span></div>";
+      box.innerHTML = "<div style='background:rgba(255,255,255,0.05);padding:12px 16px;border-radius:14px;color:rgba(255,255,255,0.8);font-size:13px;max-width:85%;border:1px solid rgba(255,255,255,0.06);line-height:1.6'>안녕하세요! 오류 증상을 설명해주시면<br>해결 방법을 안내해드릴게요.<br><br><span style='color:rgba(255,255,255,0.35);font-size:11px'>스크린샷의 에러 메시지를 텍스트로 복사해서 붙여넣어주세요.</span></div>";
     }
+  }
+  // ── Feedback ──
+  function sendFeedback(btn, question, answer, helpful) {
+    var container = btn.parentElement;
+    container.innerHTML = '<span style="font-size:11px;color:rgba(255,255,255,0.4)">' + (helpful ? '감사합니다!' : '피드백 감사합니다') + '</span>';
+    fetch('/api/feedback', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ question: question, answer: answer, helpful: helpful })
+    }).catch(function(){});
   }
   function toggleChat() {
     var p = document.getElementById('chatbot-panel');
@@ -739,13 +756,29 @@ nslookup api.anthropic.com
       var r = await fetch('/api/chat', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ message: msg })
+        body: JSON.stringify({ message: msg, history: _chatHistory.slice(-10) })
       });
       var d = await r.json();
       document.getElementById('typing')?.remove();
       if (d.error) throw new Error(d.error);
-      var html = d.answer.replace(/</g,'&lt;').replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" style="color:#fff;font-weight:600;text-decoration:underline;text-underline-offset:2px" target="_blank">$1</a>').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-size:12px;color:rgba(255,255,255,0.8)">$1</code>').replace(/\n/g,'<br>');
-      box.innerHTML += '<div style="background:rgba(255,255,255,0.05);padding:12px 16px;border-radius:14px;color:rgba(255,255,255,0.8);font-size:13px;max-width:85%;line-height:1.6;border:1px solid rgba(255,255,255,0.06)">'+html+'</div>';
+      var answerRaw = d.answer;
+      var html = answerRaw.replace(/</g,'&lt;').replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" style="color:#fff;font-weight:600;text-decoration:underline;text-underline-offset:2px" target="_blank">$1</a>').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;font-size:12px;color:rgba(255,255,255,0.8)">$1</code>').replace(/\n/g,'<br>');
+      // Feedback buttons with SVG icons
+      var fbId = 'fb_' + Date.now();
+      var qEsc = msg.replace(/'/g,"\'").replace(/"/g,'&quot;');
+      var aEsc = answerRaw.replace(/'/g,"\'").replace(/"/g,'&quot;').substring(0,200);
+      var feedbackHtml = '<div id="'+fbId+'" style="display:flex;gap:8px;margin-top:8px">'
+        + '<button onclick="sendFeedback(this,\''+qEsc+'\',\''+aEsc+'\',true)" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:4px 10px;cursor:pointer;display:flex;align-items:center;gap:4px;color:rgba(255,255,255,0.5);font-size:11px;transition:all 0.2s" onmouseover="this.style.borderColor=\'rgba(34,197,94,0.5)\';this.style.color=\'#22c55e\'" onmouseout="this.style.borderColor=\'rgba(255,255,255,0.1)\';this.style.color=\'rgba(255,255,255,0.5)\'">'
+        + '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14zM4 22H2a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h2"/></svg>'
+        + ' 도움됨</button>'
+        + '<button onclick="sendFeedback(this,\''+qEsc+'\',\''+aEsc+'\',false)" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:4px 10px;cursor:pointer;display:flex;align-items:center;gap:4px;color:rgba(255,255,255,0.5);font-size:11px;transition:all 0.2s" onmouseover="this.style.borderColor=\'rgba(239,68,68,0.5)\';this.style.color=\'#ef4444\'" onmouseout="this.style.borderColor=\'rgba(255,255,255,0.1)\';this.style.color=\'rgba(255,255,255,0.5)\'">'
+        + '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10zM20 2h2a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-2"/></svg>'
+        + ' 아닌데</button></div>';
+      box.innerHTML += '<div style="background:rgba(255,255,255,0.05);padding:12px 16px;border-radius:14px;color:rgba(255,255,255,0.8);font-size:13px;max-width:85%;line-height:1.6;border:1px solid rgba(255,255,255,0.06)">'+html+feedbackHtml+'</div>';
+      // Update history
+      _chatHistory.push({ role: 'user', content: msg });
+      _chatHistory.push({ role: 'assistant', content: answerRaw });
+      if (_chatHistory.length > 10) _chatHistory = _chatHistory.slice(-10);
       u.count++; setUsage(u); checkUsage();
       saveChatHistory();
     } catch(e) {
