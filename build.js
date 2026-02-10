@@ -1115,172 +1115,51 @@ function generateLandingPage() {
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
     html{scroll-behavior:smooth}
-    body{
-      background:#fafafa;
-      color:#111;
-      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;
-      overflow-x:hidden;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-    }
-
-    .manifesto-section{
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:24px;
-    }
-
-    .manifesto-section h1,
-    .manifesto-section p{
-      text-align:center;
-      max-width:900px;
-      margin:0 auto;
-      font-weight:700;
-      letter-spacing:-0.02em;
-      line-height:1.15;
-    }
-
-    .hero-text{
-      font-size:clamp(2.8rem,6vw,5.5rem);
-    }
-
-    .scroll-text{
-      font-size:clamp(2rem,4.5vw,4rem);
-      font-weight:600;
-    }
-
-    .stats-text{
-      font-size:clamp(1.8rem,3.5vw,3rem);
-      font-weight:700;
-      letter-spacing:-0.01em;
-    }
-
-    .sub-text{
-      font-size:clamp(1.2rem,2.5vw,1.8rem);
-      font-weight:400;
-      color:#555;
-      line-height:1.4;
-    }
-
-    /* CTA section */
-    .cta-section{
-      min-height:60vh;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      padding:24px;
-      gap:40px;
-    }
-
-    .cta-btn{
-      display:inline-block;
-      padding:18px 48px;
-      border:2px solid #111;
-      border-radius:0;
-      background:transparent;
-      color:#111;
-      font-size:1.1rem;
-      font-weight:600;
-      letter-spacing:0.02em;
-      text-decoration:none;
-      transition:background 0.3s,color 0.3s;
-    }
-    .cta-btn:hover{
-      background:#111;
-      color:#fafafa;
-    }
-
-    /* Footer */
-    .landing-footer{
-      padding:48px 24px;
-      text-align:center;
-      border-top:1px solid #e0e0e0;
-    }
-    .landing-footer p{
-      color:#999;
-      font-size:13px;
-    }
-    .landing-footer a{
-      color:#999;
-      text-decoration:none;
-      transition:color 0.2s;
-    }
-    .landing-footer a:hover{color:#111}
-    .footer-links{
-      display:flex;
-      gap:24px;
-      justify-content:center;
-      margin-top:12px;
-    }
-
-    /* Reveal animation */
-    .reveal{
-      opacity:0;
-      transform:translateY(30px);
-      transition:opacity 0.8s cubic-bezier(0.25,0.46,0.45,0.94),transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94);
-    }
-    .reveal.visible{
-      opacity:1;
-      transform:translateY(0);
-    }
+    body{background:#fff;color:#000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+    nav{position:fixed;top:0;left:0;right:0;height:60px;background:#fff;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between;padding:0 40px;z-index:100}
+    .nav-left,.nav-right{display:flex;align-items:center;gap:24px}
+    .nav-logo{display:grid;grid-template-columns:6px 6px;gap:4px}
+    .nav-logo span{width:6px;height:6px;background:#000;border-radius:50%}
+    nav a{color:#000;text-decoration:none;font-size:0.95rem;font-weight:500}
+    .nav-signup{background:#000;color:#fff!important;border-radius:999px;padding:8px 20px;font-size:0.9rem}
+    .nav-signup:hover{background:#333}
+    section{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    .hero{font-size:clamp(2.5rem,6vw,5rem);font-weight:600;letter-spacing:-0.03em;line-height:1.15;text-align:center}
+    .phrase{font-size:clamp(1.8rem,4.5vw,3.5rem);font-weight:500;letter-spacing:-0.03em;line-height:1.15;text-align:center}
+    .cta-wrap{display:flex;flex-direction:column;align-items:center;gap:48px}
+    .cta-btn{display:inline-block;background:#000;color:#fff;border-radius:999px;padding:16px 40px;font-size:1.1rem;font-weight:600;text-decoration:none;transition:background 0.3s}
+    .cta-btn:hover{background:#333}
+    .reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s ease-out,transform 0.8s ease-out}
+    .reveal.visible{opacity:1;transform:translateY(0)}
   </style>
 </head>
 <body>
-
-  <section class="manifesto-section">
-    <h1 class="hero-text reveal">OpenClaw<br>오류 해결의 시작</h1>
-  </section>
-
-  <section class="manifesto-section">
-    <p class="scroll-text reveal">에러가 발생하면</p>
-  </section>
-
-  <section class="manifesto-section">
-    <p class="scroll-text reveal">막막해집니다</p>
-  </section>
-
-  <section class="manifesto-section">
-    <p class="scroll-text reveal">하지만 대부분의 에러는</p>
-  </section>
-
-  <section class="manifesto-section">
-    <p class="scroll-text reveal">이미 해결된 적 있습니다</p>
-  </section>
-
-  <section class="manifesto-section">
-    <p class="stats-text reveal">${totalErrors}개 오류. ${totalSolutions}개 해결 방법.</p>
-  </section>
-
-  <section class="manifesto-section">
-    <p class="sub-text reveal">AI가 분석하고, 문서가 안내합니다</p>
-  </section>
-
-  <section class="cta-section">
-    <div class="reveal">
-      <a href="pages/guide.html" class="cta-btn">시작하기</a>
+  <nav>
+    <div class="nav-left">
+      <div class="nav-logo"><span></span><span></span><span></span><span></span></div>
+      <a href="pages/guide.html">가이드</a>
+    </div>
+    <div class="nav-right">
+      <a href="pages/guide.html">로그인</a>
+      <a href="pages/guide.html" class="nav-signup">시작하기</a>
+    </div>
+  </nav>
+  <section><p class="hero reveal">오류 해결의 시작.</p></section>
+  <section><p class="phrase reveal">에러가 발생하면</p></section>
+  <section><p class="phrase reveal">막막합니다.</p></section>
+  <section><p class="phrase reveal">하지만 대부분의 에러는</p></section>
+  <section><p class="phrase reveal">이미 해결된 적 있습니다.</p></section>
+  <section><p class="phrase reveal">${totalErrors}개 오류 유형. ${totalSolutions}개 검증된 해결 방법.</p></section>
+  <section><p class="phrase reveal">AI가 분석하고, 문서가 안내합니다.</p></section>
+  <section>
+    <div class="cta-wrap reveal">
+      <p class="phrase">지금 시작하세요.</p>
+      <a href="pages/guide.html" class="cta-btn">가이드 시작하기 &rarr;</a>
     </div>
   </section>
-
-  <footer class="landing-footer">
-    <p>OpenClaw Error Guide v${data.metadata.version}</p>
-    <div class="footer-links">
-      <a href="https://github.com/anthropics/openclaw" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://openclaw.ai" target="_blank" rel="noopener">OpenClaw</a>
-    </div>
-  </footer>
-
   <script>
-    var observer=new IntersectionObserver(function(entries){
-      entries.forEach(function(e){
-        if(e.isIntersecting){
-          e.target.classList.add('visible');
-        }
-      });
-    },{threshold:0.3});
-    document.querySelectorAll('.reveal').forEach(function(el){observer.observe(el)});
+    var o=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible')})},{threshold:0.2});
+    document.querySelectorAll('.reveal').forEach(function(el){o.observe(el)});
   </script>
 </body>
 </html>`;
