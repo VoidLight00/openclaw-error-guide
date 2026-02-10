@@ -76,20 +76,6 @@
           </button>
         </div>
       </div>
-      <!-- Desktop auth in sidebar bottom -->
-      <div class="sidebar-auth" id="sidebarAuth">
-        <button class="sidebar-login-btn" id="sidebarLoginBtn" onclick="googleLogin()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-          Google 로그인
-        </button>
-        <div class="sidebar-user" id="sidebarUser" style="display:none">
-          <img class="sidebar-user-avatar" id="sidebarUserAvatar" src="" alt="">
-          <div class="sidebar-user-info">
-            <div class="sidebar-user-name" id="sidebarUserName"></div>
-            <span class="plan-badge plan-free" id="sidebarPlanBadge">무료</span>
-          </div>
-        </div>
-      </div>
       
       <nav>
         <ul class="sidebar-nav">
@@ -140,6 +126,23 @@
           </a></li>
         </ul>
       </nav>
+      
+      <div class="sidebar-auth" id="sidebarAuth">
+        <button class="sidebar-login-btn" id="sidebarLoginBtn" onclick="googleLogin()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          Google 로그인
+        </button>
+        <div class="sidebar-user" id="sidebarUser" style="display:none">
+          <img class="sidebar-user-avatar" id="sidebarUserAvatar" src="" alt="">
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name" id="sidebarUserName"></div>
+            <span class="plan-badge plan-free" id="sidebarPlanBadge">무료</span>
+          </div>
+          <button class="sidebar-settings-btn" onclick="window.location.href='pricing.html'" title="설정">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
+        </div>
+      </div>
     </aside>
     <main class="main">
       <h1>채널 통합 오류</h1>
