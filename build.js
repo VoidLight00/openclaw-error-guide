@@ -86,6 +86,7 @@ function headerHtml() {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
       <span class="mobile-title">OpenClaw Guide</span>
+      <button class="theme-toggle" id="themeToggle" aria-label="테마 전환" onclick="toggleTheme()">🌙</button>
     </header>`;
 }
 
@@ -117,14 +118,55 @@ function overlayHtml() {
 function scriptHtml() {
   return `
   <script>
-    // Copy code
+    // ── Dark/Light mode toggle ──
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      document.getElementById('themeToggle').textContent = next === 'light' ? '☀️' : '🌙';
+    }
+    (function initTheme() {
+      const saved = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', saved);
+      const btn = document.getElementById('themeToggle');
+      if (btn) btn.textContent = saved === 'light' ? '☀️' : '🌙';
+    })();
+
+    // ── Copy code (feature #4) ──
     function copyCode(btn) {
       const pre = btn.closest('.code-block').querySelector('pre');
       const code = pre.textContent;
       navigator.clipboard.writeText(code).then(() => {
-        btn.textContent = '완료';
-        setTimeout(() => btn.textContent = '복사', 2000);
+        btn.textContent = '📋 복사됨!';
+        btn.style.color = '#22c55e';
+        setTimeout(() => { btn.textContent = '복사'; btn.style.color = ''; }, 2000);
       });
+    }
+
+    // ── Error report modal (feature #1) ──
+    function openReportModal() {
+      const m = document.getElementById('reportModal');
+      if (m) m.style.display = 'flex';
+    }
+    function closeReportModal() {
+      const m = document.getElementById('reportModal');
+      if (m) m.style.display = 'none';
+    }
+    function submitReport() {
+      const title = document.getElementById('reportTitle')?.value?.trim();
+      const symptom = document.getElementById('reportSymptom')?.value?.trim();
+      const screenshot = document.getElementById('reportScreenshot')?.value?.trim();
+      if (!title || !symptom) { alert('제목과 증상을 입력해주세요.'); return; }
+      const reports = JSON.parse(localStorage.getItem('error_reports') || '[]');
+      reports.push({ title, symptom, screenshot, date: new Date().toISOString() });
+      localStorage.setItem('error_reports', JSON.stringify(reports));
+      alert('제보가 저장되었습니다. 감사합니다!');
+      closeReportModal();
+      document.getElementById('reportTitle').value = '';
+      document.getElementById('reportSymptom').value = '';
+      document.getElementById('reportScreenshot').value = '';
     }
 
     // Accordion toggle
@@ -233,11 +275,14 @@ function scriptHtml() {
         </div>
         <span id="usage-badge" style="padding:3px 8px;border-radius:8px;font-size:10px;font-weight:600;background:#f5f5f5;color:#666">10/10 무료</span>
       </div>
-      <span onclick="toggleChat()" style="cursor:pointer;font-size:18px;color:#666;transition:color 0.2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#666'">✕</span>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span onclick="resetChat()" style="cursor:pointer;font-size:12px;color:#666;transition:color 0.2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#666'" title="대화 초기화">🗑️</span>
+        <span onclick="toggleChat()" style="cursor:pointer;font-size:18px;color:#666;transition:color 0.2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#666'">✕</span>
+      </div>
     </div>
     <div id="chat-messages" style="height:340px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#fafafa">
       <div style="background:#fff;padding:12px 16px;border-radius:14px;color:#333;font-size:13px;max-width:85%;box-shadow:0 1px 3px rgba(0,0,0,0.08);line-height:1.6">
-        안녕하세요! 오류 증상을 설명해주시면<br>해결 방법을 안내해드릴게요.
+        안녕하세요! 오류 증상을 설명해주시면<br>해결 방법을 안내해드릴게요.<br><br><span style="color:#888;font-size:11px">💡 스크린샷의 오류 메시지를 텍스트로 붙여넣어주시면 더 정확한 진단이 가능합니다.</span>
       </div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
         <span onclick="quickQ(this)" style="background:#fff;border:1px solid #ddd;padding:6px 12px;border-radius:20px;font-size:11px;color:#555;cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor='#000';this.style.color='#000'" onmouseout="this.style.borderColor='#ddd';this.style.color='#555'">설치 오류</span>
@@ -255,10 +300,30 @@ function scriptHtml() {
   </div>
 
   <script>
+  // ── Chatbot session storage (feature #5) ──
+  function saveChatHistory() {
+    const box = document.getElementById('chat-messages');
+    if (box) sessionStorage.setItem('chat_history', box.innerHTML);
+  }
+  function restoreChatHistory() {
+    const saved = sessionStorage.getItem('chat_history');
+    const box = document.getElementById('chat-messages');
+    if (saved && box) box.innerHTML = saved;
+  }
+  function resetChat() {
+    sessionStorage.removeItem('chat_history');
+    const box = document.getElementById('chat-messages');
+    if (box) {
+      box.innerHTML = '<div style="background:#fff;padding:12px 16px;border-radius:14px;color:#333;font-size:13px;max-width:85%;box-shadow:0 1px 3px rgba(0,0,0,0.08);line-height:1.6">안녕하세요! 오류 증상을 설명해주시면<br>해결 방법을 안내해드릴게요.<br><br><span style="color:#888;font-size:11px">💡 스크린샷의 오류 메시지를 텍스트로 붙여넣어주시면 더 정확한 진단이 가능합니다.</span></div>';
+    }
+  }
   function toggleChat() {
     const p = document.getElementById('chatbot-panel');
     p.style.display = p.style.display === 'none' ? 'block' : 'none';
-    if (p.style.display === 'block') document.getElementById('chat-input')?.focus();
+    if (p.style.display === 'block') {
+      restoreChatHistory();
+      document.getElementById('chat-input')?.focus();
+    }
     checkUsage();
   }
   function quickQ(el) {
@@ -298,7 +363,10 @@ function scriptHtml() {
     box.scrollTop = box.scrollHeight;
   }
   function subscribe() {
-    // Creem checkout URL — replace with actual product link
+    // Creem checkout URL
+    // TODO: 프로덕션 전환 시 test URL을 프로덕션 URL로 교체
+    // 현재: https://www.creem.io/test/payment/prod_6nhRuGebUqLLtBkGJcHrNO (테스트)
+    // 프로덕션: https://www.creem.io/payment/prod_XXXXX (프로덕션 키 수령 후 전환)
     const creemUrl = 'https://www.creem.io/test/payment/prod_6nhRuGebUqLLtBkGJcHrNO?success_url=' + encodeURIComponent(window.location.origin + '?pro=activated');
     window.open(creemUrl, '_blank');
   }
@@ -350,22 +418,36 @@ function scriptHtml() {
       box.innerHTML += '<div style="background:#fff;padding:12px 16px;border-radius:14px;color:#333;font-size:13px;max-width:85%;line-height:1.6;box-shadow:0 1px 3px rgba(0,0,0,0.08)">'+html+'</div>';
       // Update usage
       u.count++; setUsage(u); checkUsage();
+      saveChatHistory();
     } catch(e) {
       document.getElementById('typing')?.remove();
       box.innerHTML += '<div style="background:#fff;border:1px solid #e0e0e0;padding:12px 16px;border-radius:14px;color:#c00;font-size:13px">일시적 오류가 발생했습니다. 다시 시도해주세요.</div>';
+      saveChatHistory();
     }
     box.scrollTop = box.scrollHeight;
   }
   </script>`;
 }
 
-function headHtml(title, cssPath) {
+const SITE_URL = 'https://openclaw-error-guide.vercel.app';
+
+function headHtml(title, cssPath, pageUrl, description) {
+  const fullTitle = `${escapeHtml(title)} - OpenClaw Guide`;
+  const desc = description || 'OpenClaw 설치 및 설정 오류를 빠르게 해결하세요. 검증된 해결 방법과 단계별 가이드를 제공합니다.';
+  const canonical = pageUrl ? `${SITE_URL}/${pageUrl}` : SITE_URL;
   return `<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${escapeHtml(title)} - OpenClaw Guide</title>
+  <title>${fullTitle}</title>
+  <meta name="description" content="${escapeHtml(desc)}">
+  <link rel="canonical" href="${canonical}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="${fullTitle}">
+  <meta property="og:description" content="${escapeHtml(desc)}">
+  <meta property="og:url" content="${canonical}">
+  <meta property="og:locale" content="ko_KR">
   <link rel="stylesheet" href="${cssPath}">
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
 </head>
@@ -375,7 +457,8 @@ function headHtml(title, cssPath) {
 // Generate category page
 function generateCategoryPage(category) {
   const prefix = '../';
-  let html = headHtml(category.name, '../css/style.css');
+  const desc = `${category.name} - ${category.errors.length}개 오류 유형과 검증된 해결 방법. OpenClaw 오류 해결 가이드.`;
+  let html = headHtml(category.name, '../css/style.css', `pages/${category.id}.html`, desc);
   html += headerHtml();
   html += overlayHtml();
   html += `\n  <div class="layout">`;
@@ -464,7 +547,29 @@ function generateCategoryPage(category) {
   });
 
   html += `
+      </div>
+
+      <!-- 에러 제보 -->
+      <div class="error-report-section" style="margin-top:2rem;padding:1.5rem;border:1px dashed var(--border);border-radius:var(--radius);text-align:center">
+        <h3 style="margin-bottom:0.5rem">찾는 오류가 없나요?</h3>
+        <p style="color:var(--text-secondary);font-size:14px;margin-bottom:1rem">새로운 오류를 제보해주시면 가이드에 추가하겠습니다.</p>
+        <button onclick="openReportModal()" style="padding:10px 24px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-primary);cursor:pointer;font-size:14px;font-weight:600;transition:all 0.2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">📝 새 오류 제보하기</button>
+      </div>
+
+      <!-- 제보 모달 -->
+      <div id="reportModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:10000;display:none;align-items:center;justify-content:center">
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;width:90%;max-width:420px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <h3>오류 제보</h3>
+            <span onclick="closeReportModal()" style="cursor:pointer;font-size:20px;color:var(--text-muted)">✕</span>
+          </div>
+          <input id="reportTitle" placeholder="오류 제목" style="width:100%;padding:10px;margin-bottom:10px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-primary);font-size:14px">
+          <textarea id="reportSymptom" placeholder="증상 설명" rows="3" style="width:100%;padding:10px;margin-bottom:10px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-primary);font-size:14px;resize:vertical"></textarea>
+          <input id="reportScreenshot" placeholder="스크린샷 URL (선택)" style="width:100%;padding:10px;margin-bottom:16px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-primary);font-size:14px">
+          <button onclick="submitReport()" style="width:100%;padding:12px;border-radius:var(--radius);border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer">제출하기</button>
+        </div>
       </div>`;
+
   html += footerHtml();
   html += `
     </main>
@@ -479,7 +584,7 @@ function generateCategoryPage(category) {
 
 // Generate index page
 function generateIndexPage() {
-  let html = headHtml('OpenClaw 종합 오류 해결 가이드', 'css/style.css');
+  let html = headHtml('OpenClaw 종합 오류 해결 가이드', 'css/style.css', '', 'OpenClaw 설치·설정 오류 121개의 종합 해결 가이드. Windows, macOS, Linux, 인증, 게이트웨이 등 모든 오류 유형을 다룹니다.');
   html += headerHtml();
   html += overlayHtml();
   html += `\n  <div class="layout">`;
@@ -497,6 +602,35 @@ function generateIndexPage() {
           <span class="badge badge-info">${data.metadata.totalSolutions}개 해결 방법</span>
           <span class="badge">v${data.metadata.version}</span>
         </div>
+      </div>
+
+      <h2>🔥 자주 찾는 오류 TOP 5</h2>
+      <div class="card-grid top5-grid">
+        <a href="pages/windows.html#error-win-1" class="card top5-card">
+          <span class="top5-rank">1</span>
+          <h4>PowerShell 실행정책 오류</h4>
+          <p>Windows에서 스크립트 실행 차단</p>
+        </a>
+        <a href="pages/common.html#error-common-1" class="card top5-card">
+          <span class="top5-rank">2</span>
+          <h4>EACCES Permission 오류</h4>
+          <p>npm 글로벌 설치 권한 문제</p>
+        </a>
+        <a href="pages/channels.html#error-ch-3" class="card top5-card">
+          <span class="top5-rank">3</span>
+          <h4>Telegram 그룹 메시지 수신 오류</h4>
+          <p>Privacy Mode 설정 문제</p>
+        </a>
+        <a href="pages/oauth.html#error-oauth-3" class="card top5-card">
+          <span class="top5-rank">4</span>
+          <h4>OAuth 토큰 만료</h4>
+          <p>setup-token 갱신 필요</p>
+        </a>
+        <a href="pages/gateway.html#error-gw-3" class="card top5-card">
+          <span class="top5-rank">5</span>
+          <h4>WebSocket 연결 실패</h4>
+          <p>게이트웨이 WebSocket 접속 불가</p>
+        </a>
       </div>
 
       <div class="search-bar">
@@ -609,4 +743,19 @@ categories.forEach(cat => {
 });
 fs.writeFileSync(path.join(publicDir, 'error-index.json'), JSON.stringify(errorIndex, null, 0));
 console.log(`Generated: public/error-index.json (${errorIndex.length} errors)`);
-console.log(`\nDone! ${categories.length + 1} files generated.`);
+
+// SEO: sitemap.xml
+const sitemapUrls = [`${SITE_URL}/`];
+categories.forEach(cat => sitemapUrls.push(`${SITE_URL}/pages/${cat.id}.html`));
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${sitemapUrls.map(u => `  <url><loc>${u}</loc><lastmod>${data.metadata.lastUpdated}</lastmod></url>`).join('\n')}
+</urlset>`;
+fs.writeFileSync(path.join(publicDir, 'sitemap.xml'), sitemap);
+console.log('Generated: public/sitemap.xml');
+
+// SEO: robots.txt
+fs.writeFileSync(path.join(publicDir, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE_URL}/sitemap.xml\n`);
+console.log('Generated: public/robots.txt');
+
+console.log(`\nDone! ${categories.length + 1} pages + SEO files generated.`);
