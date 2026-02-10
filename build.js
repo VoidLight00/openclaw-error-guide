@@ -34,7 +34,7 @@ function sidebarHtml(activePage, prefix) {
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <a href="${homeHref}" class="sidebar-logo">
-          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <img src="${homeHref === '/' ? '' : '../'}logo.png" alt="VoidLight" style="width:28px;height:28px;border-radius:6px;object-fit:contain">
           OpenClaw <span>Guide</span>
         </a>
         <button class="sidebar-close" id="sidebarClose" aria-label="메뉴 닫기">
