@@ -1,20 +1,20 @@
-// AI Chatbot API — supports OpenAI, Anthropic, Google Gemini, Groq
-// POST /api/chat { message, provider, apiKey }
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
 
-  const { message, provider = 'groq', apiKey } = req.body;
+  const { message, provider = 'groq', apiKey } = req.body || {};
   if (!message) return res.status(400).json({ error: 'message required' });
   if (!apiKey) return res.status(400).json({ error: 'apiKey required' });
 
-  // Load error context from llms-full.txt (built at deploy time)
-  const fs = await import('fs');
-  const path = await import('path');
   let errorContext = '';
   try {
-    errorContext = fs.readFileSync(path.join(process.cwd(), 'public', 'llms-full.txt'), 'utf-8');
-    // Trim to ~8000 chars to fit context window
+    errorContext = readFileSync(join(process.cwd(), 'public', 'llms-full.txt'), 'utf-8');
     if (errorContext.length > 8000) errorContext = errorContext.slice(0, 8000);
   } catch (e) {
     errorContext = 'Error database not available.';
@@ -29,34 +29,12 @@ export default async function handler(req, res) {
 ${errorContext}`;
 
   try {
-    let answer;
-    switch (provider) {
-      case 'openai':
-        answer = await callOpenAI(apiKey, systemPrompt, message);
-        break;
-      case 'anthropic':
-        answer = await callAnthropic(apiKey, systemPrompt, message);
-        break;
-      case 'gemini':
-        answer = await callGemini(apiKey, systemPrompt, message);
-        break;
-      case 'grok':
-        answer = await callGrok(apiKey, systemPrompt, message);
-        break;
-      case 'openrouter':
-        answer = await callOpenRouter(apiKey, systemPrompt, message);
-        break;
-      case 'kimi':
-        answer = await callKimi(apiKey, systemPrompt, message);
-        break;
-      case 'groq':
-      default:
-        answer = await callGroq(apiKey, systemPrompt, message);
-        break;
-    }
-    res.status(200).json({ answer, provider });
+    const handlers = { openai: callOpenAI, anthropic: callAnthropic, gemini: callGemini, groq: callGroq, grok: callGrok, openrouter: callOpenRouter, kimi: callKimi };
+    const fn = handlers[provider] || handlers.groq;
+    const answer = await fn(apiKey, systemPrompt, message);
+    return res.status(200).json({ answer, provider });
   } catch (e) {
-    res.status(500).json({ error: e.message || 'API call failed' });
+    return res.status(500).json({ error: e.message || 'API call failed' });
   }
 }
 
@@ -64,11 +42,7 @@ async function callOpenAI(apiKey, system, user) {
   const r = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-    body: JSON.stringify({
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
-      max_tokens: 1000, temperature: 0.3
-    })
+    body: JSON.stringify({ model: 'gpt-4o-mini', messages: [{ role: 'system', content: system }, { role: 'user', content: user }], max_tokens: 1000, temperature: 0.3 })
   });
   const d = await r.json();
   if (d.error) throw new Error(d.error.message);
@@ -78,17 +52,8 @@ async function callOpenAI(apiKey, system, user) {
 async function callAnthropic(apiKey, system, user) {
   const r = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01'
-    },
-    body: JSON.stringify({
-      model: 'claude-3-5-haiku-20241022',
-      system: system,
-      messages: [{ role: 'user', content: user }],
-      max_tokens: 1000
-    })
+    headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+    body: JSON.stringify({ model: 'claude-3-5-haiku-20241022', system, messages: [{ role: 'user', content: user }], max_tokens: 1000 })
   });
   const d = await r.json();
   if (d.error) throw new Error(d.error.message);
@@ -99,11 +64,7 @@ async function callGemini(apiKey, system, user) {
   const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      system_instruction: { parts: [{ text: system }] },
-      contents: [{ parts: [{ text: user }] }],
-      generationConfig: { maxOutputTokens: 1000, temperature: 0.3 }
-    })
+    body: JSON.stringify({ system_instruction: { parts: [{ text: system }] }, contents: [{ parts: [{ text: user }] }], generationConfig: { maxOutputTokens: 1000, temperature: 0.3 } })
   });
   const d = await r.json();
   if (d.error) throw new Error(d.error.message);
@@ -114,11 +75,7 @@ async function callGroq(apiKey, system, user) {
   const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-    body: JSON.stringify({
-      model: 'llama-3.3-70b-versatile',
-      messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
-      max_tokens: 1000, temperature: 0.3
-    })
+    body: JSON.stringify({ model: 'llama-3.3-70b-versatile', messages: [{ role: 'system', content: system }, { role: 'user', content: user }], max_tokens: 1000, temperature: 0.3 })
   });
   const d = await r.json();
   if (d.error) throw new Error(d.error.message);
@@ -129,11 +86,7 @@ async function callGrok(apiKey, system, user) {
   const r = await fetch('https://api.x.ai/v1/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-    body: JSON.stringify({
-      model: 'grok-3-mini-fast',
-      messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
-      max_tokens: 1000, temperature: 0.3
-    })
+    body: JSON.stringify({ model: 'grok-3-mini-fast', messages: [{ role: 'system', content: system }, { role: 'user', content: user }], max_tokens: 1000, temperature: 0.3 })
   });
   const d = await r.json();
   if (d.error) throw new Error(d.error.message);
@@ -144,14 +97,10 @@ async function callOpenRouter(apiKey, system, user) {
   const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-    body: JSON.stringify({
-      model: 'meta-llama/llama-3.3-70b-instruct:free',
-      messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
-      max_tokens: 1000, temperature: 0.3
-    })
+    body: JSON.stringify({ model: 'meta-llama/llama-3.3-70b-instruct:free', messages: [{ role: 'system', content: system }, { role: 'user', content: user }], max_tokens: 1000, temperature: 0.3 })
   });
   const d = await r.json();
-  if (d.error) throw new Error(d.error.message || d.error);
+  if (d.error) throw new Error(d.error.message || JSON.stringify(d.error));
   return d.choices[0].message.content;
 }
 
@@ -159,11 +108,7 @@ async function callKimi(apiKey, system, user) {
   const r = await fetch('https://api.moonshot.cn/v1/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-    body: JSON.stringify({
-      model: 'moonshot-v1-8k',
-      messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
-      max_tokens: 1000, temperature: 0.3
-    })
+    body: JSON.stringify({ model: 'moonshot-v1-8k', messages: [{ role: 'system', content: system }, { role: 'user', content: user }], max_tokens: 1000, temperature: 0.3 })
   });
   const d = await r.json();
   if (d.error) throw new Error(d.error.message);
