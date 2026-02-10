@@ -20,7 +20,7 @@ export default async function handler(req, res) {
   let errorContext = '';
   try {
     errorContext = readFileSync(join(process.cwd(), 'public', 'llms-full.txt'), 'utf-8');
-    if (errorContext.length > 8000) errorContext = errorContext.slice(0, 8000);
+    // Full context — Groq Llama 3.3 supports 128K tokens
   } catch (e) {
     errorContext = 'Error database not available.';
   }
