@@ -20,7 +20,37 @@ export default async function handler(req, res) {
   let errorContext = '';
   try {
     errorContext = readFileSync(join(process.cwd(), 'public', 'llms-full.txt'), 'utf-8');
-    // Full context — Groq Llama 3.3 supports 128K tokens
+    // Smart context — search relevant sections based on user message
+    if (errorContext.length > 6000) {
+      const lines = errorContext.split('\n');
+      const query = message.toLowerCase();
+      const chunks = [];
+      let chunk = [];
+      for (const line of lines) {
+        if (line.startsWith('## ') && chunk.length > 0) {
+          chunks.push(chunk.join('\n'));
+          chunk = [];
+        }
+        chunk.push(line);
+      }
+      if (chunk.length) chunks.push(chunk.join('\n'));
+      // Score chunks by keyword overlap
+      const scored = chunks.map(c => {
+        const cl = c.toLowerCase();
+        const words = query.split(/\s+/).filter(w => w.length > 1);
+        const score = words.filter(w => cl.includes(w)).length;
+        return { text: c, score };
+      }).sort((a, b) => b.score - a.score);
+      // Take top chunks up to ~5000 chars
+      let ctx = '';
+      for (const s of scored) {
+        if (ctx.length + s.text.length > 5000) break;
+        ctx += s.text + '\n\n';
+      }
+      // Always include first chunk (overview)
+      if (!ctx.includes(scored[scored.length-1]?.text)) ctx = chunks[0]?.slice(0,500) + '\n\n' + ctx;
+      errorContext = ctx;
+    }
   } catch (e) {
     errorContext = 'Error database not available.';
   }
