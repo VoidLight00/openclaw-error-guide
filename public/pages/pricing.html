@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>macOS 전용 오류 - OpenClaw Guide</title>
-  <meta name="description" content="macOS 전용 오류 - 5개 오류 유형과 검증된 해결 방법. OpenClaw 오류 해결 가이드.">
-  <link rel="canonical" href="https://openclaw-error-guide.vercel.app/pages/macos.html">
+  <title>요금제 - OpenClaw Guide</title>
+  <meta name="description" content="OpenClaw Error Guide 무료 및 PRO 요금제 비교.">
+  <link rel="canonical" href="https://openclaw-error-guide.vercel.app/pages/pricing.html">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="macOS 전용 오류 - OpenClaw Guide">
-  <meta property="og:description" content="macOS 전용 오류 - 5개 오류 유형과 검증된 해결 방법. OpenClaw 오류 해결 가이드.">
-  <meta property="og:url" content="https://openclaw-error-guide.vercel.app/pages/macos.html">
+  <meta property="og:title" content="요금제 - OpenClaw Guide">
+  <meta property="og:description" content="OpenClaw Error Guide 무료 및 PRO 요금제 비교.">
+  <meta property="og:url" content="https://openclaw-error-guide.vercel.app/pages/pricing.html">
   <meta property="og:locale" content="ko_KR">
   <link rel="stylesheet" href="../css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
@@ -102,7 +102,7 @@
         <div class="sidebar-section">카테고리</div>
         <ul class="sidebar-nav">
           <li><a href="windows.html">1. Windows 전용 오류</a></li>
-          <li><a href="macos.html" class="active">2. macOS 전용 오류</a></li>
+          <li><a href="macos.html">2. macOS 전용 오류</a></li>
           <li><a href="linux.html">3. Linux 전용 오류</a></li>
           <li><a href="virtualenv.html">4. 가상환경 설정 오류</a></li>
           <li><a href="common.html">5. 공통 오류</a></li>
@@ -118,7 +118,7 @@
         
         <div class="sidebar-section">도구</div>
         <ul class="sidebar-nav">
-          <li><a href="pricing.html">
+          <li><a href="pricing.html" class="active">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="7" y1="15" x2="13" y2="15"/></svg>
             요금제
           </a></li>
@@ -140,526 +140,72 @@
           </a></li>
         </ul>
       </nav>
-    </aside>
-    <main class="main">
-      <h1>macOS 전용 오류</h1>
-      <p class="page-subtitle">5개의 오류 유형 | 총 12개의 해결 방법</p>
-      
-      <div class="search-bar">
-        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="searchInput" placeholder="오류 검색..." class="search-input">
+    </aside><main class="main">
+  <div class="pricing-header">
+    <h1>요금제</h1>
+    <p class="pricing-subtitle">필요에 맞는 플랜을 선택하세요</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-card-header">
+        <h3 class="pricing-plan-name">무료</h3>
+        <div class="pricing-price"><span class="pricing-amount">무료</span></div>
+        <p class="pricing-desc">기본 오류 해결에 충분합니다</p>
       </div>
-
-      <div class="accordion">
-        <div class="accordion-item" id="error-mac-1">
-          <div class="accordion-header" onclick="toggleAccordion(this)">
-            <div class="accordion-title-row">
-              <span class="badge badge-medium">보통</span>
-              <h2>npm 권한 문제 (sudo 요청)</h2>
-            </div>
-            <div class="accordion-meta">
-              <button class="favorite-btn" data-error-id="error-mac-1" onclick="event.stopPropagation();toggleFavorite('error-mac-1',this)" title="즐겨찾기">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-              </button>
-              <span class="solve-time">5분</span>
-              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-            </div>
-          </div>
-          <div class="accordion-body">
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                증상
-              </h3>
-              <ul class="symptom-list">
-                <li>npm install -g 시 EACCES 에러 발생</li>
-                <li>'Error: EACCES: permission denied, mkdir /usr/local/lib/node_modules/...'</li>
-                <li>sudo npm install 사용을 권유받음</li>
-              </ul>
-            </div>
-
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                원인
-              </h3>
-              <div class="cause-block">
-                <p>/usr/local/lib/node_modules 디렉토리의 소유권이 root로 되어 있어, 일반 사용자가 글로벌 패키지를 설치할 수 없습니다. sudo로 npm을 실행하는 것은 보안상 위험하므로 권장하지 않습니다.</p>
-              </div>
-            </div>
-
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-                해결 방법
-              </h3>
-              <div class="solution-card">
-                <div class="solution-header">
-                  <h4>방법 A: npm 글로벌 디렉토리 변경 (권장)</h4>
-                  <div class="trust-level">
-                    <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-                  </div>
-                </div>
-                <div class="code-block">
-                  <div class="code-header">
-                    <span>Terminal</span>
-                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-                  </div>
-                  <pre><code># 사용자 홈에 npm 글로벌 디렉토리 생성
-mkdir -p ~/.npm-global
-npm config set prefix '~/.npm-global'
-
-# PATH에 추가 (~/.zshrc 또는 ~/.bashrc)
-echo 'export PATH=~/.npm-global/bin:$PATH' &gt;&gt; ~/.zshrc
-source ~/.zshrc
-
-# 이제 sudo 없이 설치 가능
-npm install -g openclaw@latest</code></pre>
-                </div>
-              </div>
-              <div class="solution-card">
-                <div class="solution-header">
-                  <h4>방법 B: nvm으로 Node 관리 (권장)</h4>
-                  <div class="trust-level">
-                    <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-                  </div>
-                </div>
-                <div class="code-block">
-                  <div class="code-header">
-                    <span>Terminal</span>
-                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-                  </div>
-                  <pre><code># nvm은 홈 디렉토리에 Node를 설치하여 권한 문제 회피
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-source ~/.zshrc
-
-nvm install 22
-nvm alias default 22
-
-# nvm 환경에서는 sudo 불필요
-npm install -g openclaw@latest</code></pre>
-                </div>
-              </div>
-              <div class="solution-card">
-                <div class="solution-header">
-                  <h4>방법 C: /usr/local 소유권 변경 (주의)</h4>
-                  <div class="trust-level">
-                    <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-                  </div>
-                </div>
-                <div class="code-block">
-                  <div class="code-header">
-                    <span>Terminal</span>
-                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-                  </div>
-                  <pre><code># 주의: 시스템 디렉토리 소유권 변경은 다른 도구에 영향 줄 수 있음
-sudo chown -R $(whoami) /usr/local/lib/node_modules
-sudo chown -R $(whoami) /usr/local/bin
-
-# 이후 sudo 없이 설치
-npm install -g openclaw@latest</code></pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item" id="error-mac-2">
-          <div class="accordion-header" onclick="toggleAccordion(this)">
-            <div class="accordion-title-row">
-              <span class="badge badge-medium">보통</span>
-              <h2>npm 전역 설치 권한 문제</h2>
-            </div>
-            <div class="accordion-meta">
-              <button class="favorite-btn" data-error-id="error-mac-2" onclick="event.stopPropagation();toggleFavorite('error-mac-2',this)" title="즐겨찾기">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-              </button>
-              <span class="solve-time">5분</span>
-              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-            </div>
-          </div>
-          <div class="accordion-body">
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                증상
-              </h3>
-              <ul class="symptom-list">
-                <li>npm ERR! code EACCES</li>
-                <li>npm ERR! syscall access</li>
-                <li>'/usr/local/lib/node_modules' 접근 거부</li>
-              </ul>
-            </div>
-
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                원인
-              </h3>
-              <div class="cause-block">
-                <p>macOS에서 Homebrew로 Node를 설치한 경우, /usr/local 디렉토리의 권한이 복잡하게 설정되어 있을 수 있습니다. 특히 macOS Ventura 이후 보안 정책이 강화되면서 더 자주 발생합니다.</p>
-              </div>
-            </div>
-
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-                해결 방법
-              </h3>
-              <div class="solution-card">
-                <div class="solution-header">
-                  <h4>방법 A: OpenClaw 인스톨러 스크립트 사용 (가장 간편)</h4>
-                  <div class="trust-level">
-                    <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-                  </div>
-                </div>
-                <div class="code-block">
-                  <div class="code-header">
-                    <span>Terminal</span>
-                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-                  </div>
-                  <pre><code># 인스톨러가 권한 문제를 자동으로 처리합니다
-curl -fsSL https://openclaw.ai/install.sh | bash</code></pre>
-                </div>
-              </div>
-              <div class="solution-card">
-                <div class="solution-header">
-                  <h4>방법 B: Homebrew로 Node 재설치</h4>
-                  <div class="trust-level">
-                    <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-                  </div>
-                </div>
-                <div class="code-block">
-                  <div class="code-header">
-                    <span>Terminal</span>
-                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-                  </div>
-                  <pre><code># 기존 Node 제거 후 Homebrew로 깔끔하게 재설치
-brew uninstall node
-brew cleanup
-brew install node@22
-
-# Homebrew가 설치한 Node는 권한 문제가 적음
-npm install -g openclaw@latest</code></pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item" id="error-mac-3">
-          <div class="accordion-header" onclick="toggleAccordion(this)">
-            <div class="accordion-title-row">
-              <span class="badge badge-medium">보통</span>
-              <h2>npm 캐시 손상</h2>
-            </div>
-            <div class="accordion-meta">
-              <button class="favorite-btn" data-error-id="error-mac-3" onclick="event.stopPropagation();toggleFavorite('error-mac-3',this)" title="즐겨찾기">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-              </button>
-              <span class="solve-time">3분</span>
-              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-            </div>
-          </div>
-          <div class="accordion-body">
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                증상
-              </h3>
-              <ul class="symptom-list">
-                <li>npm install 시 'Unexpected token' 또는 'Invalid JSON' 에러</li>
-                <li>npm ERR! code EINTEGRITY</li>
-                <li>npm cache verify 경고 메시지</li>
-                <li>특정 패키지만 반복적으로 설치 실패</li>
-              </ul>
-            </div>
-
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                원인
-              </h3>
-              <div class="cause-block">
-                <p>npm 캐시 디렉토리(~/.npm/_cacache)에 저장된 패키지 데이터가 손상되었습니다. 네트워크 불안정, 디스크 오류, 또는 동시 설치 시도로 인해 발생할 수 있습니다.</p>
-              </div>
-            </div>
-
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-                해결 방법
-              </h3>
-              <div class="solution-card">
-                <div class="solution-header">
-                  <h4>방법 A: npm 캐시 완전 초기화</h4>
-                  <div class="trust-level">
-                    <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-                  </div>
-                </div>
-                <div class="code-block">
-                  <div class="code-header">
-                    <span>Terminal</span>
-                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-                  </div>
-                  <pre><code># npm 캐시 강제 삭제
-npm cache clean --force
-
-# 캐시 상태 확인
-npm cache verify
-
-# 재설치
-npm install -g openclaw@latest</code></pre>
-                </div>
-              </div>
-              <div class="solution-card">
-                <div class="solution-header">
-                  <h4>방법 B: 캐시 디렉토리 수동 삭제</h4>
-                  <div class="trust-level">
-                    <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-                  </div>
-                </div>
-                <div class="code-block">
-                  <div class="code-header">
-                    <span>Terminal</span>
-                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-                  </div>
-                  <pre><code># npm 캐시 디렉토리 직접 삭제
-rm -rf ~/.npm/_cacache
-
-# package-lock 도 문제라면 프로젝트 내에서:
-rm -rf node_modules package-lock.json
-npm install</code></pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item" id="error-mac-4">
-          <div class="accordion-header" onclick="toggleAccordion(this)">
-            <div class="accordion-title-row">
-              <span class="badge badge-low">낮음</span>
-              <h2>npm install 타임아웃</h2>
-            </div>
-            <div class="accordion-meta">
-              <button class="favorite-btn" data-error-id="error-mac-4" onclick="event.stopPropagation();toggleFavorite('error-mac-4',this)" title="즐겨찾기">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-              </button>
-              <span class="solve-time">5분</span>
-              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-            </div>
-          </div>
-          <div class="accordion-body">
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                증상
-              </h3>
-              <ul class="symptom-list">
-                <li>npm ERR! network timeout at: https://registry.npmjs.org/...</li>
-                <li>npm ERR! code ETIMEDOUT</li>
-                <li>설치가 진행되다가 오래 멈춘 후 실패</li>
-                <li>fetch failed 에러</li>
-              </ul>
-            </div>
-
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                원인
-              </h3>
-              <div class="cause-block">
-                <p>npm 레지스트리 서버와의 연결이 타임아웃되었습니다. 느린 네트워크, VPN 사용, 회사 방화벽, 또는 npm 서버 자체의 일시적 장애일 수 있습니다.</p>
-              </div>
-            </div>
-
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-                해결 방법
-              </h3>
-              <div class="solution-card">
-                <div class="solution-header">
-                  <h4>방법 A: 타임아웃 시간 늘리기</h4>
-                  <div class="trust-level">
-                    <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-                  </div>
-                </div>
-                <div class="code-block">
-                  <div class="code-header">
-                    <span>Terminal</span>
-                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-                  </div>
-                  <pre><code># 기본 타임아웃을 300초(5분)로 늘리기
-npm config set fetch-timeout 300000
-npm config set fetch-retry-maxtimeout 120000
-
-# 재설치 시도
-npm install -g openclaw@latest</code></pre>
-                </div>
-              </div>
-              <div class="solution-card">
-                <div class="solution-header">
-                  <h4>방법 B: 레지스트리 미러 사용</h4>
-                  <div class="trust-level">
-                    <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-                  </div>
-                </div>
-                <div class="code-block">
-                  <div class="code-header">
-                    <span>Terminal</span>
-                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-                  </div>
-                  <pre><code># 한국/아시아 사용자는 npmmirror 사용 가능 (속도 개선)
-npm install -g openclaw@latest --registry https://registry.npmmirror.com
-
-# 또는 영구 설정
-npm config set registry https://registry.npmmirror.com
-
-# 원래대로 복구하려면:
-npm config set registry https://registry.npmjs.org</code></pre>
-                </div>
-              </div>
-              <div class="solution-card">
-                <div class="solution-header">
-                  <h4>방법 C: VPN/프록시 확인</h4>
-                  <div class="trust-level">
-                    <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-                  </div>
-                </div>
-                <div class="code-block">
-                  <div class="code-header">
-                    <span>Terminal</span>
-                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-                  </div>
-                  <pre><code># VPN을 사용 중이라면 일시적으로 해제 후 시도
-
-# 프록시 설정 확인
-npm config get proxy
-npm config get https-proxy
-
-# 프록시가 잘못 설정되어 있다면 삭제
-npm config delete proxy
-npm config delete https-proxy</code></pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item" id="error-mac-5">
-          <div class="accordion-header" onclick="toggleAccordion(this)">
-            <div class="accordion-title-row">
-              <span class="badge badge-high">심각</span>
-              <h2>sharp/libvips 빌드 실패 (시스템 libvips 충돌)</h2>
-            </div>
-            <div class="accordion-meta">
-              <button class="favorite-btn" data-error-id="error-mac-5" onclick="event.stopPropagation();toggleFavorite('error-mac-5',this)" title="즐겨찾기">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-              </button>
-              <span class="solve-time">3분</span>
-              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-            </div>
-          </div>
-          <div class="accordion-body">
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                증상
-              </h3>
-              <ul class="symptom-list">
-                <li>npm install -g openclaw 시 sharp 빌드 에러</li>
-                <li>libvips 관련 컴파일 오류</li>
-                <li>'sharp: Installation error' 메시지</li>
-                <li>Homebrew로 설치한 libvips와 충돌</li>
-              </ul>
-            </div>
-
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                원인
-              </h3>
-              <div class="cause-block">
-                <p>macOS에서 Homebrew 등으로 시스템 libvips가 설치되어 있으면, sharp 모듈이 시스템 libvips를 사용하려다 버전 충돌이 발생합니다. OpenClaw 인스톨러는 기본적으로 SHARP_IGNORE_GLOBAL_LIBVIPS=1을 설정하여 이 문제를 방지합니다. (출처: installer.md - 'sharp/libvips issues', 환경변수 SHARP_IGNORE_GLOBAL_LIBVIPS=1 기본값)</p>
-              </div>
-            </div>
-
-            <div class="error-section">
-              <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-                해결 방법
-              </h3>
-              <div class="solution-card">
-                <div class="solution-header">
-                  <h4>방법 A: SHARP_IGNORE_GLOBAL_LIBVIPS 환경변수 설정 (권장)</h4>
-                  <div class="trust-level">
-                    <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-                  </div>
-                </div>
-                <div class="code-block">
-                  <div class="code-header">
-                    <span>Terminal</span>
-                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-                  </div>
-                  <pre><code># 시스템 libvips를 무시하고 prebuilt 바이너리 사용
-SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest
-
-# 영구 설정 (쉘에 추가)
-echo 'export SHARP_IGNORE_GLOBAL_LIBVIPS=1' &gt;&gt; ~/.zshrc
-source ~/.zshrc</code></pre>
-                </div>
-              </div>
-              <div class="solution-card">
-                <div class="solution-header">
-                  <h4>방법 B: OpenClaw 인스톨러 스크립트 사용 (자동 처리)</h4>
-                  <div class="trust-level">
-                    <span class="trust-label">신뢰도</span>
-                    <span class="trust-stars"><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-                  </div>
-                </div>
-                <div class="code-block">
-                  <div class="code-header">
-                    <span>Terminal</span>
-                    <button class="copy-btn" onclick="copyCode(this)">복사</button>
-                  </div>
-                  <pre><code># 인스톨러가 SHARP_IGNORE_GLOBAL_LIBVIPS=1을 자동으로 설정합니다
-curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash</code></pre>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <ul class="pricing-features">
+        <li><svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> AI 오류 진단 10회/일</li>
+        <li><svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 121개 에러 가이드 열람</li>
+        <li><svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 퍼지 검색</li>
+        <li><svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 다크모드</li>
+      </ul>
+      <div class="pricing-card-footer">
+        <span class="pricing-btn pricing-btn-secondary">현재 사용 중</span>
       </div>
-
-      <!-- 에러 제보 -->
-      <div class="error-report-section" style="margin-top:2rem;padding:1.5rem;border:1px dashed var(--border);border-radius:var(--radius);text-align:center">
-        <h3 style="margin-bottom:0.5rem">찾는 오류가 없나요?</h3>
-        <p style="color:var(--text-secondary);font-size:14px;margin-bottom:1rem">새로운 오류를 제보해주시면 가이드에 추가하겠습니다.</p>
-        <button onclick="openReportModal()" style="padding:10px 24px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-primary);cursor:pointer;font-size:14px;font-weight:600;transition:all 0.2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'"><svg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' style='vertical-align:middle'><path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7'/><path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'/></svg> 새 오류 제보하기</button>
+    </div>
+    <div class="pricing-card pricing-card-pro">
+      <div class="pricing-card-badge">추천</div>
+      <div class="pricing-card-header">
+        <h3 class="pricing-plan-name">PRO</h3>
+        <div class="pricing-price"><span class="pricing-amount">$3</span><span class="pricing-period">/월</span></div>
+        <p class="pricing-desc">전문가를 위한 완전한 지원</p>
       </div>
-
-      <!-- 제보 모달 -->
-      <div id="reportModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:10000;display:none;align-items:center;justify-content:center">
-        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;width:90%;max-width:420px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-            <h3>오류 제보</h3>
-            <span onclick="closeReportModal()" style="cursor:pointer;font-size:20px;color:var(--text-muted)">✕</span>
-          </div>
-          <input id="reportTitle" placeholder="오류 제목" style="width:100%;padding:10px;margin-bottom:10px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-primary);font-size:14px">
-          <textarea id="reportSymptom" placeholder="증상 설명" rows="3" style="width:100%;padding:10px;margin-bottom:10px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-primary);font-size:14px;resize:vertical"></textarea>
-          <input id="reportScreenshot" placeholder="스크린샷 URL (선택)" style="width:100%;padding:10px;margin-bottom:16px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-tertiary);color:var(--text-primary);font-size:14px">
-          <button onclick="submitReport()" style="width:100%;padding:12px;border-radius:var(--radius);border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer">제출하기</button>
-        </div>
+      <ul class="pricing-features">
+        <li><svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> AI 오류 진단 300회/일</li>
+        <li><svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 모든 무료 기능 포함</li>
+        <li><svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 우선 지원</li>
+        <li><svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 새 에러 우선 업데이트</li>
+      </ul>
+      <div class="pricing-card-footer">
+        <button class="pricing-btn pricing-btn-primary" onclick="subscribe()">PRO 시작하기</button>
       </div>
+    </div>
+  </div>
+  <div class="pricing-faq">
+    <h2>자주 묻는 질문</h2>
+    <div class="faq-accordion">
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span>결제는 어떻게 진행되나요?</span>
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer">Creem을 통한 안전한 결제가 진행됩니다. 신용카드 및 다양한 결제 수단을 지원합니다.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span>언제든 해지할 수 있나요?</span>
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer">네, 언제든 해지 가능합니다. 해지 후에도 남은 기간 동안 PRO 기능을 이용할 수 있습니다.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span>무료 플랜의 제한은 무엇인가요?</span>
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="faq-answer">하루 10회 AI 오류 진단 횟수 제한이 있습니다. 가이드 문서 열람, 퍼지 검색, 다크모드는 제한 없이 사용 가능합니다.</div>
+      </div>
+    </div>
+  </div>
       <footer class="site-footer">
         <div class="footer-content">
           <p>OpenClaw Error Guide vv3.0 | 최종 업데이트: 2026-02-10</p>

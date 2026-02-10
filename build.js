@@ -82,6 +82,10 @@ function sidebarHtml(activePage, prefix) {
         
         <div class="sidebar-section">도구</div>
         <ul class="sidebar-nav">
+          <li><a href="${pagePrefix}pricing.html"${activePage === 'pricing' ? ' class="active"' : ''}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="7" y1="15" x2="13" y2="15"/></svg>
+            요금제
+          </a></li>
           <li><a href="${homeHref}#favorites" onclick="showFavorites(event)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
             즐겨찾기
@@ -137,7 +141,7 @@ function headerHtml() {
               <span id="dropdownUsageText">오늘 0회 사용</span>
             </div>
             <div class="profile-dropdown-divider"></div>
-            <a class="profile-dropdown-item profile-dropdown-upgrade" id="dropdownUpgrade" href="#" onclick="subscribe(); return false;">
+            <a class="profile-dropdown-item profile-dropdown-upgrade" id="dropdownUpgrade" href="pages/pricing.html">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg>
               PRO 업그레이드
             </a>
@@ -1003,6 +1007,13 @@ openclaw logs --follow   # 실시간 로그 확인</code></pre>
           </button>
           <div class="faq-answer">${data.metadata.totalErrors}개 오류 유형과 ${data.metadata.totalSolutions}개의 검증된 해결 방법을 제공합니다. Windows, macOS, Linux 환경의 설치, 인증, 게이트웨이, 채널 통합 등 모든 영역을 다룹니다.</div>
         </div>
+      </div>
+
+      <div class="pricing-cta-link" style="text-align:center;margin:1.5rem 0 2rem">
+        <a href="pages/pricing.html" style="font-size:0.95rem;font-weight:600;color:var(--accent)">
+          자세한 요금제 비교
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
       </div>`;
 
   html += footerHtml();
@@ -1014,6 +1025,93 @@ openclaw logs --follow   # 실시간 로그 확인</code></pre>
   html += `
 </body>
 </html>`;
+  return html;
+}
+
+// Generate pricing page
+function generatePricingPage() {
+  const chk = '<svg class="pricing-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
+  const totalErrors = data.metadata.totalErrors;
+  
+  let html = headHtml('요금제', '../css/style.css', 'pages/pricing.html', 'OpenClaw Error Guide 무료 및 PRO 요금제 비교.');
+  html += headerHtml();
+  html += overlayHtml();
+  html += '\n  <div class="layout">';
+  html += sidebarHtml('pricing', '../');
+  html += [
+    '<main class="main">',
+    '  <div class="pricing-header">',
+    '    <h1>요금제</h1>',
+    '    <p class="pricing-subtitle">필요에 맞는 플랜을 선택하세요</p>',
+    '  </div>',
+    '  <div class="pricing-grid">',
+    '    <div class="pricing-card">',
+    '      <div class="pricing-card-header">',
+    '        <h3 class="pricing-plan-name">무료</h3>',
+    '        <div class="pricing-price"><span class="pricing-amount">무료</span></div>',
+    '        <p class="pricing-desc">기본 오류 해결에 충분합니다</p>',
+    '      </div>',
+    '      <ul class="pricing-features">',
+    '        <li>' + chk + ' AI 오류 진단 10회/일</li>',
+    '        <li>' + chk + ' ' + totalErrors + '개 에러 가이드 열람</li>',
+    '        <li>' + chk + ' 퍼지 검색</li>',
+    '        <li>' + chk + ' 다크모드</li>',
+    '      </ul>',
+    '      <div class="pricing-card-footer">',
+    '        <span class="pricing-btn pricing-btn-secondary">현재 사용 중</span>',
+    '      </div>',
+    '    </div>',
+    '    <div class="pricing-card pricing-card-pro">',
+    '      <div class="pricing-card-badge">추천</div>',
+    '      <div class="pricing-card-header">',
+    '        <h3 class="pricing-plan-name">PRO</h3>',
+    '        <div class="pricing-price"><span class="pricing-amount">$3</span><span class="pricing-period">/월</span></div>',
+    '        <p class="pricing-desc">전문가를 위한 완전한 지원</p>',
+    '      </div>',
+    '      <ul class="pricing-features">',
+    '        <li>' + chk + ' AI 오류 진단 300회/일</li>',
+    '        <li>' + chk + ' 모든 무료 기능 포함</li>',
+    '        <li>' + chk + ' 우선 지원</li>',
+    '        <li>' + chk + ' 새 에러 우선 업데이트</li>',
+    '      </ul>',
+    '      <div class="pricing-card-footer">',
+    '        <button class="pricing-btn pricing-btn-primary" onclick="subscribe()">PRO 시작하기</button>',
+    '      </div>',
+    '    </div>',
+    '  </div>',
+    '  <div class="pricing-faq">',
+    '    <h2>자주 묻는 질문</h2>',
+    '    <div class="faq-accordion">',
+    '      <div class="faq-item">',
+    '        <button class="faq-question" onclick="toggleFaq(this)">',
+    '          <span>결제는 어떻게 진행되나요?</span>',
+    '          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>',
+    '        </button>',
+    '        <div class="faq-answer">Creem을 통한 안전한 결제가 진행됩니다. 신용카드 및 다양한 결제 수단을 지원합니다.</div>',
+    '      </div>',
+    '      <div class="faq-item">',
+    '        <button class="faq-question" onclick="toggleFaq(this)">',
+    '          <span>언제든 해지할 수 있나요?</span>',
+    '          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>',
+    '        </button>',
+    '        <div class="faq-answer">네, 언제든 해지 가능합니다. 해지 후에도 남은 기간 동안 PRO 기능을 이용할 수 있습니다.</div>',
+    '      </div>',
+    '      <div class="faq-item">',
+    '        <button class="faq-question" onclick="toggleFaq(this)">',
+    '          <span>무료 플랜의 제한은 무엇인가요?</span>',
+    '          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>',
+    '        </button>',
+    '        <div class="faq-answer">하루 10회 AI 오류 진단 횟수 제한이 있습니다. 가이드 문서 열람, 퍼지 검색, 다크모드는 제한 없이 사용 가능합니다.</div>',
+    '      </div>',
+    '    </div>',
+    '  </div>'
+  ].join('\n');
+
+  html += footerHtml();
+  html += '\n    </main>\n  </div>';
+  html += backToTopHtml();
+  html += scriptHtml();
+  html += '\n</body>\n</html>';
   return html;
 }
 
@@ -1033,6 +1131,10 @@ categories.forEach(cat => {
   console.log(`Generated: public/pages/${filename}`);
 });
 
+// Pricing page
+fs.writeFileSync(path.join(pagesDir, 'pricing.html'), generatePricingPage());
+console.log('Generated: public/pages/pricing.html');
+
 // Generate error index for AI chatbot
 const errorIndex = [];
 const catSlugs = { 'Windows 전용 오류':'windows','macOS 전용 오류':'macos','Linux 전용 오류':'linux','가상환경 설정 오류':'virtualenv','공통 오류':'common','인증 (OAuth) 오류':'oauth','게이트웨이 접속 오류':'gateway','채널 통합 오류':'channels','클라이언트 연결 오류':'client','런타임 오류':'runtime','브라우저 도구 오류':'browser','채널 확장 오류':'channels-ext','스킬 & 모델 오류':'skills' };
@@ -1046,7 +1148,7 @@ fs.writeFileSync(path.join(publicDir, 'error-index.json'), JSON.stringify(errorI
 console.log(`Generated: public/error-index.json (${errorIndex.length} errors)`);
 
 // SEO: sitemap.xml
-const sitemapUrls = [`${SITE_URL}/`];
+const sitemapUrls = [`${SITE_URL}/`, `${SITE_URL}/pages/pricing.html`];
 categories.forEach(cat => sitemapUrls.push(`${SITE_URL}/pages/${cat.id}.html`));
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
