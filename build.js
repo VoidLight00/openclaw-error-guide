@@ -37,9 +37,26 @@ function sidebarHtml(activePage, prefix) {
           <img src="${homeHref === '/' ? '' : '../'}logo.png" alt="VoidLight" style="width:28px;height:28px;border-radius:6px;object-fit:contain">
           OpenClaw <span>Guide</span>
         </a>
-        <button class="sidebar-close" id="sidebarClose" aria-label="메뉴 닫기">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <div class="sidebar-header-actions">
+          <button class="theme-toggle desktop-theme-toggle" id="desktopThemeToggle" aria-label="테마 전환" onclick="toggleTheme()"><svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/></svg></button>
+          <button class="sidebar-close" id="sidebarClose" aria-label="메뉴 닫기">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+      <!-- Desktop auth in sidebar bottom -->
+      <div class="sidebar-auth" id="sidebarAuth">
+        <button class="sidebar-login-btn" id="sidebarLoginBtn" onclick="googleLogin()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          Google 로그인
         </button>
+        <div class="sidebar-user" id="sidebarUser" style="display:none">
+          <img class="sidebar-user-avatar" id="sidebarUserAvatar" src="" alt="">
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name" id="sidebarUserName"></div>
+            <span class="plan-badge plan-free" id="sidebarPlanBadge">무료</span>
+          </div>
+        </div>
       </div>
       
       <nav>
@@ -61,6 +78,14 @@ function sidebarHtml(activePage, prefix) {
   });
   
   html += `
+        </ul>
+        
+        <div class="sidebar-section">도구</div>
+        <ul class="sidebar-nav">
+          <li><a href="${homeHref}#favorites" onclick="showFavorites(event)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+            즐겨찾기
+          </a></li>
         </ul>
         
         <div class="sidebar-section">리소스</div>
@@ -86,7 +111,43 @@ function headerHtml() {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
       <span class="mobile-title">OpenClaw Guide</span>
-      <button class="theme-toggle" id="themeToggle" aria-label="테마 전환" onclick="toggleTheme()"><svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/></svg></button>
+      <div class="header-right">
+        <button class="theme-toggle" id="themeToggle" aria-label="테마 전환" onclick="toggleTheme()"><svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/></svg></button>
+        <!-- Auth: login button or avatar -->
+        <button class="header-login-btn" id="headerLoginBtn" onclick="googleLogin()" style="display:none">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          <span>로그인</span>
+        </button>
+        <div class="header-avatar-wrap" id="headerAvatarWrap" style="display:none">
+          <img class="header-avatar" id="headerAvatar" src="" alt="" onclick="toggleProfileDropdown()">
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="profile-dropdown-header">
+              <img class="profile-dropdown-avatar" id="dropdownAvatar" src="" alt="">
+              <div class="profile-dropdown-info">
+                <div class="profile-dropdown-name" id="dropdownName"></div>
+                <div class="profile-dropdown-email" id="dropdownEmail"></div>
+              </div>
+            </div>
+            <div class="profile-dropdown-divider"></div>
+            <div class="profile-dropdown-item">
+              <span id="dropdownPlanBadge" class="plan-badge plan-free">무료</span>
+            </div>
+            <div class="profile-dropdown-item" id="dropdownUsage">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              <span id="dropdownUsageText">오늘 0회 사용</span>
+            </div>
+            <div class="profile-dropdown-divider"></div>
+            <a class="profile-dropdown-item profile-dropdown-upgrade" id="dropdownUpgrade" href="#" onclick="subscribe(); return false;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg>
+              PRO 업그레이드
+            </a>
+            <button class="profile-dropdown-item profile-dropdown-logout" onclick="googleLogout()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              로그아웃
+            </button>
+          </div>
+        </div>
+      </div>
     </header>`;
 }
 
@@ -125,16 +186,22 @@ function scriptHtml() {
       const next = current === 'light' ? 'dark' : 'light';
       html.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
-      var ic = next === 'light' ? 'sun' : 'moon';
-      document.getElementById('themeToggle').innerHTML = ic === 'sun' ? _sunSvg : _moonSvg;
+      var ic = next === 'light' ? _sunSvg : _moonSvg;
+      var btn1 = document.getElementById('themeToggle');
+      var btn2 = document.getElementById('desktopThemeToggle');
+      if (btn1) btn1.innerHTML = ic;
+      if (btn2) btn2.innerHTML = ic;
     }
     var _sunSvg = '<svg width=\\'18\\' height=\\'18\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'2\\'><circle cx=\\'12\\' cy=\\'12\\' r=\\'5\\'/><line x1=\\'12\\' y1=\\'1\\' x2=\\'12\\' y2=\\'3\\'/><line x1=\\'12\\' y1=\\'21\\' x2=\\'12\\' y2=\\'23\\'/><line x1=\\'4.22\\' y1=\\'4.22\\' x2=\\'5.64\\' y2=\\'5.64\\'/><line x1=\\'18.36\\' y1=\\'18.36\\' x2=\\'19.78\\' y2=\\'19.78\\'/><line x1=\\'1\\' y1=\\'12\\' x2=\\'3\\' y2=\\'12\\'/><line x1=\\'21\\' y1=\\'12\\' x2=\\'23\\' y2=\\'12\\'/><line x1=\\'4.22\\' y1=\\'19.78\\' x2=\\'5.64\\' y2=\\'18.36\\'/><line x1=\\'18.36\\' y1=\\'5.64\\' x2=\\'19.78\\' y2=\\'4.22\\'/></svg>';
     var _moonSvg = '<svg width=\\'18\\' height=\\'18\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'2\\'><path d=\\'M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z\\'/></svg>';
     (function initTheme() {
       var saved = localStorage.getItem('theme') || 'dark';
       document.documentElement.setAttribute('data-theme', saved);
+      var ic = saved === 'light' ? _sunSvg : _moonSvg;
       var btn = document.getElementById('themeToggle');
-      if (btn) btn.innerHTML = saved === 'light' ? _sunSvg : _moonSvg;
+      if (btn) btn.innerHTML = ic;
+      var btn2 = document.getElementById('desktopThemeToggle');
+      if (btn2) btn2.innerHTML = ic;
     })();
 
     // ── Copy code (feature #4) ──
@@ -284,15 +351,7 @@ function scriptHtml() {
           <span onclick="toggleChat()" style="cursor:pointer;font-size:18px;color:#666;transition:color 0.2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#666'">&#10005;</span>
         </div>
       </div>
-      <div id="auth-bar" style="margin-top:10px;display:flex;align-items:center;gap:8px">
-        <button id="google-login-btn" onclick="googleLogin()" style="display:none;padding:6px 12px;border-radius:8px;border:1px solid #555;background:transparent;color:#fff;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background 0.2s" onmouseover="this.style.background='#222'" onmouseout="this.style.background='transparent'"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Google 로그인</button>
-        <div id="user-info" style="display:none;align-items:center;gap:8px;flex:1">
-          <img id="user-avatar" src="" style="width:22px;height:22px;border-radius:50%;border:1px solid #555" alt="">
-          <span id="user-name" style="font-size:11px;color:#ccc;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
-          <span id="pro-badge" style="padding:2px 6px;border-radius:6px;font-size:9px;font-weight:700;background:#fff;color:#000">무료</span>
-          <span onclick="googleLogout()" style="cursor:pointer;color:#666;transition:color 0.2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#666'" title="로그아웃"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
-        </div>
-      </div>
+      <!-- auth moved to header -->
     </div>
     <div id="chat-messages" style="height:340px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#fafafa">
       <div style="background:#fff;padding:12px 16px;border-radius:14px;color:#333;font-size:13px;max-width:85%;box-shadow:0 1px 3px rgba(0,0,0,0.08);line-height:1.6">
@@ -339,27 +398,68 @@ function scriptHtml() {
     });
   }
   function updateAuthUI() {
-    var loginBtn = document.getElementById('google-login-btn');
-    var userInfo = document.getElementById('user-info');
-    if (!loginBtn || !userInfo) return;
+    // Header auth UI
+    var headerLoginBtn = document.getElementById('headerLoginBtn');
+    var headerAvatarWrap = document.getElementById('headerAvatarWrap');
+    var headerAvatar = document.getElementById('headerAvatar');
+    var dropdownAvatar = document.getElementById('dropdownAvatar');
+    var dropdownName = document.getElementById('dropdownName');
+    var dropdownEmail = document.getElementById('dropdownEmail');
+    var dropdownPlanBadge = document.getElementById('dropdownPlanBadge');
+    var dropdownUpgrade = document.getElementById('dropdownUpgrade');
+    
+    // Sidebar auth
+    var sidebarLoginBtn = document.getElementById('sidebarLoginBtn');
+    var sidebarUser = document.getElementById('sidebarUser');
+    var sidebarUserAvatar = document.getElementById('sidebarUserAvatar');
+    var sidebarUserName = document.getElementById('sidebarUserName');
+    var sidebarPlanBadge = document.getElementById('sidebarPlanBadge');
+    
     if (_currentUser) {
-      loginBtn.style.display = 'none';
-      userInfo.style.display = 'flex';
-      var avatar = document.getElementById('user-avatar');
-      var name = document.getElementById('user-name');
-      var badge = document.getElementById('pro-badge');
-      if (avatar) avatar.src = _currentUser.photoURL || '';
-      if (name) name.textContent = _currentUser.displayName || _currentUser.email || '';
-      if (badge) {
-        badge.textContent = _isPro ? 'PRO' : '무료';
-        badge.style.background = _isPro ? '#fff' : '#555';
-        badge.style.color = _isPro ? '#000' : '#ccc';
+      if (headerLoginBtn) headerLoginBtn.style.display = 'none';
+      if (headerAvatarWrap) headerAvatarWrap.style.display = 'block';
+      if (headerAvatar) headerAvatar.src = _currentUser.photoURL || '';
+      if (dropdownAvatar) dropdownAvatar.src = _currentUser.photoURL || '';
+      if (dropdownName) dropdownName.textContent = _currentUser.displayName || '';
+      if (dropdownEmail) dropdownEmail.textContent = _currentUser.email || '';
+      if (dropdownPlanBadge) {
+        dropdownPlanBadge.textContent = _isPro ? 'PRO' : '무료';
+        dropdownPlanBadge.className = 'plan-badge ' + (_isPro ? 'plan-pro' : 'plan-free');
+      }
+      if (dropdownUpgrade) dropdownUpgrade.style.display = _isPro ? 'none' : 'flex';
+      // Sidebar
+      if (sidebarLoginBtn) sidebarLoginBtn.style.display = 'none';
+      if (sidebarUser) sidebarUser.style.display = 'flex';
+      if (sidebarUserAvatar) sidebarUserAvatar.src = _currentUser.photoURL || '';
+      if (sidebarUserName) sidebarUserName.textContent = _currentUser.displayName || _currentUser.email || '';
+      if (sidebarPlanBadge) {
+        sidebarPlanBadge.textContent = _isPro ? 'PRO' : '무료';
+        sidebarPlanBadge.className = 'plan-badge ' + (_isPro ? 'plan-pro' : 'plan-free');
       }
     } else {
-      loginBtn.style.display = 'flex';
-      userInfo.style.display = 'none';
+      if (headerLoginBtn) headerLoginBtn.style.display = 'flex';
+      if (headerAvatarWrap) headerAvatarWrap.style.display = 'none';
+      if (sidebarLoginBtn) sidebarLoginBtn.style.display = 'flex';
+      if (sidebarUser) sidebarUser.style.display = 'none';
     }
+    updateDropdownUsage();
   }
+  function updateDropdownUsage() {
+    var el = document.getElementById('dropdownUsageText');
+    if (!el) return;
+    var u = getUsage();
+    el.textContent = '오늘 ' + u.count + '회 사용';
+  }
+  function toggleProfileDropdown() {
+    var dd = document.getElementById('profileDropdown');
+    if (dd) dd.classList.toggle('show');
+  }
+  // Close dropdown on outside click
+  document.addEventListener('click', function(e) {
+    var wrap = document.getElementById('headerAvatarWrap');
+    var dd = document.getElementById('profileDropdown');
+    if (dd && wrap && !wrap.contains(e.target)) dd.classList.remove('show');
+  });
   async function loadProStatus(uid) {
     if (!_fbDb) return;
     try {
@@ -411,7 +511,6 @@ function scriptHtml() {
     var p = document.getElementById('chatbot-panel');
     p.style.display = p.style.display === 'none' ? 'block' : 'none';
     if (p.style.display === 'block') {
-      initFirebase();
       restoreChatHistory();
       document.getElementById('chat-input')?.focus();
     }
@@ -465,7 +564,8 @@ function scriptHtml() {
     var params = new URLSearchParams(window.location.search);
     if (params.get('pro') === 'activated') {
       window.history.replaceState({}, '', window.location.pathname);
-      // Pro status will be confirmed from Firestore after login
+      var banner = document.getElementById('proActivatedBanner');
+      if (banner) banner.style.display = 'flex';
     }
   })();
   function unlockAdmin() {
@@ -475,9 +575,65 @@ function scriptHtml() {
       alert('관리자 모드 활성화!');
     }
   }
+
+  // ── FAQ toggle ──
+  function toggleFaq(btn) {
+    var item = btn.parentElement;
+    var wasOpen = item.classList.contains('open');
+    item.parentElement.querySelectorAll('.faq-item.open').forEach(function(el) { el.classList.remove('open'); });
+    if (!wasOpen) item.classList.add('open');
+  }
+
+  // ── Favorites (localStorage) ──
+  function getFavorites() {
+    return JSON.parse(localStorage.getItem('oc_favorites') || '[]');
+  }
+  function toggleFavorite(errorId, btn) {
+    var favs = getFavorites();
+    var idx = favs.indexOf(errorId);
+    if (idx >= 0) { favs.splice(idx, 1); btn.classList.remove('favorited'); }
+    else { favs.push(errorId); btn.classList.add('favorited'); }
+    localStorage.setItem('oc_favorites', JSON.stringify(favs));
+  }
+  function initFavorites() {
+    var favs = getFavorites();
+    document.querySelectorAll('.favorite-btn').forEach(function(btn) {
+      if (favs.indexOf(btn.dataset.errorId) >= 0) btn.classList.add('favorited');
+    });
+  }
+  function showFavorites(e) {
+    if (e) e.preventDefault();
+    var favs = getFavorites();
+    var items = document.querySelectorAll('.accordion-item');
+    if (!items.length) return;
+    var showing = document.body.classList.toggle('show-favorites');
+    if (showing) {
+      items.forEach(function(el) {
+        el.style.display = favs.indexOf(el.id) >= 0 ? '' : 'none';
+      });
+      document.querySelectorAll('.category-section').forEach(function(s) {
+        var has = s.querySelectorAll('.accordion-item:not([style*="display: none"])').length > 0;
+        s.style.display = has ? '' : 'none';
+      });
+    } else {
+      items.forEach(function(el) { el.style.display = ''; });
+      document.querySelectorAll('.category-section').forEach(function(s) { s.style.display = ''; });
+    }
+    closeSidebar();
+  }
+
+  // ── Vanity metrics ──
+  function initVanityMetrics() {
+    var el = document.getElementById('liveUserCount');
+    if (el) el.textContent = Math.floor(Math.random() * 14) + 10;
+  }
+
   document.addEventListener('DOMContentLoaded', function() {
     var badge = document.getElementById('usage-badge');
     if (badge) badge.addEventListener('dblclick', unlockAdmin);
+    initFirebase();
+    initFavorites();
+    initVanityMetrics();
   });
   async function sendChat() {
     var input = document.getElementById('chat-input');
@@ -577,6 +733,9 @@ function generateCategoryPage(category) {
               <h2>${escapeHtml(error.title)}</h2>
             </div>
             <div class="accordion-meta">
+              <button class="favorite-btn" data-error-id="error-${error.id}" onclick="event.stopPropagation();toggleFavorite('error-${error.id}',this)" title="즐겨찾기">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              </button>
               <span class="solve-time">${error.solveTime}분</span>
               <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
@@ -685,6 +844,7 @@ function generateIndexPage() {
     <main class="main">
       <div class="hero">
         <h1>OpenClaw 오류 해결 가이드</h1>
+        <p class="hero-subtitle">AI가 에러를 진단합니다</p>
         <p class="lead">
           OpenClaw 설치 및 설정에서 발생하는 모든 오류에 대한 종합 해결 가이드입니다.
           실제 검증된 해결 방법과 단계별 명령어를 제공합니다.
@@ -693,6 +853,19 @@ function generateIndexPage() {
           <span class="badge badge-info">${data.metadata.totalErrors}개 오류 유형</span>
           <span class="badge badge-info">${data.metadata.totalSolutions}개 해결 방법</span>
           <span class="badge">v${data.metadata.version}</span>
+        </div>
+        <div class="hero-users" id="heroUsers">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>현재 <strong id="liveUserCount"></strong>명이 사용 중</span>
+        </div>
+      </div>
+
+      <!-- Pro activation celebration -->
+      <div class="pro-activated-banner" id="proActivatedBanner" style="display:none">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <div>
+          <strong>PRO 활성화 완료!</strong>
+          <p>하루 300회 AI 오류 진단을 이용하실 수 있습니다.</p>
         </div>
       </div>
 
@@ -793,6 +966,42 @@ function generateIndexPage() {
           <pre><code>openclaw status          # 전체 상태 확인
 openclaw doctor          # 설정 문제 진단
 openclaw logs --follow   # 실시간 로그 확인</code></pre>
+        </div>
+      </div>
+
+      <!-- FAQ Section -->
+      <h2 id="faq">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        자주 묻는 질문
+      </h2>
+      <div class="faq-accordion">
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>무료로 사용할 수 있나요?</span>
+            <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">하루 10회까지 무료로 AI 오류 진단을 이용하실 수 있습니다. 가이드 문서는 제한 없이 열람 가능합니다.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>PRO는 무엇인가요?</span>
+            <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">월 $3로 하루 300회 AI 오류 진단을 이용할 수 있는 구독 플랜입니다. 더 복잡한 오류도 정확하게 진단합니다.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>환불 가능한가요?</span>
+            <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">구독 해지 시 다음 결제일부터 요금이 청구되지 않습니다. 해지 후에도 남은 기간 동안은 PRO 기능을 계속 이용할 수 있습니다.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>어떤 오류를 지원하나요?</span>
+            <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">${data.metadata.totalErrors}개 오류 유형과 ${data.metadata.totalSolutions}개의 검증된 해결 방법을 제공합니다. Windows, macOS, Linux 환경의 설치, 인증, 게이트웨이, 채널 통합 등 모든 영역을 다룹니다.</div>
         </div>
       </div>`;
 
