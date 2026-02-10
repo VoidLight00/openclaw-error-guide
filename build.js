@@ -282,7 +282,7 @@ function scriptHtml() {
   }
   function subscribe() {
     // Creem checkout URL — replace with actual product link
-    const creemUrl = localStorage.getItem('guidebot_creem_url') || 'https://creem.io';
+    const creemUrl = 'https://www.creem.io/test/payment/prod_6nhRuGebUqLLtBkGJcHrNO';
     window.open(creemUrl, '_blank');
   }
   // Check for pro activation via URL param (after Creem redirect)
