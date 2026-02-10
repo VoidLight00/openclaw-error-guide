@@ -1346,7 +1346,7 @@ openclaw doctor --repair</code></pre>
     const creemUrl = 'https://www.creem.io/test/payment/prod_6nhRuGebUqLLtBkGJcHrNO?success_url=' + encodeURIComponent(window.location.origin + '?pro=activated');
     window.open(creemUrl, '_blank');
   }
-  // Check for pro activation via URL param (after Creem redirect)
+  // Check for pro activation via URL param (after Creem redirect) or admin code
   (function() {
     const params = new URLSearchParams(window.location.search);
     if (params.get('pro') === 'activated') {
@@ -1354,6 +1354,18 @@ openclaw doctor --repair</code></pre>
       window.history.replaceState({}, '', window.location.pathname);
     }
   })();
+  function unlockAdmin() {
+    const code = prompt('관리자 코드를 입력하세요');
+    if (code === 'ediboom-admin-2026') {
+      const u = getUsage(); u.pro = true; setUsage(u); checkUsage();
+      alert('관리자 모드 활성화!');
+    }
+  }
+  // Triple-click on header title to open admin unlock
+  document.addEventListener('DOMContentLoaded', () => {
+    const badge = document.getElementById('usage-badge');
+    if (badge) badge.addEventListener('dblclick', unlockAdmin);
+  });
   async function sendChat() {
     const input = document.getElementById('chat-input');
     const msg = input.value.trim();
