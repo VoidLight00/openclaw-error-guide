@@ -1248,7 +1248,7 @@ export ANTHROPIC_API_KEY=sk-ant-...</code></pre>
         <option value="openai">OpenAI</option>
         <option value="anthropic">Anthropic</option>
       </select>
-      <input id="chat-apikey" type="password" placeholder="API Key 입력" style="width:48%;padding:6px;border-radius:8px;border:1px solid #444;background:#1a1a2e;color:#ddd;font-size:12px">
+      <input id="chat-apikey" type="password" placeholder="API Key (Groq는 생략 가능)" style="width:48%;padding:6px;border-radius:8px;border:1px solid #444;background:#1a1a2e;color:#ddd;font-size:12px">
     </div>
     <div id="chat-messages" style="height:300px;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px">
       <div style="background:#2a2a4a;padding:10px 14px;border-radius:12px;color:#ccc;font-size:13px;max-width:85%">
@@ -1277,7 +1277,7 @@ export ANTHROPIC_API_KEY=sk-ant-...</code></pre>
     if (!msg) return;
     const apiKey = document.getElementById('chat-apikey').value.trim();
     const provider = document.getElementById('chat-provider').value;
-    if (!apiKey) { alert('API Key를 입력해주세요'); return; }
+    if (!apiKey && provider !== 'groq') { alert('API Key를 입력해주세요 (Groq는 키 없이 사용 가능)'); return; }
     // Save
     localStorage.setItem('ochat_key', apiKey);
     localStorage.setItem('ochat_provider', provider);
