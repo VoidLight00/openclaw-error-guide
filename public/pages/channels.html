@@ -74,7 +74,7 @@
       </div>
 
       <div class="accordion">
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-ch-1">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-high">심각</span>
@@ -189,7 +189,7 @@ openclaw channels status --probe</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-ch-2">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -282,7 +282,7 @@ openclaw onboard</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-ch-3">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-high">심각</span>
@@ -373,7 +373,7 @@ openclaw channels status --probe</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-ch-4">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -475,7 +475,7 @@ dig +short api.telegram.org AAAA
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-ch-5">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -571,7 +571,7 @@ openclaw onboard</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-ch-6">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-high">심각</span>
@@ -662,7 +662,7 @@ cat ~/.openclaw/openclaw.json</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-ch-7">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -727,7 +727,7 @@ sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-ch-8">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -796,7 +796,7 @@ echo 'nameserver 8.8.8.8' | sudo tee /etc/resolv.conf</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-discord-grouppolicy-allowlist로-서버-응답-안-됨">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -916,7 +916,7 @@ echo 'nameserver 8.8.8.8' | sudo tee /etc/resolv.conf</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-telegram-block-streaming이-텍스트를-분할하지-않음">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -1020,7 +1020,7 @@ echo 'nameserver 8.8.8.8' | sudo tee /etc/resolv.conf</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-telegram-ipv6-dns-연결-실패-sendmessage/sendchataction">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -1309,7 +1309,7 @@ echo 'nameserver 8.8.8.8' | sudo tee /etc/resolv.conf</code></pre>
       const d = await r.json();
       document.getElementById('typing')?.remove();
       if (d.error) throw new Error(d.error);
-      let html = d.answer.replace(/</g,'&lt;').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;font-size:12px;color:#333">$1</code>').replace(/\n/g,'<br>');
+      let html = d.answer.replace(/</g,'&lt;').replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" style="color:#000;font-weight:600;text-decoration:underline;text-underline-offset:2px" target="_blank">$1 →</a>').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;font-size:12px;color:#333">$1</code>').replace(/\n/g,'<br>');
       box.innerHTML += '<div style="background:#fff;padding:12px 16px;border-radius:14px;color:#333;font-size:13px;max-width:85%;line-height:1.6;box-shadow:0 1px 3px rgba(0,0,0,0.08)">'+html+'</div>';
       // Update usage
       u.count++; setUsage(u); checkUsage();

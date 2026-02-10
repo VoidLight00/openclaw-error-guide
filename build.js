@@ -317,7 +317,7 @@ function scriptHtml() {
       const d = await r.json();
       document.getElementById('typing')?.remove();
       if (d.error) throw new Error(d.error);
-      let html = d.answer.replace(/</g,'&lt;').replace(/\\*\\*(.+?)\\*\\*/g,'<b>$1</b>').replace(/\`([^\`]+)\`/g,'<code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;font-size:12px;color:#333">$1</code>').replace(/\\n/g,'<br>');
+      let html = d.answer.replace(/</g,'&lt;').replace(/\\[([^\\]]+)\\]\\(([^)]+)\\)/g,'<a href="$2" style="color:#000;font-weight:600;text-decoration:underline;text-underline-offset:2px" target="_blank">$1 →</a>').replace(/\\*\\*(.+?)\\*\\*/g,'<b>$1</b>').replace(/\`([^\`]+)\`/g,'<code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;font-size:12px;color:#333">$1</code>').replace(/\\n/g,'<br>');
       box.innerHTML += '<div style="background:#fff;padding:12px 16px;border-radius:14px;color:#333;font-size:13px;max-width:85%;line-height:1.6;box-shadow:0 1px 3px rgba(0,0,0,0.08)">'+html+'</div>';
       // Update usage
       u.count++; setUsage(u); checkUsage();
@@ -366,7 +366,7 @@ function generateCategoryPage(category) {
   category.errors.forEach((error) => {
     const sev = severityMap[error.severity] || severityMap.medium;
     html += `
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-${error.id}">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge ${sev.cls}">${sev.label}</span>
@@ -569,4 +569,15 @@ categories.forEach(cat => {
   console.log(`Generated: public/pages/${filename}`);
 });
 
+// Generate error index for AI chatbot
+const errorIndex = [];
+const catSlugs = { 'Windows 전용 오류':'windows','macOS 전용 오류':'macos','Linux 전용 오류':'linux','가상환경 설정 오류':'virtualenv','공통 오류':'common','인증 (OAuth) 오류':'oauth','게이트웨이 접속 오류':'gateway','채널 통합 오류':'channels','클라이언트 연결 오류':'client','런타임 오류':'runtime','브라우저 도구 오류':'browser','채널 확장 오류':'channels-ext','스킬 & 모델 오류':'skills' };
+categories.forEach(cat => {
+  const slug = cat.id || catSlugs[cat.name] || 'unknown';
+  cat.errors.forEach(err => {
+    errorIndex.push({ id:err.id, title:err.title, error:err.error||'', symptoms:err.symptoms||[], category:cat.name, url:`pages/${slug}.html#error-${err.id}`, solutions: err.solutions.slice(0,2).map(s => s.title + ': ' + (s.steps||[]).join(' → ')) });
+  });
+});
+fs.writeFileSync(path.join(publicDir, 'error-index.json'), JSON.stringify(errorIndex, null, 0));
+console.log(`Generated: public/error-index.json (${errorIndex.length} errors)`);
 console.log(`\nDone! ${categories.length + 1} files generated.`);

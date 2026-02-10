@@ -74,7 +74,7 @@
       </div>
 
       <div class="accordion">
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-common-1">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -165,7 +165,7 @@ npm install -g openclaw@latest</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-common-2">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -252,7 +252,7 @@ npx openclaw onboard --install-daemon</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-common-3">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -327,7 +327,7 @@ which node  # ~/.nvm/... 경로여야 정상</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-common-4">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -418,7 +418,7 @@ openclaw gateway restart</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-common-5">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-high">심각</span>
@@ -507,7 +507,7 @@ curl -fsSL https://openclaw.ai/install.sh | bash</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-common-6">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-high">심각</span>
@@ -596,7 +596,7 @@ openclaw status
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-common-7">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -694,7 +694,7 @@ npm install -g openclaw@latest</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-common-8">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -758,7 +758,7 @@ OPENCLAW_VERBOSE=1 curl -fsSL https://openclaw.ai/install.sh | bash</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-common-9">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-low">낮음</span>
@@ -822,7 +822,7 @@ OPENCLAW_VERBOSE=1 curl -fsSL https://openclaw.ai/install.sh | bash</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-common-10">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -887,7 +887,7 @@ openclaw config set agents.defaults.model.primary anthropic/claude-sonnet-4-2025
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-common-11">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -951,7 +951,7 @@ openclaw config get agents.defaults.models
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-common-12">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-high">심각</span>
@@ -1019,7 +1019,7 @@ openclaw onboard</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-common-13">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -1093,7 +1093,7 @@ openclaw gateway restart</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-common-14">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -1378,7 +1378,7 @@ openclaw doctor --repair</code></pre>
       const d = await r.json();
       document.getElementById('typing')?.remove();
       if (d.error) throw new Error(d.error);
-      let html = d.answer.replace(/</g,'&lt;').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;font-size:12px;color:#333">$1</code>').replace(/\n/g,'<br>');
+      let html = d.answer.replace(/</g,'&lt;').replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" style="color:#000;font-weight:600;text-decoration:underline;text-underline-offset:2px" target="_blank">$1 →</a>').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;font-size:12px;color:#333">$1</code>').replace(/\n/g,'<br>');
       box.innerHTML += '<div style="background:#fff;padding:12px 16px;border-radius:14px;color:#333;font-size:13px;max-width:85%;line-height:1.6;box-shadow:0 1px 3px rgba(0,0,0,0.08)">'+html+'</div>';
       // Update usage
       u.count++; setUsage(u); checkUsage();

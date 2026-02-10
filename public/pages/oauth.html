@@ -74,7 +74,7 @@
       </div>
 
       <div class="accordion">
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-oauth-1">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-high">심각</span>
@@ -164,7 +164,7 @@ openclaw config set providers.anthropic.apiKey 'sk-ant-...'</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-oauth-2">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-high">심각</span>
@@ -277,7 +277,7 @@ openclaw gateway restart</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-oauth-3">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -342,7 +342,7 @@ openclaw models status</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-oauth-4">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -408,7 +408,7 @@ openclaw gateway restart</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-oauth-5">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -494,7 +494,7 @@ openclaw models auth paste-token --provider anthropic
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-oauth-6">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-high">심각</span>
@@ -591,7 +591,7 @@ openclaw gateway restart</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-oauth-7">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-high">심각</span>
@@ -656,7 +656,7 @@ export ANTHROPIC_API_KEY=sk-ant-...</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-oauth-token-refresh-failed-anthropic-claude-subscr">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -744,7 +744,7 @@ export ANTHROPIC_API_KEY=sk-ant-...</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-no-api-key-found-for-provider-after-adding-a-new-a">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -848,7 +848,7 @@ export ANTHROPIC_API_KEY=sk-ant-...</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-llm-request-rejected:-thinking-signature-required-">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -936,7 +936,7 @@ export ANTHROPIC_API_KEY=sk-ant-...</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-semantic-memory-search에-openai-api-key-필요">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -1040,7 +1040,7 @@ export ANTHROPIC_API_KEY=sk-ant-...</code></pre>
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <div class="accordion-item" id="error-env-vars-disappeared-in-service-서비스에서-환경변수-누락">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="accordion-title-row">
               <span class="badge badge-medium">보통</span>
@@ -1345,7 +1345,7 @@ export ANTHROPIC_API_KEY=sk-ant-...</code></pre>
       const d = await r.json();
       document.getElementById('typing')?.remove();
       if (d.error) throw new Error(d.error);
-      let html = d.answer.replace(/</g,'&lt;').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;font-size:12px;color:#333">$1</code>').replace(/\n/g,'<br>');
+      let html = d.answer.replace(/</g,'&lt;').replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" style="color:#000;font-weight:600;text-decoration:underline;text-underline-offset:2px" target="_blank">$1 →</a>').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;font-size:12px;color:#333">$1</code>').replace(/\n/g,'<br>');
       box.innerHTML += '<div style="background:#fff;padding:12px 16px;border-radius:14px;color:#333;font-size:13px;max-width:85%;line-height:1.6;box-shadow:0 1px 3px rgba(0,0,0,0.08)">'+html+'</div>';
       // Update usage
       u.count++; setUsage(u); checkUsage();

@@ -17,51 +17,37 @@ export default async function handler(req, res) {
   const apiKey = reqKey || (provider === 'groq' ? serverKey : null);
   if (!apiKey) return res.status(400).json({ error: 'apiKey required' });
 
-  let errorContext = '';
+  // Load error index for grounded responses
+  let errorIndex = [];
   try {
-    errorContext = readFileSync(join(process.cwd(), 'public', 'llms-full.txt'), 'utf-8');
-    // Smart context — search relevant sections based on user message
-    if (errorContext.length > 6000) {
-      const lines = errorContext.split('\n');
-      const query = message.toLowerCase();
-      const chunks = [];
-      let chunk = [];
-      for (const line of lines) {
-        if (line.startsWith('## ') && chunk.length > 0) {
-          chunks.push(chunk.join('\n'));
-          chunk = [];
-        }
-        chunk.push(line);
-      }
-      if (chunk.length) chunks.push(chunk.join('\n'));
-      // Score chunks by keyword overlap
-      const scored = chunks.map(c => {
-        const cl = c.toLowerCase();
-        const words = query.split(/\s+/).filter(w => w.length > 1);
-        const score = words.filter(w => cl.includes(w)).length;
-        return { text: c, score };
-      }).sort((a, b) => b.score - a.score);
-      // Take top chunks up to ~5000 chars
-      let ctx = '';
-      for (const s of scored) {
-        if (ctx.length + s.text.length > 5000) break;
-        ctx += s.text + '\n\n';
-      }
-      // Always include first chunk (overview)
-      if (!ctx.includes(scored[scored.length-1]?.text)) ctx = chunks[0]?.slice(0,500) + '\n\n' + ctx;
-      errorContext = ctx;
-    }
-  } catch (e) {
-    errorContext = 'Error database not available.';
-  }
+    errorIndex = JSON.parse(readFileSync(join(process.cwd(), 'public', 'error-index.json'), 'utf-8'));
+  } catch (e) {}
 
-  const systemPrompt = `당신은 OpenClaw 오류 해결 전문 AI 어시스턴트입니다.
-아래는 OpenClaw 오류 데이터베이스입니다. 사용자의 질문에 맞는 오류와 해결 방법을 찾아 친절하게 안내하세요.
-증상만 설명해도 유사한 오류를 추론하여 답변하세요.
-한국어로 답변하세요. 답변은 간결하게.
+  // Find relevant errors by keyword matching
+  const query = message.toLowerCase();
+  const queryWords = query.split(/\s+/).filter(w => w.length > 1);
+  const scored = errorIndex.map(err => {
+    const text = (err.title + ' ' + err.error + ' ' + (err.symptoms||[]).join(' ') + ' ' + err.category + ' ' + (err.solutions||[]).join(' ')).toLowerCase();
+    const score = queryWords.filter(w => text.includes(w)).length;
+    return { ...err, score };
+  }).filter(e => e.score > 0).sort((a, b) => b.score - a.score).slice(0, 8);
 
-=== 오류 데이터베이스 ===
-${errorContext}`;
+  const errorContext = scored.map(e =>
+    `[${e.category}] ${e.title}\n  URL: ${e.url}\n  증상: ${(e.symptoms||[]).join(', ')}\n  해결: ${(e.solutions||[]).join(' | ')}`
+  ).join('\n\n');
+
+  const systemPrompt = `당신은 OpenClaw 오류 해결 가이드봇입니다.
+
+규칙:
+1. 아래 오류 데이터베이스에서 매칭되는 오류를 찾아 답변하세요.
+2. 반드시 해당 오류의 URL 링크를 포함하세요. 형식: [오류 제목](URL)
+3. 해결 방법은 데이터베이스의 원문을 그대로 안내하세요.
+4. 매칭되는 오류가 여러개면 모두 나열하세요.
+5. 한국어로 답변. 간결하게.
+6. 데이터베이스에 없는 내용은 "해당 오류는 가이드에 아직 등록되지 않았습니다"라고 답변.
+
+=== 매칭된 오류 (${scored.length}건) ===
+${errorContext || '매칭된 오류 없음'}`;
 
   try {
     const handlers = { openai: callOpenAI, anthropic: callAnthropic, gemini: callGemini, groq: callGroq, grok: callGrok, openrouter: callOpenRouter, kimi: callKimi };
