@@ -282,7 +282,7 @@ function scriptHtml() {
   }
   function subscribe() {
     // Creem checkout URL — replace with actual product link
-    const creemUrl = 'https://www.creem.io/test/payment/prod_6nhRuGebUqLLtBkGJcHrNO';
+    const creemUrl = 'https://www.creem.io/test/payment/prod_6nhRuGebUqLLtBkGJcHrNO?success_url=' + encodeURIComponent(window.location.origin + '?pro=activated');
     window.open(creemUrl, '_blank');
   }
   // Check for pro activation via URL param (after Creem redirect)
