@@ -529,7 +529,7 @@ function scriptHtml() {
   function subscribe() {
     if (!_currentUser) { googleLogin(); return; }
     // Creem checkout — pass email for webhook matching
-    var creemUrl = 'https://www.creem.io/test/payment/prod_6nhRuGebUqLLtBkGJcHrNO?success_url=' + encodeURIComponent(window.location.origin + '?pro=activated') + '&customer_email=' + encodeURIComponent(_currentUser.email || '');
+    var creemUrl = 'https://www.creem.io/payment/prod_1oRxpxalx7mUEobaxzxpcG?success_url=' + encodeURIComponent(window.location.origin + '/pages/guide.html?pro=activated') + '&customer_email=' + encodeURIComponent(_currentUser.email || '');
     window.open(creemUrl, '_blank');
   }
   // Check for pro activation via URL param (after Creem redirect)
