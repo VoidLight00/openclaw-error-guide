@@ -52,6 +52,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
             가이드
           </a></li>
+          <li><a href="telegram-setup.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            텔레그램 연동
+          </a></li>
         </ul>
         
         <div class="sidebar-section">카테고리</div>
@@ -565,7 +569,7 @@
   function subscribe() {
     if (!_currentUser) { googleLogin(); return; }
     // Creem checkout — pass email for webhook matching
-    var creemUrl = 'https://www.creem.io/test/payment/prod_6nhRuGebUqLLtBkGJcHrNO?success_url=' + encodeURIComponent(window.location.origin + '?pro=activated') + '&customer_email=' + encodeURIComponent(_currentUser.email || '');
+    var creemUrl = 'https://www.creem.io/payment/prod_1oRxpxalx7mUEobaxzxpcG?success_url=' + encodeURIComponent(window.location.origin + '/pages/guide.html?pro=activated') + '&customer_email=' + encodeURIComponent(_currentUser.email || '');
     window.open(creemUrl, '_blank');
   }
   // Check for pro activation via URL param (after Creem redirect)
