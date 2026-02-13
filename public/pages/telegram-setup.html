@@ -345,7 +345,41 @@ openclaw onboard
           <div>대시보드가 안 열리면 먼저 <code>openclaw gateway start</code>를 실행하세요. 대시보드 포트는 설정에 따라 다를 수 있습니다 (기본: 3000).</div>
         </div>
 
-        <p style="color:var(--text-secondary);font-size:0.9rem;margin:1.25rem 0 0.75rem;">방법 C: 수동 설정 (JSON 직접 편집)</p>
+        <p style="color:var(--text-secondary);font-size:0.9rem;margin:1.25rem 0 0.75rem;">방법 C: Claude Code로 설정</p>
+        <ul>
+          <li>Claude Code 터미널을 열고 아래 명령어를 입력하세요</li>
+        </ul>
+        <div class="code-block">
+          <div class="code-header">
+            <span>Claude Code</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>openclaw 텔레그램 봇 연동해줘. 
+BotFather 토큰: 여기에_토큰_입력</code></pre>
+        </div>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin:0.75rem 0;">Claude Code가 알아서 다음을 처리합니다:</p>
+        <ul>
+          <li><code>~/.openclaw/openclaw.json</code> 파일을 읽고 텔레그램 채널 설정 추가</li>
+          <li>게이트웨이 재시작 (<code>openclaw gateway restart</code>)</li>
+          <li>연결 상태 확인</li>
+        </ul>
+        <div class="alert-box info">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div>Claude Code가 OpenClaw 설정 파일 수정 권한을 요청하면 <strong>승인</strong>해주세요. 토큰만 준비되어 있으면 나머지는 자동입니다.</div>
+        </div>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin:0.75rem 0;">또는 더 상세하게 지시할 수도 있습니다:</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span>Claude Code (상세 버전)</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>~/.openclaw/openclaw.json 파일에 텔레그램 채널을 추가해줘.
+봇 토큰은 123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11 이야.
+설정 후 openclaw gateway restart 실행하고 
+openclaw status로 연결 상태 확인해줘.</code></pre>
+        </div>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;margin:1.25rem 0 0.75rem;">방법 D: 수동 설정 (JSON 직접 편집)</p>
         <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:0.5rem;"><code>~/.openclaw/openclaw.json</code> 파일에 직접 추가:</p>
         <div class="code-block">
           <div class="code-header">
