@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenClaw Windows 설치 가이드 - OpenClaw Guide</title>
+  <meta name="description" content="Windows 환경에서 OpenClaw을 설치하는 완전 가이드. 실제 시행착오를 바탕으로 작성된 단계별 안내.">
+  <link rel="canonical" href="https://openclaw-error-guide.vercel.app/pages/windows-install.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="OpenClaw Windows 설치 가이드 - OpenClaw Guide">
+  <meta property="og:description" content="Windows 환경에서 OpenClaw을 설치하는 완전 가이드. 실제 시행착오를 바탕으로 작성된 단계별 안내.">
+  <meta property="og:url" content="https://openclaw-error-guide.vercel.app/pages/windows-install.html">
+  <meta property="og:locale" content="ko_KR">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="../firebase-config.js"></script>
+  <style>
+    .step-section {
+      margin-bottom: 2.5rem;
+      padding: 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      position: relative;
+    }
+    .step-section:hover {
+      border-color: var(--border-hover);
+    }
+    .step-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1rem;
+    }
+    .step-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .step-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .step-section p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+    .step-section ul, .step-section ol {
+      list-style: none;
+      padding: 0;
+      margin: 0.75rem 0;
+    }
+    .step-section ul li, .step-section ol li {
+      padding: 0.5rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .step-section ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.85rem;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .step-section ol {
+      counter-reset: ol-counter;
+    }
+    .step-section ol li {
+      counter-increment: ol-counter;
+    }
+    .step-section ol li::before {
+      content: counter(ol-counter) '.';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+    .alert-box {
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius);
+      margin: 1rem 0;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .alert-box.warning {
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      color: #f59e0b;
+    }
+    .alert-box.info {
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+    }
+    .alert-box.success {
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+    }
+    .alert-box.danger {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+    }
+    .alert-box svg {
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .guide-hero {
+      text-align: center;
+      padding: 2rem 0 1.5rem;
+    }
+    .guide-hero h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .guide-hero p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+    .guide-hero-icon {
+      margin-bottom: 1rem;
+    }
+
+    /* TOC */
+    .toc-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .toc-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px 1.5rem;
+    }
+    .toc-list li a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .toc-list li a:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+    .toc-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0;
+    }
+    .checklist li {
+      padding: 0.6rem 0;
+      padding-left: 2rem;
+      position: relative;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    .checklist li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.65rem;
+      width: 14px;
+      height: 14px;
+      border: 2px solid var(--border);
+      border-radius: 3px;
+    }
+
+    .section-divider {
+      border: none;
+      border-top: 1px dashed var(--border);
+      margin: 1.5rem 0;
+    }
+
+    .mistakes-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.875rem;
+    }
+    .mistakes-table th,
+    .mistakes-table td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .mistakes-table th {
+      color: var(--text-primary);
+      font-weight: 600;
+      background: var(--bg-tertiary);
+    }
+    .mistakes-table td {
+      color: var(--text-secondary);
+    }
+    .mistakes-table td:first-child {
+      text-align: center;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .mistakes-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .onboard-step {
+      margin: 1.25rem 0;
+      padding: 1rem 1.25rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .onboard-step-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 0.5rem;
+    }
+    .onboard-step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+    .onboard-step-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .onboard-step p {
+      margin: 0;
+      font-size: 0.85rem;
+    }
+    .onboard-step .arrow-indicator {
+      display: inline-block;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.25);
+      border-radius: 6px;
+      padding: 2px 10px;
+      font-weight: 600;
+      font-size: 0.82rem;
+      color: #4ade80;
+      margin-top: 6px;
+    }
+
+    .badge-cost {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .badge-free {
+      background: rgba(34, 197, 94, 0.12);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.25);
+    }
+    .badge-paid {
+      background: rgba(239, 68, 68, 0.12);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+
+    @media (max-width: 640px) {
+      .toc-list { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+    <header class="mobile-header" id="mobileHeader">
+      <button class="hamburger" id="hamburgerBtn" aria-label="메뉴 열기">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <span class="mobile-title">OpenClaw Guide</span>
+      <div class="header-right"></div>
+    </header><div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="sidebar-logo">
+          <img src="../logo.png" alt="VoidLight" style="width:28px;height:28px;border-radius:6px;object-fit:contain">
+          OpenClaw <span>Guide</span>
+        </a>
+        <div class="sidebar-header-actions">
+          <button class="sidebar-close" id="sidebarClose" aria-label="메뉴 닫기">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+      
+      <nav>
+        <ul class="sidebar-nav">
+          <li><a href="https://open.kakao.com/o/gugo7tCh" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            VoidLight 채팅방
+          </a></li>
+          <li><a href="../index.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            홈
+          </a></li>
+          <li><a href="guide.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            가이드
+          </a></li>
+          <li><a href="install-guide.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            설치 가이드
+          </a></li>
+          <li><a href="user-guide.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+            사용자 가이드
+          </a></li>
+          <li><a href="windows-install.html" class="active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg>
+            Windows 설치 가이드
+          </a></li>
+          <li><a href="telegram-setup.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            텔레그램 연동
+          </a></li>
+        </ul>
+        
+        <div class="sidebar-section">카테고리</div>
+        <ul class="sidebar-nav">
+          <li><a href="windows.html">1. Windows 전용 오류</a></li>
+          <li><a href="macos.html">2. macOS 전용 오류</a></li>
+          <li><a href="linux.html">3. Linux 전용 오류</a></li>
+          <li><a href="virtualenv.html">4. 가상환경 설정 오류</a></li>
+          <li><a href="common.html">5. 공통 오류</a></li>
+          <li><a href="oauth.html">6. 인증 (OAuth) 오류</a></li>
+          <li><a href="gateway.html">7. 게이트웨이 접속 오류</a></li>
+          <li><a href="channels.html">8. 채널 통합 오류</a></li>
+          <li><a href="client.html">9. 클라이언트 연결 오류</a></li>
+          <li><a href="runtime.html">10. 런타임 오류</a></li>
+          <li><a href="browser.html">11. 브라우저 도구 오류</a></li>
+          <li><a href="channels-ext.html">12. 채널 확장 오류</a></li>
+          <li><a href="skills.html">13. 스킬 &amp; 모델 오류</a></li>
+        </ul>
+        
+        <div class="sidebar-section">도구</div>
+        <ul class="sidebar-nav">
+          <li><a href="pricing.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="7" y1="15" x2="13" y2="15"/></svg>
+            요금제
+          </a></li>
+        </ul>
+        
+        <div class="sidebar-section">리소스</div>
+        <ul class="sidebar-nav">
+          <li><a href="https://github.com/anthropics/openclaw" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            GitHub
+          </a></li>
+          <li><a href="https://open.kakao.com/o/gugo7tCh" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            VoidLight 채팅방
+          </a></li>
+        </ul>
+      </nav>
+      
+      <div class="sidebar-bottom" id="sidebarAuth">
+        <button class="sidebar-login-btn" id="sidebarLoginBtn" onclick="googleLogin()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          Google 로그인
+        </button>
+        <div class="sidebar-user-panel" id="sidebarUser" style="display:none">
+          <div class="sidebar-user-row" onclick="toggleSidebarMenu()">
+            <img class="sidebar-user-avatar" id="sidebarUserAvatar" src="" alt="">
+            <div class="sidebar-user-info">
+              <div class="sidebar-user-name" id="sidebarUserName"></div>
+              <span class="plan-badge plan-free" id="sidebarPlanBadge">무료</span>
+            </div>
+            <svg class="sidebar-dots" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+          </div>
+          <div class="sidebar-user-menu" id="sidebarUserMenu">
+            <div class="sidebar-menu-item" id="sidebarUsage">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              <span id="sidebarUsageText">오늘 0회 사용</span>
+            </div>
+            <div class="sidebar-menu-divider"></div>
+            <a class="sidebar-menu-item" id="sidebarUpgrade" href="pricing.html">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg>
+              PRO 업그레이드
+            </a>
+            <div class="sidebar-menu-divider"></div>
+            <button class="sidebar-menu-item sidebar-menu-logout" onclick="googleLogout()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              로그아웃
+            </button>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <main class="main">
+
+      <!-- Hero -->
+      <div class="guide-hero">
+        <div class="guide-hero-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg>
+        </div>
+        <h1>OpenClaw Windows 설치 가이드</h1>
+        <p>실제 Windows 환경에서 설치하며 겪은 시행착오를 바탕으로 작성된 완전 가이드.<br>텔레그램 봇 생성부터 페어링까지, 한 번에 성공하세요.</p>
+      </div>
+
+      <!-- TOC -->
+      <nav class="toc-box">
+        <div class="toc-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          목차
+        </div>
+        <ol class="toc-list">
+          <li><a href="#sec1"><span class="toc-num">1</span> 사전 준비</a></li>
+          <li><a href="#sec2"><span class="toc-num">2</span> 텔레그램 봇 생성</a></li>
+          <li><a href="#sec3"><span class="toc-num">3</span> Git 설치</a></li>
+          <li><a href="#sec4"><span class="toc-num">4</span> Claude Code 설치</a></li>
+          <li><a href="#sec5"><span class="toc-num">5</span> Node.js 설치</a></li>
+          <li><a href="#sec6"><span class="toc-num">6</span> OpenClaw 설치</a></li>
+          <li><a href="#sec7"><span class="toc-num">7</span> 초기 설정 (onboard)</a></li>
+          <li><a href="#sec8"><span class="toc-num">8</span> 텔레그램 페어링</a></li>
+          <li><a href="#sec9"><span class="toc-num">9</span> 설치 완료 확인</a></li>
+          <li><a href="#sec10"><span class="toc-num">10</span> 유용한 명령어</a></li>
+          <li><a href="#sec11"><span class="toc-num">11</span> 문제 해결</a></li>
+          <li><a href="#sec-ref"><span class="toc-num">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
+          </span> Quick Reference</a></li>
+        </ol>
+      </nav>
+
+      <!-- 시작하기 전에 -->
+      <div class="step-section">
+        <div class="step-indicator">
+          <div class="step-number" style="font-size:0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+          <div class="step-title">시작하기 전에 -- 꼭 읽어주세요!</div>
+        </div>
+
+        <div class="alert-box danger">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div><strong>이 가이드는 실제 Windows 환경에서 설치하면서 겪은 시행착오를 바탕으로 작성되었습니다.</strong> 아래 3가지만 기억하면 한 번에 성공할 수 있습니다.</div>
+        </div>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1rem 0 0.5rem;">흔한 실수 3가지와 해결법</p>
+        <table class="mistakes-table">
+          <thead>
+            <tr><th style="width:50px;">순서</th><th>흔한 실수</th><th>이렇게 하세요</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td><code>npm i -g openclaw</code> 실행 시 빌드 오류 발생</td>
+              <td><strong>반드시</strong> <code>--ignore-scripts</code> 옵션을 붙여서 설치</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Gateway 서비스 설치 실패</td>
+              <td><strong>처음부터 관리자 권한 PowerShell</strong>에서 모든 작업 진행</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>텔레그램에서 봇이 응답하지 않음</td>
+              <td><strong>페어링(연결 인증)</strong> 과정을 빠뜨리지 않기</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 1. 사전 준비 -->
+      <div class="step-section" id="sec1">
+        <div class="step-indicator">
+          <div class="step-number">1</div>
+          <div class="step-title">사전 준비</div>
+        </div>
+
+        <div class="alert-box info">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div><strong>설치를 시작하기 전에 아래 항목을 모두 준비해두세요.</strong> 중간에 가입하거나 다운로드하면 흐름이 끊기고 시간이 오래 걸립니다.</div>
+        </div>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1.25rem 0 0.5rem;">1-1. 필요한 계정 (미리 가입)</p>
+        <table>
+          <thead>
+            <tr><th>계정</th><th>용도</th><th>가입 링크</th><th>비용</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Anthropic</strong></td>
+              <td>Claude Code 사용 + OpenClaw AI 모델</td>
+              <td><a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a></td>
+              <td><span class="badge-cost badge-paid">유료</span></td>
+            </tr>
+            <tr>
+              <td><strong>텔레그램</strong></td>
+              <td>봇과 대화할 채팅 플랫폼</td>
+              <td><a href="https://telegram.org" target="_blank" rel="noopener">telegram.org</a></td>
+              <td><span class="badge-cost badge-free">무료</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="alert-box info">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div><strong>Anthropic 비용 안내:</strong> Anthropic의 <strong>Claude Pro/Max 구독</strong> ($20/월~) 또는 <strong>API 크레딧 충전</strong>이 필요합니다. Claude Code와 OpenClaw 모두 별도의 API Key 발급 없이, 터미널 명령어를 통해 인증을 처리합니다.</div>
+        </div>
+
+        <div class="alert-box success">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <div><strong>다른 AI 모델을 사용할 경우:</strong> OpenClaw은 Claude 외에도 GPT(OpenAI), Gemini(Google) 등을 지원합니다.<br>
+            - OpenAI: <a href="https://platform.openai.com" target="_blank" rel="noopener" style="color:var(--accent)">platform.openai.com</a> (유료)<br>
+            - Google Gemini: <a href="https://aistudio.google.com" target="_blank" rel="noopener" style="color:var(--accent)">aistudio.google.com</a> (무료 티어 있음)</div>
+        </div>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1.25rem 0 0.5rem;">1-2. 발급이 필요한 토큰</p>
+        <table>
+          <thead>
+            <tr><th>항목</th><th>용도</th><th>발급 시점</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>텔레그램 봇 토큰</strong></td>
+              <td>OpenClaw과 텔레그램 연결</td>
+              <td><strong>설치 전 미리 발급</strong> -- <a href="#sec2">2단계</a>에서 안내</td>
+            </tr>
+            <tr>
+              <td><strong>Anthropic 토큰</strong></td>
+              <td>OpenClaw AI 모델 인증</td>
+              <td><strong>설치 중 발급</strong> -- <a href="#sec4">4단계</a>에서 안내</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1.25rem 0 0.5rem;">1-3. 미리 설치할 소프트웨어</p>
+        <table>
+          <thead>
+            <tr><th>소프트웨어</th><th>용도</th><th>다운로드</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>텔레그램 앱</strong></td>
+              <td>봇 생성 및 대화</td>
+              <td><a href="https://desktop.telegram.org" target="_blank" rel="noopener">desktop.telegram.org</a> (PC) 또는 앱스토어 (모바일)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="alert-box info">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div><strong>Git</strong>, <strong>Claude Code</strong>, <strong>Node.js</strong>는 아래 가이드에서 명령어로 설치합니다. 미리 다운로드할 필요 없습니다.</div>
+        </div>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1.25rem 0 0.5rem;">1-4. 시스템 요구사항</p>
+        <table>
+          <thead>
+            <tr><th>항목</th><th>요구사항</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>운영체제</strong></td><td>Windows 10 이상 (Windows 11 권장)</td></tr>
+            <tr><td><strong>관리자 권한</strong></td><td>PowerShell을 관리자 권한으로 실행할 수 있어야 함</td></tr>
+            <tr><td><strong>인터넷 연결</strong></td><td>설치 및 AI 모델 호출에 필요</td></tr>
+            <tr><td><strong>디스크 공간</strong></td><td>약 500MB 이상 여유 공간</td></tr>
+          </tbody>
+        </table>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1.25rem 0 0.5rem;">1-5. 준비 체크리스트</p>
+        <ul class="checklist">
+          <li>Anthropic 계정 가입 완료 (Pro/Max 구독 또는 API 크레딧 충전)</li>
+          <li>텔레그램 계정 가입 및 앱 설치</li>
+          <li>텔레그램 봇 토큰 발급 및 저장 (@BotFather -> /newbot)</li>
+          <li>Windows 관리자 계정으로 로그인되어 있는지 확인</li>
+        </ul>
+
+        <hr class="section-divider">
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;">이 가이드의 진행 방식</p>
+        <div class="alert-box info">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div>이 가이드는 <strong>Claude Code(터미널 AI 어시스턴트)</strong>를 활용하여 설치를 진행합니다. Claude Code에게 명령어를 대신 실행시키거나, 각 단계에서 도움을 받을 수 있어 초보자도 쉽게 따라할 수 있습니다. 또한 OpenClaw onboard에 필요한 Anthropic 토큰 생성을 위해 Claude Code가 필수입니다.</div>
+        </div>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1.25rem 0 0.5rem;">관리자 권한 PowerShell 열기</p>
+        <div class="alert-box danger">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div><strong>중요: 이후 모든 명령어는 관리자 권한 PowerShell에서 실행합니다.</strong> 일반 PowerShell에서 실행하면 나중에 Gateway 서비스 설치가 실패하여 처음부터 다시 해야 합니다.</div>
+        </div>
+        <ol>
+          <li><strong>시작 메뉴</strong> 클릭 (또는 Windows 키)</li>
+          <li><strong>"PowerShell"</strong> 검색</li>
+          <li><strong>"Windows PowerShell"</strong>을 <strong>우클릭</strong></li>
+          <li><strong>"관리자 권한으로 실행"</strong> 선택</li>
+          <li>"이 앱이 디바이스를 변경할 수 있도록 허용하시겠어요?" -> <strong>예</strong> 클릭</li>
+        </ol>
+
+        <div class="alert-box warning">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div><strong>참고:</strong> Git 설치 후에는 PATH 갱신을 위해 PowerShell을 한 번 닫고 다시 열어야 합니다. 다시 열 때도 반드시 <strong>관리자 권한</strong>으로 여세요.</div>
+        </div>
+      </div>
+
+      <!-- 2. 텔레그램 봇 생성 -->
+      <div class="step-section" id="sec2">
+        <div class="step-indicator">
+          <div class="step-number">2</div>
+          <div class="step-title">텔레그램 봇 생성 (먼저!)</div>
+        </div>
+
+        <div class="alert-box warning">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div><strong>왜 먼저?</strong> onboard 과정에서 봇 토큰을 입력해야 합니다. 미리 만들어두면 설정 중 중단 없이 진행할 수 있습니다.</div>
+        </div>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1rem 0 0.5rem;">단계별 안내</p>
+        <ol>
+          <li><strong>텔레그램 앱</strong>을 엽니다 (모바일 또는 데스크톱)</li>
+          <li>검색창에 <code>@BotFather</code>를 검색하고 대화를 시작합니다</li>
+          <li><code>/newbot</code> 명령어를 입력합니다</li>
+          <li><strong>봇 이름</strong>을 입력합니다 (표시 이름, 예: <code>My OpenClaw Bot</code>)</li>
+          <li><strong>봇 username</strong>을 입력합니다 (반드시 <code>bot</code>으로 끝나야 함, 예: <code>my_openclaw_bot</code>)</li>
+          <li>BotFather가 <strong>봇 토큰</strong>을 발급해줍니다</li>
+        </ol>
+
+        <p style="color:var(--text-muted);font-size:0.85rem;margin-top:1rem;">토큰 형태 예시:</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span>Bot Token</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>1234567890:ABCdefGHIjklMNOpqrSTUvwxYZ123456789</code></pre>
+        </div>
+
+        <div class="alert-box danger">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div><strong>중요: 이 토큰을 복사해서 메모장 등에 임시 저장해두세요!</strong> 토큰은 비밀번호와 같으므로 외부에 공유하지 마세요.</div>
+        </div>
+      </div>
+
+      <!-- 3. Git 설치 -->
+      <div class="step-section" id="sec3">
+        <div class="step-indicator">
+          <div class="step-number">3</div>
+          <div class="step-title">Git 설치</div>
+        </div>
+
+        <p>Claude Code 설치에 Git이 필요합니다.</p>
+
+        <div class="alert-box info">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div><strong>이미 Git이 설치되어 있다면</strong> 이 단계를 건너뛰세요.</div>
+        </div>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1rem 0 0.5rem;">공식 사이트에서 설치</p>
+        <ol>
+          <li><a href="https://git-scm.com/install/windows" target="_blank" rel="noopener" style="color:var(--accent)">https://git-scm.com/install/windows</a>에 접속</li>
+          <li>windows - Standalone Installer - <strong>"Git for Windows/x64 Setup."</strong> 클릭</li>
+          <li>다운로드된 설치 파일 실행</li>
+          <li>설치 마법사에서 "Next" 클릭하여 진행 (select components에서 <strong>Add a Git Bash Profile to Windows Terminal</strong> 체크)</li>
+          <li>환경변수 -> 시스템 변수 -> Path에 <code>C:\Program Files\Git\cmd</code> 포함 확인</li>
+        </ol>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1.25rem 0 0.5rem;">PowerShell 재시작 및 설치 확인</p>
+
+        <div class="alert-box danger">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div><strong>중요: Git 설치 후 PowerShell을 닫고 새로 열어야 합니다!</strong> (다시 관리자 권한으로 여세요)</div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span>PowerShell (관리자)</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>git --version</code></pre>
+        </div>
+        <p style="color:var(--text-muted);font-size:0.85rem;">버전 번호(예: <code>git version 2.53.0.windows.1</code>)가 출력되면 성공입니다.</p>
+      </div>
+
+      <!-- 4. Claude Code 설치 -->
+      <div class="step-section" id="sec4">
+        <div class="step-indicator">
+          <div class="step-number">4</div>
+          <div class="step-title">Claude Code 설치</div>
+        </div>
+
+        <div class="alert-box info">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div><strong>이미 Claude Code가 설치되어 있다면</strong> <a href="#setup-token" style="color:var(--accent)">Anthropic setup-token 생성</a>만 진행하세요.</div>
+        </div>
+
+        <p>Claude Code는 Anthropic에서 만든 터미널 기반 AI 어시스턴트입니다. 터미널에서 직접 AI에게 명령어 실행, 파일 관리, 설치 등을 맡길 수 있습니다.</p>
+
+        <div class="alert-box warning">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div><strong>참고:</strong> Claude Code는 OpenClaw 설치에 필수입니다. OpenClaw onboard 과정에서 필요한 Anthropic 토큰을 <code>claude setup-token</code> 명령어로 생성해야 하기 때문입니다.</div>
+        </div>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1.25rem 0 0.5rem;">사전 요구사항</p>
+        <ul>
+          <li><strong>Git</strong>: <a href="#sec3" style="color:var(--accent)">3단계</a>에서 설치 완료되어 있어야 합니다</li>
+          <li><strong>Anthropic 계정</strong>: <a href="https://console.anthropic.com" target="_blank" rel="noopener" style="color:var(--accent)">console.anthropic.com</a>에서 가입</li>
+        </ul>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1.25rem 0 0.5rem;">설치 방법</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span>PowerShell (관리자)</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>irm https://claude.ai/install.ps1 | iex</code></pre>
+        </div>
+        <p style="color:var(--text-muted);font-size:0.85rem;">설치 완료 후 <code>C:\Users\사용자이름\.local\bin\claude.exe</code> 경로에 설치됩니다.</p>
+
+        <div class="alert-box danger">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div><strong>중요한 단계:</strong> 설치 후 PATH에 추가해야 합니다. 아래 명령어를 실행하세요:</div>
+        </div>
+        <div class="code-block">
+          <div class="code-header">
+            <span>PowerShell (관리자)</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>[Environment]::SetEnvironmentVariable("PATH", "$([Environment]::GetEnvironmentVariable('PATH', 'User'));$env:USERPROFILE\.local\bin", "User")</code></pre>
+        </div>
+
+        <div class="alert-box success">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <div><strong>설정 확인:</strong> 환경변수 -> 사용자 변수 -> Path에 <code>C:\Users\사용자이름\.local\bin</code> 포함되어 있으면 정상 설치 완료.</div>
+        </div>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1.25rem 0 0.5rem;">초기 설정</p>
+        <p>설치 후 <strong>PowerShell을 닫고 새로 열어야</strong> 합니다 (관리자 권한으로). 그 후:</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span>PowerShell (관리자)</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>claude</code></pre>
+        </div>
+        <p>처음 실행하면 브라우저가 열리고 Anthropic 계정 인증을 요청합니다. 안내에 따라 로그인하면 됩니다.</p>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1.25rem 0 0.5rem;">설치 확인</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span>PowerShell (관리자)</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>claude --version</code></pre>
+        </div>
+        <p style="color:var(--text-muted);font-size:0.85rem;">버전 번호(예: <code>2.1.42</code>)가 출력되면 설치 성공입니다.</p>
+
+        <hr class="section-divider">
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;" id="setup-token">Anthropic setup-token 생성</p>
+
+        <div class="alert-box danger">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div><strong>중요: 이 토큰은 OpenClaw onboard 과정(<a href="#sec7" style="color:inherit;text-decoration:underline">7단계</a>)에서 반드시 필요합니다!</strong> 반드시 이 단계에서 미리 생성해두세요.</div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span>PowerShell (관리자)</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>claude setup-token</code></pre>
+        </div>
+
+        <ol>
+          <li>실행하면 브라우저가 열립니다</li>
+          <li><strong>Anthropic 계정으로 로그인</strong>합니다</li>
+          <li>인증 완료 후 터미널에 <code>sk-ant-oat01-...</code> 형태의 긴 토큰이 표시됩니다</li>
+          <li><strong>이 토큰을 반드시 복사해서 메모장에 저장하세요!</strong></li>
+        </ol>
+
+        <div class="alert-box warning">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div><strong>이 토큰을 저장하지 않으면</strong> onboard 진행 중에 터미널을 전환해야 하는 번거로움이 생깁니다.</div>
+        </div>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1.25rem 0 0.5rem;">Claude Code 활용 팁</p>
+        <ul>
+          <li><strong>"Node.js 설치해줘"</strong> -> 자동으로 설치 및 확인</li>
+          <li><strong>"openclaw 설치해줘"</strong> -> 명령어 실행 및 오류 자동 대응</li>
+          <li><strong>"이 화면 어떻게 해?"</strong> -> 스크린샷을 보여주면 다음 단계 안내</li>
+        </ul>
+      </div>
+
+      <!-- 5. Node.js 설치 -->
+      <div class="step-section" id="sec5">
+        <div class="step-indicator">
+          <div class="step-number">5</div>
+          <div class="step-title">Node.js 설치</div>
+        </div>
+
+        <p>OpenClaw은 Node.js 기반이므로 Node.js를 설치해야 합니다.</p>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1rem 0 0.5rem;">방법 1: Claude Code에게 맡기기 (권장)</p>
+        <p>Claude Code 터미널에서 다음과 같이 요청하세요:</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span>Claude Code</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>Node.js 설치해줘</code></pre>
+        </div>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1.25rem 0 0.5rem;">방법 2: 직접 명령어 입력</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span>PowerShell (관리자)</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>winget install OpenJS.NodeJS.LTS</code></pre>
+        </div>
+        <ul>
+          <li>약관 동의 메시지가 나오면 <code>Y</code>를 입력합니다</li>
+          <li>설치 중 추가 관리자 권한 팝업이 뜨면 "예"를 클릭합니다</li>
+          <li><code>설치 성공</code> 메시지가 나올 때까지 기다립니다</li>
+        </ul>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1.25rem 0 0.5rem;">방법 3: 공식 사이트에서 설치</p>
+        <ol>
+          <li><a href="https://nodejs.org/ko/download" target="_blank" rel="noopener" style="color:var(--accent)">https://nodejs.org/ko/download</a>에 접속</li>
+          <li><strong>Windows 설치 프로그램(.msi)</strong> 버전 다운로드</li>
+          <li>다운로드된 <code>.msi</code> 파일 실행</li>
+          <li>설치 마법사의 안내에 따라 "Next"를 클릭하여 설치 완료</li>
+        </ol>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1.25rem 0 0.5rem;">설치 확인</p>
+
+        <div class="alert-box danger">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div><strong>중요: Node.js 설치 후에는 반드시 PowerShell을 닫고 새로 열어야 합니다!</strong> (다시 관리자 권한으로 여세요)</div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span>PowerShell (관리자) - 새로 열기</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>node --version
+npm --version</code></pre>
+        </div>
+        <p style="color:var(--text-muted);font-size:0.85rem;">버전 번호(예: <code>v24.13.1</code> / <code>11.8.0</code>)가 출력되면 설치 성공입니다.</p>
+
+        <div class="alert-box warning">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div>npm 버전 번호가 안 나오고 오류가 뜨면? PowerShell에서 <code>Set-ExecutionPolicy RemoteSigned</code> 실행(변경옵션은 A) 후 재시도하세요.</div>
+        </div>
+      </div>
+
+      <!-- 6. OpenClaw 설치 -->
+      <div class="step-section" id="sec6">
+        <div class="step-indicator">
+          <div class="step-number">6</div>
+          <div class="step-title">OpenClaw 설치</div>
+        </div>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;">방법 1: Claude Code에게 맡기기 (권장)</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span>Claude Code</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>https://openclaw.ai/ 설치해줘</code></pre>
+        </div>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1.25rem 0 0.5rem;">방법 2: 직접 명령어 입력</p>
+
+        <div class="alert-box danger">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div><strong>주의: 반드시 <code>--ignore-scripts</code> 옵션을 붙여서 실행하세요!</strong> 이 옵션 없이 실행하면 <code>node-llama-cpp</code> 빌드 오류가 발생하여 설치가 실패합니다. Cloud AI(Claude, GPT 등)를 사용할 것이라면 이 옵션을 붙여도 아무 문제 없습니다.</div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span>PowerShell (관리자)</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>npm i -g openclaw --ignore-scripts</code></pre>
+        </div>
+
+        <p>설치에 상황에 따라 시간이 많이 걸릴 수 있으나 인내심을 가지고 완료될 때까지 기다려 주셔야 합니다.</p>
+
+        <p style="color:var(--text-muted);font-size:0.85rem;">성공 시 출력 예: <code>added 672 packages in 41s</code></p>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1.25rem 0 0.5rem;">설치 확인</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span>PowerShell (관리자)</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>openclaw --version</code></pre>
+        </div>
+        <p style="color:var(--text-muted);font-size:0.85rem;">버전 번호(예: <code>2026.2.12</code>)가 출력되면 설치 성공입니다.</p>
+
+        <div class="alert-box info">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div><strong>--ignore-scripts 없이 설치하고 싶다면?</strong> 로컬 AI 모델(llama 등)을 사용하려면 <a href="https://visualstudio.microsoft.com/visual-cpp-build-tools/" target="_blank" rel="noopener" style="color:var(--accent)">Visual Studio Build Tools</a> (C++ 빌드 도구 포함)와 CMake를 먼저 설치해야 합니다. 대부분의 사용자는 Cloud AI를 사용하므로 <code>--ignore-scripts</code>로 충분합니다.</div>
+        </div>
+      </div>
+
+      <!-- 7. OpenClaw 초기 설정 (onboard) -->
+      <div class="step-section" id="sec7">
+        <div class="step-indicator">
+          <div class="step-number">7</div>
+          <div class="step-title">OpenClaw 초기 설정 (onboard)</div>
+        </div>
+
+        <div class="alert-box danger">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div><strong>반드시 관리자 권한 PowerShell에서 실행하세요!</strong> 일반 PowerShell에서 실행하면 Gateway 서비스 설치가 실패합니다.</div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span>PowerShell (관리자)</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>openclaw onboard</code></pre>
+        </div>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1.25rem 0 0.75rem;">설정 과정 상세 안내</p>
+        <p>아래 순서대로 질문이 나타납니다. 각 단계에서 선택할 항목을 안내합니다.</p>
+
+        <div class="onboard-step">
+          <div class="onboard-step-header">
+            <div class="onboard-step-num">1</div>
+            <div class="onboard-step-title">보안 경고</div>
+          </div>
+          <div class="code-block" style="margin:0.5rem 0 0.5rem">
+            <pre><code>I understand this is powerful and inherently risky. Continue?
+  Yes /  > No</code></pre>
+          </div>
+          <div class="arrow-indicator">-> 왼쪽 화살표로 Yes 선택 후 Enter</div>
+        </div>
+
+        <div class="onboard-step">
+          <div class="onboard-step-header">
+            <div class="onboard-step-num">2</div>
+            <div class="onboard-step-title">온보딩 모드</div>
+          </div>
+          <div class="arrow-indicator">-> QuickStart 선택</div>
+        </div>
+
+        <div class="onboard-step">
+          <div class="onboard-step-header">
+            <div class="onboard-step-num">3</div>
+            <div class="onboard-step-title">AI 모델 제공자 선택</div>
+          </div>
+          <div class="arrow-indicator">-> Anthropic 선택</div>
+        </div>
+
+        <div class="onboard-step">
+          <div class="onboard-step-header">
+            <div class="onboard-step-num">4</div>
+            <div class="onboard-step-title">Anthropic 인증 방식</div>
+          </div>
+          <div class="arrow-indicator">-> Anthropic token (paste setup-token) 선택</div>
+        </div>
+
+        <div class="onboard-step">
+          <div class="onboard-step-header">
+            <div class="onboard-step-num">5</div>
+            <div class="onboard-step-title">Anthropic setup-token 붙여넣기</div>
+          </div>
+          <p><a href="#sec4" style="color:var(--accent)">4단계</a>에서 저장해둔 토큰(<code>sk-ant-oat01-...</code>)을 붙여넣기 후 Enter</p>
+        </div>
+
+        <div class="onboard-step">
+          <div class="onboard-step-header">
+            <div class="onboard-step-num">6</div>
+            <div class="onboard-step-title">토큰 이름</div>
+          </div>
+          <div class="arrow-indicator">-> 빈칸 그대로 Enter (기본값 사용)</div>
+        </div>
+
+        <div class="onboard-step">
+          <div class="onboard-step-header">
+            <div class="onboard-step-num">7</div>
+            <div class="onboard-step-title">기본 모델 선택</div>
+          </div>
+          <div class="arrow-indicator">-> 그대로 Enter (기본 모델 유지)</div>
+        </div>
+
+        <div class="onboard-step">
+          <div class="onboard-step-header">
+            <div class="onboard-step-num">8</div>
+            <div class="onboard-step-title">채널 선택</div>
+          </div>
+          <div class="arrow-indicator">-> Telegram (Bot API) 선택</div>
+        </div>
+
+        <div class="onboard-step">
+          <div class="onboard-step-header">
+            <div class="onboard-step-num">9</div>
+            <div class="onboard-step-title">텔레그램 봇 토큰 입력</div>
+          </div>
+          <p><a href="#sec2" style="color:var(--accent)">2단계</a>에서 저장해둔 봇 토큰을 붙여넣기 후 Enter</p>
+          <div class="alert-box info" style="margin-top:0.5rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <div><strong>참고:</strong> 이미 텔레그램이 설정되어 있다면 "Telegram already configured" 메시지가 나타납니다. 해결 방법은 <a href="#ts-telegram-configured" style="color:inherit;text-decoration:underline">문제 해결</a>을 참고하세요.</div>
+          </div>
+        </div>
+
+        <div class="onboard-step">
+          <div class="onboard-step-header">
+            <div class="onboard-step-num">10</div>
+            <div class="onboard-step-title">스킬 설정</div>
+          </div>
+          <div class="arrow-indicator">-> No 선택 (나중에 설정 가능, 초보자는 건너뛰기 권장)</div>
+          <div class="alert-box success" style="margin-top:0.5rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <div>Yes를 선택한 경우: <code>Install missing skill dependencies</code> -> <strong>Skip for now</strong> 선택, API Key 설정 -> 모두 <strong>No</strong></div>
+          </div>
+        </div>
+
+        <div class="onboard-step">
+          <div class="onboard-step-header">
+            <div class="onboard-step-num">11</div>
+            <div class="onboard-step-title">Hooks 설정</div>
+          </div>
+          <div class="arrow-indicator">-> Skip for now 선택 (Enter)</div>
+        </div>
+
+        <div class="onboard-step">
+          <div class="onboard-step-header">
+            <div class="onboard-step-num">12</div>
+            <div class="onboard-step-title">Gateway 서비스 설치</div>
+          </div>
+          <p>관리자 권한으로 실행했다면 자동으로 설치됩니다:</p>
+          <div class="code-block" style="margin:0.5rem 0">
+            <pre><code>Installing Gateway service...
+Installed Scheduled Task: OpenClaw Gateway
+Gateway service installed.</code></pre>
+          </div>
+          <div class="alert-box success" style="margin-top:0.5rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <div><strong>확인 포인트:</strong> <code>Gateway: reachable</code>이 표시되면 성공!</div>
+          </div>
+          <div class="alert-box danger" style="margin-top:0.5rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <div><code>Gateway service install failed</code>가 나온다면 관리자 권한이 아닌 상태입니다. PowerShell을 닫고 관리자 권한으로 다시 열어서 <code>openclaw onboard</code>를 재실행하세요.</div>
+          </div>
+        </div>
+
+        <div class="onboard-step">
+          <div class="onboard-step-header">
+            <div class="onboard-step-num">13</div>
+            <div class="onboard-step-title">봇 시작 방법 선택</div>
+          </div>
+          <div class="arrow-indicator">-> Hatch in TUI (recommended) 선택 (Enter)</div>
+        </div>
+
+        <div class="onboard-step">
+          <div class="onboard-step-header">
+            <div class="onboard-step-num">14</div>
+            <div class="onboard-step-title">봇 초기 대화 (TUI)</div>
+          </div>
+          <p>TUI(터미널 UI)가 열리면서 봇이 인사합니다. 자유롭게 한국어로 대답하세요:</p>
+          <div class="code-block" style="margin:0.5rem 0">
+            <pre><code>너 이름은 아라곤이야. 나는 sangs라고 불러줘.
+타임존은 한국(KST)이야.
+역할은 친절한 한국어 비서로 해줘.</code></pre>
+          </div>
+          <div class="alert-box info" style="margin-top:0.5rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <div><strong>TUI를 종료하려면:</strong> <code>Ctrl + C</code>를 누릅니다.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. 텔레그램 페어링 -->
+      <div class="step-section" id="sec8">
+        <div class="step-indicator">
+          <div class="step-number">8</div>
+          <div class="step-title">텔레그램 페어링 (연결 인증)</div>
+        </div>
+
+        <div class="alert-box danger">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div><strong>이 단계를 빠뜨리면 텔레그램에서 봇이 응답하지 않습니다!</strong></div>
+        </div>
+
+        <p>봇 설치는 끝났지만, 텔레그램 계정과 봇을 연결(페어링)해야 대화할 수 있습니다.</p>
+
+        <ol>
+          <li>텔레그램 앱에서 만든 봇을 찾아 <code>/start</code> 메시지를 보냅니다</li>
+          <li>봇이 다음과 같은 메시지를 응답합니다:</li>
+        </ol>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span>텔레그램 봇 응답</span>
+          </div>
+          <pre><code>OpenClaw: access not configured.
+
+Your Telegram user id: 1234567890
+Pairing code: ABCD1234
+
+Ask the bot owner to approve with:
+openclaw pairing approve telegram ABCD1234</code></pre>
+        </div>
+
+        <ol start="3">
+          <li>PowerShell에서 봇이 알려준 명령어를 그대로 실행합니다:</li>
+        </ol>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span>PowerShell (관리자)</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>openclaw pairing approve telegram ABCD1234</code></pre>
+        </div>
+
+        <div class="alert-box warning">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div><strong>주의:</strong> <code>ABCD1234</code> 부분을 텔레그램에서 받은 <strong>실제 페어링 코드</strong>로 바꿔야 합니다!</div>
+        </div>
+
+        <ol start="4">
+          <li>성공 시: <code>Approved telegram sender 1234567890.</code></li>
+          <li>텔레그램에서 봇에게 아무 메시지나 보내보세요. AI가 응답하면 성공!</li>
+        </ol>
+      </div>
+
+      <!-- 9. 설치 완료 확인 -->
+      <div class="step-section" id="sec9">
+        <div class="step-indicator">
+          <div class="step-number" style="font-size:0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="step-title">설치 완료 확인</div>
+        </div>
+
+        <p>모든 설정이 끝났습니다! 아래를 확인하세요:</p>
+
+        <ul class="checklist">
+          <li><code>openclaw --version</code> 으로 버전 확인 가능</li>
+          <li>텔레그램에서 봇에게 메시지를 보내면 AI가 응답</li>
+          <li>Gateway가 백그라운드에서 실행 중 (PC를 재시작해도 자동 실행)</li>
+        </ul>
+
+        <div class="alert-box success">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <div><strong>관리자 권한 PowerShell은 이제 닫아도 됩니다.</strong> Gateway 서비스가 Windows 예약 작업으로 등록되어 백그라운드에서 계속 실행됩니다.</div>
+        </div>
+      </div>
+
+      <!-- 10. 유용한 명령어 -->
+      <div class="step-section" id="sec10">
+        <div class="step-indicator">
+          <div class="step-number" style="font-size:0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/></svg></div>
+          <div class="step-title">유용한 명령어</div>
+        </div>
+
+        <table>
+          <thead>
+            <tr><th>명령어</th><th>설명</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>openclaw status</code></td><td>봇 상태 확인</td></tr>
+            <tr><td><code>openclaw dashboard</code></td><td>웹 대시보드 열기 (브라우저)</td></tr>
+            <tr><td><code>openclaw tui</code></td><td>TUI 터미널 열기 (봇과 직접 대화)</td></tr>
+            <tr><td><code>openclaw configure</code></td><td>설정 변경</td></tr>
+            <tr><td><code>openclaw configure --section web</code></td><td>웹 검색 기능 설정 (Brave Search API 필요)</td></tr>
+            <tr><td><code>openclaw security audit --deep</code></td><td>보안 점검</td></tr>
+            <tr><td><code>openclaw pairing approve &lt;채널&gt; &lt;코드&gt;</code></td><td>새 사용자 페어링 승인</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 11. 문제 해결 -->
+      <div class="step-section" id="sec11">
+        <div class="step-indicator">
+          <div class="step-number" style="font-size:0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+          <div class="step-title">문제 해결 (Troubleshooting)</div>
+        </div>
+
+        <!-- 11-1 -->
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;">Node.js 또는 OpenClaw 명령어를 찾을 수 없음</p>
+        <div class="code-block">
+          <div class="code-header"><span>증상</span></div>
+          <pre><code>node: command not found
+# 또는
+openclaw: 이 시스템에서 스크립트를 실행할 수 없습니다</code></pre>
+        </div>
+        <p><strong>원인:</strong> 설치 후 터미널의 PATH 환경변수가 갱신되지 않음</p>
+        <p><strong>해결:</strong> 현재 PowerShell 창을 <strong>완전히 닫고</strong>, 새 PowerShell을 관리자 권한으로 다시 열기</p>
+
+        <hr class="section-divider">
+
+        <!-- 11-2 -->
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;"><code>npm i -g openclaw</code> 실행 시 빌드 오류</p>
+        <div class="code-block">
+          <div class="code-header"><span>증상</span></div>
+          <pre><code>npm error [node-llama-cpp] Failed to build llama.cpp
+npm error code ENOENT</code></pre>
+        </div>
+        <p><strong>원인:</strong> <code>node-llama-cpp</code> 네이티브 모듈 빌드에 C++ 빌드 도구가 필요</p>
+        <p><strong>해결:</strong></p>
+        <div class="code-block">
+          <div class="code-header">
+            <span>PowerShell (관리자)</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>npm i -g openclaw --ignore-scripts</code></pre>
+        </div>
+
+        <hr class="section-divider">
+
+        <!-- 11-3 -->
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;">Gateway service install failed</p>
+        <div class="code-block">
+          <div class="code-header"><span>증상</span></div>
+          <pre><code>Gateway service install failed.
+Run PowerShell as Administrator or rerun without installing the daemon.</code></pre>
+        </div>
+        <p><strong>원인:</strong> 관리자 권한 없이 실행</p>
+        <p><strong>해결:</strong> PowerShell 닫기 -> 시작 메뉴 -> "PowerShell" 검색 -> <strong>우클릭</strong> -> <strong>관리자 권한으로 실행</strong> -> <code>openclaw onboard</code> 재실행</p>
+
+        <hr class="section-divider">
+
+        <!-- 11-4 -->
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;">Health check failed: gateway closed</p>
+        <div class="code-block">
+          <div class="code-header"><span>증상</span></div>
+          <pre><code>Health check failed: gateway closed (1006 abnormal closure)
+Gateway: not detected</code></pre>
+        </div>
+        <p><strong>원인:</strong> Gateway 서비스가 설치되지 않았거나 실행되지 않음</p>
+        <p><strong>해결:</strong> 위의 Gateway service install failed 해결 방법과 동일</p>
+
+        <hr class="section-divider">
+
+        <!-- 11-5 -->
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;">텔레그램에서 <code>access not configured</code> 메시지</p>
+        <p><strong>원인:</strong> 텔레그램 계정과 봇이 아직 페어링되지 않음</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span>PowerShell (관리자)</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>openclaw pairing approve telegram [봇이 알려준 페어링코드]</code></pre>
+        </div>
+
+        <hr class="section-divider">
+
+        <!-- 11-6 -->
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;">텔레그램에서 봇이 응답하지 않음 (Gateway 중지)</p>
+        <p><strong>원인 확인:</strong></p>
+        <div class="code-block">
+          <div class="code-header">
+            <span>PowerShell</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>openclaw status</code></pre>
+        </div>
+        <p>출력에서 Gateway가 중지된 상태인지 확인:</p>
+        <div class="code-block">
+          <div class="code-header"><span>증상</span></div>
+          <pre><code>Gateway: unreachable (connect ECONNREFUSED 127.0.0.1:18789)
+Gateway service: stopped (state Ready)</code></pre>
+        </div>
+        <p><strong>해결:</strong></p>
+        <div class="code-block">
+          <div class="code-header">
+            <span>PowerShell</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>openclaw gateway start</code></pre>
+        </div>
+        <p>정상 복구 확인: <code>openclaw health</code> 실행 후 <code>Telegram: ok</code>가 표시되면 정상입니다.</p>
+
+        <hr class="section-divider">
+
+        <!-- 11-7 -->
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;" id="ts-telegram-configured">텔레그램에서 "Telegram already configured" 메시지</p>
+        <div class="code-block">
+          <div class="code-header"><span>증상</span></div>
+          <pre><code>Telegram already configured. What do you want to do?
+  > Modify settings
+    Skip (leave as-is)</code></pre>
+        </div>
+        <p><strong>원인:</strong> 이전에 이미 텔레그램 설정을 완료함</p>
+        <p><strong>해결:</strong> 설정을 변경할 필요가 없으면 <strong>Skip (leave as-is)</strong> 선택</p>
+      </div>
+
+      <!-- Quick Reference -->
+      <div class="step-section" id="sec-ref">
+        <div class="step-indicator">
+          <div class="step-number" style="font-size:0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></div>
+          <div class="step-title">전체 설치 요약 (Quick Reference)</div>
+        </div>
+
+        <p>모든 단계를 한눈에 보고 싶다면:</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span>Quick Reference</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code># 1. 텔레그램 봇 생성 (사전 준비)
+#    - 텔레그램에서 @BotFather로 봇 토큰 미리 발급받기!
+#    - 관리자 권한 PowerShell 열기
+
+# 2. Git 설치
+winget install Git.Git
+# PowerShell을 닫고 관리자 권한으로 새로 열기
+
+# 3. Claude Code 설치 + Anthropic 토큰 생성
+irm https://claude.ai/install.ps1 | iex
+# PowerShell을 닫고 관리자 권한으로 새로 열기
+claude                    # 브라우저에서 Anthropic 로그인
+claude setup-token        # 토큰 생성 -> 메모장에 저장!
+
+# 4. Node.js 설치
+winget install OpenJS.NodeJS.LTS
+# PowerShell을 닫고 관리자 권한으로 새로 열기
+
+# 5. OpenClaw 설치 (--ignore-scripts 필수!)
+npm i -g openclaw --ignore-scripts
+
+# 6. 초기 설정 (관리자 권한 PowerShell에서!)
+openclaw onboard
+
+# 7. 텔레그램 페어링
+openclaw pairing approve telegram [페어링코드]</code></pre>
+        </div>
+      </div>
+
+      <!-- 질문 안내 -->
+      <div style="text-align:center;margin:2.5rem 0 1.5rem;">
+        <a href="https://open.kakao.com/o/gugo7tCh" target="_blank" rel="noopener"
+           style="display:inline-flex;align-items:center;gap:10px;padding:1rem 2rem;border-radius:12px;background:rgba(245,195,68,0.1);border:1px solid rgba(245,195,68,0.3);color:#f5c344;font-size:1.1rem;font-weight:700;text-decoration:none;transition:all 0.2s;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f5c344" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          궁금한 점이 있으면 VoidLight 채팅방에서 질문하세요!
+        </a>
+      </div>
+
+      <footer class="site-footer">
+        <div class="footer-content">
+          <p>OpenClaw Error Guide v3.0 | 작성일: 2026-02-14 | Windows 11 Pro | Node.js v24.13.1</p>
+          <div class="footer-links">
+            <a href="https://github.com/anthropics/openclaw" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://openclaw.ai" target="_blank" rel="noopener">OpenClaw</a>
+            <a href="https://open.kakao.com/o/gugo7tCh" target="_blank" rel="noopener">VoidLight 채팅방</a>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+    <button class="back-to-top" id="backToTop" aria-label="맨 위로">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+  <script>
+    function copyCode(btn) {
+      const pre = btn.closest('.code-block').querySelector('pre');
+      navigator.clipboard.writeText(pre.textContent).then(() => {
+        btn.textContent = '\u2713 복사됨!';
+        btn.style.color = '#22c55e';
+        setTimeout(() => { btn.textContent = '복사'; btn.style.color = ''; }, 2000);
+      });
+    }
+    // Mobile sidebar
+    const hamburger = document.getElementById('hamburgerBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const closeBtn = document.getElementById('sidebarClose');
+    function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('show'); document.body.style.overflow = 'hidden'; }
+    function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('show'); document.body.style.overflow = ''; }
+    if (hamburger) hamburger.addEventListener('click', openSidebar);
+    if (overlay) overlay.addEventListener('click', closeSidebar);
+    if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+    // Back to top
+    const backToTop = document.getElementById('backToTop');
+    const mainEl = document.querySelector('.main');
+    if (mainEl && backToTop) {
+      mainEl.addEventListener('scroll', () => { backToTop.classList.toggle('show', mainEl.scrollTop > 400); });
+      backToTop.addEventListener('click', () => { mainEl.scrollTo({ top: 0, behavior: 'smooth' }); });
+    }
+    // Firebase auth stubs
+    var _fbApp=null,_fbAuth=null,_fbDb=null,_currentUser=null,_isPro=false;
+    function initFirebase(){if(_fbApp)return;if(typeof firebase==='undefined'||!firebaseConfig||firebaseConfig.apiKey==='PLACEHOLDER')return;_fbApp=firebase.initializeApp(firebaseConfig);_fbAuth=firebase.auth();_fbDb=firebase.firestore();_fbAuth.onAuthStateChanged(function(u){_currentUser=u;updateAuthUI();});}
+    function updateAuthUI(){var b=document.getElementById('sidebarLoginBtn'),p=document.getElementById('sidebarUser'),a=document.getElementById('sidebarUserAvatar'),n=document.getElementById('sidebarUserName');if(_currentUser){if(b)b.style.display='none';if(p)p.style.display='block';if(a)a.src=_currentUser.photoURL||'';if(n)n.textContent=_currentUser.displayName||_currentUser.email||'';}else{if(b)b.style.display='flex';if(p)p.style.display='none';}}
+    function toggleSidebarMenu(){var m=document.getElementById('sidebarUserMenu');if(m)m.classList.toggle('show');}
+    function googleLogin(){if(!_fbAuth)return;var p=new firebase.auth.GoogleAuthProvider();_fbAuth.signInWithPopup(p).catch(function(){});}
+    function googleLogout(){if(_fbAuth)_fbAuth.signOut();_currentUser=null;updateAuthUI();}
+    document.addEventListener('DOMContentLoaded',function(){initFirebase();});
+  </script>
+</body>
+</html>
