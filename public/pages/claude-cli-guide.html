@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude CLI 경유 가이드 - OpenClaw Guide</title>
+  <meta name="description" content="Claude Code 구독으로 OpenClaw 코딩 비용을 0원으로 만드는 방법. CLI 경유 설정 가이드.">
+  <link rel="canonical" href="https://openclaw-error-guide.vercel.app/pages/claude-cli-guide.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Claude CLI 경유 가이드 - OpenClaw Guide">
+  <meta property="og:description" content="Claude Code 구독으로 OpenClaw 코딩 비용을 0원으로 만드는 방법.">
+  <meta property="og:url" content="https://openclaw-error-guide.vercel.app/pages/claude-cli-guide.html">
+  <meta property="og:locale" content="ko_KR">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="../firebase-config.js"></script>
+  <style>
+    .step-section {
+      margin-bottom: 2.5rem;
+      padding: 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      position: relative;
+    }
+    .step-section:hover {
+      border-color: var(--border-hover);
+    }
+    .step-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1rem;
+    }
+    .step-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .step-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .step-section p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+    .step-section ul, .step-section ol {
+      list-style: none;
+      padding: 0;
+      margin: 0.75rem 0;
+    }
+    .step-section ul li, .step-section ol li {
+      padding: 0.5rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .step-section ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.85rem;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .step-section ol {
+      counter-reset: ol-counter;
+    }
+    .step-section ol li {
+      counter-increment: ol-counter;
+    }
+    .step-section ol li::before {
+      content: counter(ol-counter) '.';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+    .alert-box {
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius);
+      margin: 1rem 0;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .alert-box.warning {
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      color: #f59e0b;
+    }
+    .alert-box.info {
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+    }
+    .alert-box.success {
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+    }
+    .alert-box.danger {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+    }
+    .alert-box svg {
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* Guide hero */
+    .guide-hero {
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      margin-bottom: 2rem;
+      background: linear-gradient(135deg, rgba(59,130,246,0.06), rgba(139,92,246,0.06));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+    .guide-hero-icon {
+      margin-bottom: 1rem;
+    }
+    .guide-hero h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+    .guide-hero p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* TOC */
+    .toc-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .toc-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px 1.5rem;
+    }
+    .toc-list li a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .toc-list li a:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+    .toc-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* Comparison cards */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+    .compare-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+    }
+    .compare-card h4 {
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .compare-card p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin: 0;
+      line-height: 1.5;
+    }
+    .compare-card.highlight {
+      border-color: rgba(34, 197, 94, 0.3);
+      background: rgba(34, 197, 94, 0.04);
+    }
+
+    .section-divider {
+      border: none;
+      border-top: 1px dashed var(--border);
+      margin: 1.5rem 0;
+    }
+
+    @media (max-width: 640px) {
+      .toc-list { grid-template-columns: 1fr; }
+      .compare-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+    <header class="mobile-header" id="mobileHeader">
+      <button class="hamburger" id="hamburgerBtn" aria-label="메뉴 열기">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <span class="mobile-title">OpenClaw Guide</span>
+      <div class="header-right"></div>
+    </header><div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="sidebar-logo">
+          <img src="../logo.png" alt="VoidLight" style="width:28px;height:28px;border-radius:6px;object-fit:contain">
+          OpenClaw <span>Guide</span>
+        </a>
+        <div class="sidebar-header-actions">
+          <button class="sidebar-close" id="sidebarClose" aria-label="메뉴 닫기">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+      
+      <nav>
+        <ul class="sidebar-nav">
+          <li><a href="https://open.kakao.com/o/gugo7tCh" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            VoidLight 채팅방
+          </a></li>
+          <li><a href="../index.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            홈
+          </a></li>
+          <li><a href="guide.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            가이드
+          </a></li>
+          <li><a href="install-guide.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            설치 가이드
+          </a></li>
+          <li><a href="user-guide.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            사용자 가이드
+          </a></li>
+          <li><a href="windows-install.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg>
+            Windows 설치 가이드
+          </a></li>
+          <li><a href="telegram-setup.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            텔레그램 연동
+          </a></li>
+          <li><a href="claude-cli-guide.html" class="active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+            Claude CLI 경유 가이드
+          </a></li>
+        </ul>
+        
+        <div class="sidebar-section">카테고리</div>
+        <ul class="sidebar-nav">
+          <li><a href="windows.html">1. Windows 전용 오류</a></li>
+          <li><a href="macos.html">2. macOS 전용 오류</a></li>
+          <li><a href="linux.html">3. Linux 전용 오류</a></li>
+          <li><a href="virtualenv.html">4. 가상환경 설정 오류</a></li>
+          <li><a href="common.html">5. 공통 오류</a></li>
+          <li><a href="oauth.html">6. 인증 (OAuth) 오류</a></li>
+          <li><a href="gateway.html">7. 게이트웨이 접속 오류</a></li>
+          <li><a href="channels.html">8. 채널 통합 오류</a></li>
+          <li><a href="client.html">9. 클라이언트 연결 오류</a></li>
+          <li><a href="runtime.html">10. 런타임 오류</a></li>
+          <li><a href="browser.html">11. 브라우저 도구 오류</a></li>
+          <li><a href="channels-ext.html">12. 채널 확장 오류</a></li>
+          <li><a href="skills.html">13. 스킬 &amp; 모델 오류</a></li>
+        </ul>
+        
+        <div class="sidebar-section">도구</div>
+        <ul class="sidebar-nav">
+          <li><a href="pricing.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="7" y1="15" x2="13" y2="15"/></svg>
+            요금제
+          </a></li>
+          <li><a href="guide.html#favorites" onclick="showFavorites(event)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+            즐겨찾기
+          </a></li>
+        </ul>
+        
+        <div class="sidebar-section">리소스</div>
+        <ul class="sidebar-nav">
+          <li><a href="https://github.com/anthropics/openclaw" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            GitHub
+          </a></li>
+          <li><a href="https://open.kakao.com/o/gugo7tCh" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            VoidLight 채팅방
+          </a></li>
+        </ul>
+      </nav>
+      
+      <div class="sidebar-bottom" id="sidebarAuth">
+        <button class="sidebar-login-btn" id="sidebarLoginBtn" onclick="googleLogin()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          Google 로그인
+        </button>
+        <div class="sidebar-user-panel" id="sidebarUser" style="display:none">
+          <div class="sidebar-user-row" onclick="toggleSidebarMenu()">
+            <img class="sidebar-user-avatar" id="sidebarUserAvatar" src="" alt="">
+            <div class="sidebar-user-info">
+              <div class="sidebar-user-name" id="sidebarUserName"></div>
+              <span class="plan-badge plan-free" id="sidebarPlanBadge">무료</span>
+            </div>
+            <svg class="sidebar-dots" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+          </div>
+          <div class="sidebar-user-menu" id="sidebarUserMenu">
+            <div class="sidebar-menu-item" id="sidebarUsage">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              <span id="sidebarUsageText">오늘 0회 사용</span>
+            </div>
+            <div class="sidebar-menu-divider"></div>
+            <a class="sidebar-menu-item" id="sidebarUpgrade" href="pricing.html">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg>
+              PRO 업그레이드
+            </a>
+            <div class="sidebar-menu-divider"></div>
+            <button class="sidebar-menu-item sidebar-menu-logout" onclick="googleLogout()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              로그아웃
+            </button>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <main class="main">
+
+      <!-- Hero -->
+      <div class="guide-hero">
+        <div class="guide-hero-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        </div>
+        <h1>Claude CLI 경유 가이드</h1>
+        <p>Claude Code 구독으로 OpenClaw 코딩 비용을 0원으로<br>API 과금 없이 구독만으로 코딩 작업 처리하기</p>
+      </div>
+
+      <!-- TOC -->
+      <nav class="toc-box">
+        <div class="toc-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          목차
+        </div>
+        <ol class="toc-list">
+          <li><a href="#sec1"><span class="toc-num">1</span> 왜 필요한가요?</a></li>
+          <li><a href="#sec2"><span class="toc-num">2</span> 작동 원리</a></li>
+          <li><a href="#sec3"><span class="toc-num">3</span> 사전 준비</a></li>
+          <li><a href="#sec4"><span class="toc-num">4</span> 설정 방법</a></li>
+          <li><a href="#sec5"><span class="toc-num">5</span> 비용 비교</a></li>
+          <li><a href="#sec6"><span class="toc-num">6</span> FAQ</a></li>
+          <li><a href="#sec7"><span class="toc-num">7</span> 주의사항</a></li>
+        </ol>
+      </nav>
+
+      <!-- 1. 왜 필요한가요? -->
+      <div class="step-section" id="sec1">
+        <div class="step-indicator">
+          <div class="step-number">1</div>
+          <div class="step-title">왜 필요한가요?</div>
+        </div>
+
+        <p>OpenClaw은 기본적으로 <strong>Anthropic API 키</strong>로 작동합니다. 대화할 때마다 토큰이 소모되고, 사용한 만큼 과금됩니다.</p>
+
+        <p>그런데 Claude Code(Pro/Max) 구독이 있다면, <strong>코딩 작업을 구독 크레딧으로 처리</strong>할 수 있습니다. API 비용을 아끼면서 동일한 결과를 얻는 방법입니다.</p>
+
+        <div class="compare-grid">
+          <div class="compare-card">
+            <h4>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+              API 직접 방식
+            </h4>
+            <p>OpenClaw이 Anthropic API를 직접 호출합니다. 대화, 코딩 모두 <strong>종량제 과금</strong>됩니다.</p>
+          </div>
+          <div class="compare-card highlight">
+            <h4>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+              CLI 경유 방식
+            </h4>
+            <p>코딩 작업은 Claude Code CLI를 통해 실행합니다. <strong>구독 크레딧으로 무료 처리</strong>됩니다.</p>
+          </div>
+        </div>
+
+        <div class="alert-box info">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div><strong>핵심 포인트:</strong> 일반 대화/질문은 여전히 API 과금됩니다. <strong>코딩 작업만</strong> CLI 경유로 무료 처리됩니다.</div>
+        </div>
+      </div>
+
+      <!-- 2. 작동 원리 -->
+      <div class="step-section" id="sec2">
+        <div class="step-indicator">
+          <div class="step-number">2</div>
+          <div class="step-title">작동 원리</div>
+        </div>
+
+        <p>OpenClaw가 API를 직접 호출하는 대신, <strong>터미널에서 Claude Code CLI를 실행</strong>하고 거기에 프롬프트를 전달합니다. 마치 사람이 Claude Code를 사용하는 것과 동일합니다.</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span>일반 방식 (API 직접 호출)</span>
+          </div>
+          <pre><code>OpenClaw  ──▶  Anthropic API  ──▶  응답
+                  💰 종량제 과금</code></pre>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span>CLI 경유 방식 (구독 활용)</span>
+          </div>
+          <pre><code>OpenClaw  ──▶  Claude Code CLI  ──▶  응답
+                  💳 월정액 구독 (추가 비용 없음)</code></pre>
+        </div>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin:1.25rem 0 0.5rem;">구체적인 흐름</p>
+        <ol>
+          <li>OpenClaw가 터미널에서 Claude Code를 실행합니다 (<code>exec pty:true</code>)</li>
+          <li>코딩 프롬프트를 텍스트로 붙여넣기합니다 (<code>process paste</code>)</li>
+          <li>Claude Code가 구독 크레딧으로 작업을 처리합니다</li>
+          <li>완료되면 결과를 OpenClaw가 읽어서 보고합니다</li>
+        </ol>
+
+        <div class="alert-box success">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <div><strong>OAuth 토큰을 추출해서 쓰는 것이 아닙니다.</strong> Claude Code CLI를 정상적으로 실행하고, 거기에 입력만 전달하는 방식입니다.</div>
+        </div>
+      </div>
+
+      <!-- 3. 사전 준비 -->
+      <div class="step-section" id="sec3">
+        <div class="step-indicator">
+          <div class="step-number">3</div>
+          <div class="step-title">사전 준비</div>
+        </div>
+
+        <p>CLI 경유 방식을 사용하려면 다음이 필요합니다:</p>
+
+        <ul>
+          <li><strong>Claude Code 설치 완료</strong> &mdash; 터미널에서 <code>claude</code> 명령어가 작동해야 합니다</li>
+          <li><strong>Claude Code 로그인 완료</strong> &mdash; <code>claude login</code>으로 인증 완료</li>
+          <li><strong>Claude Pro 또는 Max 구독</strong> &mdash; 구독이 있어야 CLI를 사용할 수 있습니다</li>
+          <li><strong>tmux 설치</strong> (선택) &mdash; 병렬 작업에 필요</li>
+        </ul>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span>사전 확인</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code># Claude Code 설치 확인
+claude --version
+
+# 로그인 상태 확인
+claude login
+
+# tmux 설치 (Mac)
+brew install tmux
+
+# tmux 설치 (Windows WSL / Linux)
+sudo apt install tmux</code></pre>
+        </div>
+      </div>
+
+      <!-- 4. 설정 방법 -->
+      <div class="step-section" id="sec4">
+        <div class="step-indicator">
+          <div class="step-number">4</div>
+          <div class="step-title">설정 방법 (5분)</div>
+        </div>
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin-bottom:0.75rem;">Step 1. 스킬 폴더 만들기</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>mkdir -p ~/.openclaw/workspace/skills/programming</code></pre>
+        </div>
+
+        <hr class="section-divider">
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin-bottom:0.75rem;">Step 2. SKILL.md 파일 생성</p>
+        <p>아래 내용을 <code>~/.openclaw/workspace/skills/programming/SKILL.md</code> 파일로 저장합니다.</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span>SKILL.md</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>---
+name: programming
+description: Claude Code CLI를 통해 코딩 작업을 실행합니다. 코딩 관련 요청이 있을 때 사용하세요.
+---
+
+# Programming (Claude Code CLI 경유)
+
+## 개요
+코드를 직접 작성하지 않고, Claude Code CLI에 프롬프트를 전달해서 실행합니다.
+Claude Code 구독 크레딧을 사용하므로 API 비용이 들지 않습니다.
+
+## 사용 시점
+
+**사용 O:**
+- 코드 작성, 디버깅, 리팩토링
+- 파일 생성/수정이 필요한 작업
+- 프로젝트 구조 만들기
+
+**사용 X:**
+- 일반 대화, 질문
+- 코드와 무관한 작업
+
+## 실행 방법
+
+### 1. Claude Code 실행 (백그라운드)
+
+exec pty:true background:true workdir:~/Projects/[프로젝트명]
+command: "claude --dangerously-skip-permissions"
+
+### 2. 준비 확인 (3~5초 대기)
+
+process action:log sessionId:XXX
+
+프롬프트가 보이면 준비 완료.
+
+### 3. 프롬프트 전달
+
+process action:paste sessionId:XXX text:"다음을 수행해주세요:
+1. src/app.js 파일에 에러 핸들링 추가
+2. 완료 후 결과 보고"
+
+### 4. 실행
+
+process action:send-keys sessionId:XXX keys:["Enter"]
+
+### 5. 결과 확인
+
+process action:poll sessionId:XXX
+
+## 주의사항
+- --dangerously-skip-permissions: 파일 수정 시 매번 승인 안 물어봄
+- 프로젝트 폴더를 정확히 지정할 것
+- 작업 끝나면 세션 종료: process action:kill sessionId:XXX</code></pre>
+        </div>
+
+        <hr class="section-divider">
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin-bottom:0.75rem;">Step 3. AGENTS.md에 규칙 추가</p>
+        <p><code>~/.openclaw/workspace/AGENTS.md</code> 파일 맨 아래에 다음을 추가합니다:</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span>AGENTS.md에 추가</span>
+            <button class="copy-btn" onclick="copyCode(this)">복사</button>
+          </div>
+          <pre><code>## 코딩 작업 규칙
+
+코딩 관련 요청은 반드시 `programming` 스킬을 통해 처리하세요.
+- 파일 생성/수정/삭제가 필요한 코딩 작업 → programming 스킬 사용
+- 일반 대화, 설명, 질문 → 직접 응답 (API 사용)</code></pre>
+        </div>
+
+        <hr class="section-divider">
+
+        <p style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;margin-bottom:0.75rem;">Step 4. 테스트</p>
+        <p>OpenClaw에게 코딩 작업을 요청해보세요:</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span>테스트 메시지</span>
+          </div>
+          <pre><code>~/Projects/test 폴더에 hello.py 만들어줘. Hello World 출력하는 거</code></pre>
+        </div>
+
+        <div class="alert-box success">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <div>Claude Code CLI가 실행되면서 작업을 처리하면 성공입니다! API 과금 없이 구독 크레딧으로 처리됩니다.</div>
+        </div>
+      </div>
+
+      <!-- 5. 비용 비교 -->
+      <div class="step-section" id="sec5">
+        <div class="step-indicator">
+          <div class="step-number">5</div>
+          <div class="step-title">비용 비교</div>
+        </div>
+
+        <table>
+          <thead>
+            <tr><th>항목</th><th>API 직접 방식</th><th>CLI 경유 방식</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>일반 대화/질문</strong></td><td>종량제 과금</td><td>종량제 과금 (동일)</td></tr>
+            <tr><td><strong>코딩 작업</strong></td><td>종량제 과금</td><td>구독으로 무료</td></tr>
+            <tr><td><strong>응답 속도</strong></td><td>빠름</td><td>약간 느림 (터미널 경유)</td></tr>
+            <tr><td><strong>초기 설정</strong></td><td>없음</td><td>약 5분</td></tr>
+            <tr><td><strong>필요 구독</strong></td><td>없음 (API 키만)</td><td>Claude Pro/Max</td></tr>
+          </tbody>
+        </table>
+
+        <div class="alert-box info">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div><strong>비용 절약 효과:</strong> 코딩 작업이 전체 사용량의 50% 이상이라면, CLI 경유 방식으로 API 비용을 절반 이상 줄일 수 있습니다.</div>
+        </div>
+      </div>
+
+      <!-- 6. FAQ -->
+      <div class="step-section" id="sec6">
+        <div class="step-indicator">
+          <div class="step-number">6</div>
+          <div class="step-title">FAQ</div>
+        </div>
+
+        <div class="alert-box info">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div><strong>Q. 일반 대화도 무료가 되나요?</strong><br>아닙니다. 코딩 작업만 CLI 경유로 무료 처리됩니다. 일반 대화, 웹 검색, 파일 분석 등은 여전히 API 과금입니다.</div>
+        </div>
+
+        <div class="alert-box info">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div><strong>Q. Claude Pro ($20/월)도 되나요?</strong><br>Claude Code에 접근 권한이 있으면 됩니다. Pro/Max 모두 가능합니다.</div>
+        </div>
+
+        <div class="alert-box info">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div><strong>Q. <code>--dangerously-skip-permissions</code>가 위험하진 않나요?</strong><br>이 플래그는 파일 수정/명령어 실행 시 매번 승인을 묻지 않습니다. 신뢰하는 프로젝트에서만 사용하세요. 중요한 시스템 파일이 있는 디렉토리에서는 사용을 피하세요.</div>
+        </div>
+
+        <div class="alert-box info">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div><strong>Q. 병렬로 여러 작업을 할 수 있나요?</strong><br>tmux를 사용하면 여러 Claude Code 세션을 동시에 실행할 수 있습니다. 각 세션은 별도의 프로젝트/작업을 처리합니다.</div>
+        </div>
+      </div>
+
+      <!-- 7. 주의사항 -->
+      <div class="step-section" id="sec7">
+        <div class="step-indicator">
+          <div class="step-number">7</div>
+          <div class="step-title">주의사항</div>
+        </div>
+
+        <div class="alert-box warning">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div><strong>Anthropic 정책 변경 가능성</strong><br>Anthropic은 2026년 2월, Claude Free/Pro/Max의 OAuth 토큰을 외부 제품에서 API로 사용하는 것을 공식 금지했습니다. CLI 경유 방식은 OAuth 토큰을 추출하지 않고 CLI를 정상 실행하는 것이므로 현재는 허용되지만, <strong>정책이 바뀔 수 있습니다.</strong></div>
+        </div>
+
+        <div class="alert-box warning">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div><strong>코딩 전용입니다</strong><br>Claude Code CLI는 코딩 작업에 최적화되어 있습니다. 일반 대화, 요약, 번역 등의 작업에는 적합하지 않으며, 그런 작업은 기존 API 방식을 사용해야 합니다.</div>
+        </div>
+
+        <div class="alert-box danger">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          <div><strong>절대 하지 마세요</strong><br>
+            &bull; OAuth 토큰을 추출해서 OpenClaw config에 API 키로 등록하는 것<br>
+            &bull; 토큰을 다른 서비스/도구에 전달하는 것<br>
+            이러한 행위는 Anthropic 이용약관 위반이며 계정이 정지될 수 있습니다.
+          </div>
+        </div>
+
+        <p style="color:var(--text-muted);font-size:0.82rem;margin-top:1.5rem;">이 가이드는 2026년 2월 기준이며, Anthropic 정책 변경 시 업데이트가 필요할 수 있습니다.</p>
+      </div>
+
+      <!-- CTA -->
+      <div style="text-align:center;margin:2.5rem 0 1.5rem;">
+        <a href="https://open.kakao.com/o/gugo7tCh" target="_blank" rel="noopener"
+           style="display:inline-flex;align-items:center;gap:10px;padding:1rem 2rem;border-radius:12px;background:rgba(245,195,68,0.1);border:1px solid rgba(245,195,68,0.3);color:#f5c344;font-size:1.1rem;font-weight:700;text-decoration:none;transition:all 0.2s;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f5c344" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          궁금한 점이 있으면 VoidLight 채팅방에서 질문하세요!
+        </a>
+      </div>
+
+      <footer class="site-footer">
+        <div class="footer-content">
+          <p>OpenClaw Error Guide v3.0 | 최종 업데이트: 2026-02-19</p>
+          <div class="footer-links">
+            <a href="https://github.com/anthropics/openclaw" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://openclaw.ai" target="_blank" rel="noopener">OpenClaw</a>
+            <a href="https://open.kakao.com/o/gugo7tCh" target="_blank" rel="noopener">VoidLight 채팅방</a>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+    <button class="back-to-top" id="backToTop" aria-label="맨 위로">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+  <script>
+    function copyCode(btn) {
+      const pre = btn.closest('.code-block').querySelector('pre');
+      navigator.clipboard.writeText(pre.textContent).then(() => {
+        btn.textContent = '\u2713 복사됨!';
+        btn.style.color = '#22c55e';
+        setTimeout(() => { btn.textContent = '복사'; btn.style.color = ''; }, 2000);
+      });
+    }
+    const hamburger = document.getElementById('hamburgerBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const closeBtn = document.getElementById('sidebarClose');
+    function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('show'); document.body.style.overflow = 'hidden'; }
+    function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('show'); document.body.style.overflow = ''; }
+    if (hamburger) hamburger.addEventListener('click', openSidebar);
+    if (overlay) overlay.addEventListener('click', closeSidebar);
+    if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+    const backToTop = document.getElementById('backToTop');
+    const mainEl = document.querySelector('.main');
+    if (mainEl && backToTop) {
+      mainEl.addEventListener('scroll', () => { backToTop.classList.toggle('show', mainEl.scrollTop > 400); });
+      backToTop.addEventListener('click', () => { mainEl.scrollTo({ top: 0, behavior: 'smooth' }); });
+    }
+    var _fbApp=null,_fbAuth=null,_fbDb=null,_currentUser=null,_isPro=false;
+    function initFirebase(){if(_fbApp)return;if(typeof firebase==='undefined'||!firebaseConfig||firebaseConfig.apiKey==='PLACEHOLDER')return;_fbApp=firebase.initializeApp(firebaseConfig);_fbAuth=firebase.auth();_fbDb=firebase.firestore();_fbAuth.onAuthStateChanged(function(u){_currentUser=u;updateAuthUI();});}
+    function updateAuthUI(){var b=document.getElementById('sidebarLoginBtn'),p=document.getElementById('sidebarUser'),a=document.getElementById('sidebarUserAvatar'),n=document.getElementById('sidebarUserName');if(_currentUser){if(b)b.style.display='none';if(p)p.style.display='block';if(a)a.src=_currentUser.photoURL||'';if(n)n.textContent=_currentUser.displayName||_currentUser.email||'';}else{if(b)b.style.display='flex';if(p)p.style.display='none';}}
+    function toggleSidebarMenu(){var m=document.getElementById('sidebarUserMenu');if(m)m.classList.toggle('show');}
+    function googleLogin(){if(!_fbAuth)return;var p=new firebase.auth.GoogleAuthProvider();_fbAuth.signInWithPopup(p).catch(function(){});}
+    function googleLogout(){if(_fbAuth)_fbAuth.signOut();_currentUser=null;updateAuthUI();}
+    document.addEventListener('DOMContentLoaded',function(){initFirebase();});
+  </script>
+</body>
+</html>
