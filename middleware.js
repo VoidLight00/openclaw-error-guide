@@ -1,8 +1,27 @@
 export default function middleware(request) {
   const url = new URL(request.url)
+  const path = url.pathname
   
-  // Allow login page and auth API
-  if (url.pathname === '/login.html' || url.pathname === '/api/auth') {
+  // Allow static assets, login page, and auth API
+  if (
+    path === '/login.html' ||
+    path.startsWith('/api/') ||
+    path.startsWith('/_next/') ||
+    path.startsWith('/_vercel/') ||
+    path.endsWith('.css') ||
+    path.endsWith('.js') ||
+    path.endsWith('.png') ||
+    path.endsWith('.jpg') ||
+    path.endsWith('.svg') ||
+    path.endsWith('.ico') ||
+    path.endsWith('.woff') ||
+    path.endsWith('.woff2') ||
+    path.endsWith('.ttf') ||
+    path.endsWith('.gif') ||
+    path.endsWith('.webp') ||
+    path.endsWith('.json') ||
+    path.endsWith('.map')
+  ) {
     return;
   }
   
@@ -14,8 +33,4 @@ export default function middleware(request) {
   
   // Redirect to login
   return Response.redirect(new URL('/login.html', request.url), 302)
-}
-
-export const config = {
-  matcher: ['/((?!_vercel|favicon.ico|.*\\.css|.*\\.js|.*\\.png|.*\\.svg|.*\\.ico).*)'],
 }
