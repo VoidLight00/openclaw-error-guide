@@ -27,7 +27,7 @@ export default function middleware(request) {
   
   // Check auth cookie
   const cookie = request.headers.get('cookie') || ''
-  if (cookie.includes('site_auth=ok_001023')) {
+  if (cookie.includes('site_auth=ok_1023')) {
     return;
   }
   

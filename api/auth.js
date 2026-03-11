@@ -5,8 +5,8 @@ export default function handler(req, res) {
   
   const { password } = req.body || {}
   
-  if (password === '001023') {
-    res.setHeader('Set-Cookie', 'site_auth=ok_001023; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=2592000')
+  if (password === '1023') {
+    res.setHeader('Set-Cookie', 'site_auth=ok_1023; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=2592000')
     return res.status(200).json({ ok: true })
   }
   
